@@ -6,12 +6,12 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using Hl7.Fhir.Model;
+using Microsoft.HealthVault.ItemTypes;
+using Microsoft.HealthVault.Thing;
+
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    using Hl7.Fhir.Model;
-    using Microsoft.HealthVault.ItemTypes;
-    using Microsoft.HealthVault.Thing;
-
     public static class ObservationToHealthVault
     {
         /// <summary>
@@ -42,17 +42,27 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             var value = observation.Value as Quantity;
 
             // TODO: detect the units from the code (value.Unit)
-            weight.Value = new WeightValue((double)value.Value);
-            weight.Value.DisplayValue = new DisplayValue(
-                (double)value.Value,
-                value.Unit,
-                value.Code);
+            if (value != null)
+            {
+                if (value.Value.HasValue)
+                {
+                    weight.Value = new WeightValue((double)value.Value);
+                    weight.Value.DisplayValue = new DisplayValue();
+                    weight.Value.DisplayValue.Value = (double)value.Value;
+                    weight.Value.DisplayValue.Units = value.Unit;
+                    weight.Value.DisplayValue.UnitsCode = value.Code;
+                }
+            }
 
             var effectiveDate = observation.Effective as FhirDateTime;
-            var dateTime = effectiveDate.ToDateTimeOffset();            
-            weight.When = new HealthServiceDateTime(
-                new HealthServiceDate(dateTime.Year, dateTime.Month, dateTime.Day), 
-                new ApproximateTime(dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond));
+
+            if (effectiveDate != null)
+            {
+                var dateTime = effectiveDate.ToDateTimeOffset();
+                weight.When = new HealthServiceDateTime(
+                    new HealthServiceDate(dateTime.Year, dateTime.Month, dateTime.Day),
+                    new ApproximateTime(dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond));
+            }
 
             return weight;
         }
