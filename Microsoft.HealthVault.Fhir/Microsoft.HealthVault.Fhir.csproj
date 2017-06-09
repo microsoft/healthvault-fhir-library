@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="Hl7.Fhir.STU3" Version="0.93.4" />
-    <PackageReference Include="Microsoft.HealthVault.Client" Version="1.65.20508.1-preview" />
+    <PackageReference Include="Microsoft.HealthVault" Version="1.65.20508.1-preview" />
   </ItemGroup>
 
 </Project>
