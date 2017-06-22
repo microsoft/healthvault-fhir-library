@@ -6,10 +6,13 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System.Collections.Generic;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Serialization;
-using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Fhir.Transformers;
+using Microsoft.HealthVault.Fhir.UnitTests.Samples;
+using Microsoft.HealthVault.ItemTypes;
+using Microsoft.HealthVault.Thing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
@@ -20,76 +23,56 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         [TestMethod]
         public void WeightToHealthVault_Successful()
         {
-            var json = @"{
-                  'resourceType': 'Observation',
-                  'id': 'example',
-                  'text': {
-                    'status': 'generated'                   
-                  },
-                  'status': 'final',
-                  'category': [
-                    {
-                      'coding': [
-                        {
-                          'system': 'http://hl7.org/fhir/observation-category',
-                          'code': 'vital-signs',
-                          'display': 'Vital Signs'
-                        }
-                      ]
-                    }
-                  ],
-                  'code': {
-                    'coding': [
-                      {
-                        'system': 'http://loinc.org',
-                        'code': '29463-7',
-                        'display': 'Body Weight'
-                      },
-                      {
-                        'system': 'http://loinc.org',
-                        'code': '3141-9',
-                        'display': 'Body weight Measured'
-                      },
-                      {
-                        'system': 'http://snomed.info/sct',
-                        'code': '27113001',
-                        'display': 'Body weight'
-                      },
-                      {
-                        'system': 'http://acme.org/devices/clinical-codes',
-                        'code': 'body-weight',
-                        'display': 'Body Weight'
-                      },
-                      { 
-                        'system': 'http://healthvault.com/data-types/vital-statistics',
-                        'code': 'Wgt',
-                        'display': 'Body Weight'
-                      }   
-                    ]
-                  },
-                  'subject': {
-                    'reference': 'Patient/example'
-                  },
-                  'context': {
-                    'reference': 'Encounter/example'
-                  },
-                  'effectiveDateTime': '2016-03-28',
-                  'valueQuantity': {
-                    'value': 67,
-                    'unit': 'kg',
-                    'system': 'http://unitsofmeasure.org',
-                    'code': 'kg'
-                  }
-                }";
+            var json = SampleUtil.GetSampleContent("FhirWeight.json");
 
             var fhirParser = new FhirJsonParser();
             var observation = fhirParser.Parse<Observation>(json);
-
-            var weight = observation.ToHealthVault<Weight>();
+            
+            var weight = observation.ToHealthVault() as Weight;
             Assert.IsNotNull(weight);
             Assert.AreEqual(67, weight.Value.Kilograms);
             Assert.AreEqual("kg", weight.Value.DisplayValue.Units);
             Assert.AreEqual("kg", weight.Value.DisplayValue.UnitsCode);
+        }
+
+
+        [TestMethod]
+        public void BloodGlucoseToHealthVault_Successful()
+        {
+            var json = SampleUtil.GetSampleContent("FhirBloodGlucose.json");
+
+            var fhirParser = new FhirJsonParser();
+            var observation = fhirParser.Parse<Observation>(json);
+
+            var glucose = observation.ToHealthVault() as BloodGlucose;
+            Assert.IsNotNull(glucose);
+            Assert.AreEqual(6.3, glucose.Value.Value);
+            Assert.AreEqual("mmol/l", glucose.Value.DisplayValue.Units);
+            Assert.AreEqual("mmol/L", glucose.Value.DisplayValue.UnitsCode);           
+        }
+
+        [TestMethod]
+        public void MultipleObservationsToHealthVault_ReturnsCollection()
+        {
+            var fhirParse = new FhirJsonParser();
+
+            var samples = new List<string>()
+            {
+                SampleUtil.GetSampleContent("FhirBloodGlucose.json"),
+                SampleUtil.GetSampleContent("FhirWeight.json")
+            };
+
+            var list = new List<ThingBase>();
+            foreach (var sample in samples)
+            {
+                list.Add(fhirParse.Parse<Observation>(sample).ToHealthVault());
+            }
+
+            Assert.AreEqual(2, list.Count);
+            Assert.AreEqual(BloodGlucose.TypeId, list[0].TypeId);
+            Assert.IsTrue(list[0] is BloodGlucose);
+            Assert.AreEqual(Weight.TypeId, list[1].TypeId);
+            Assert.IsTrue(list[1] is Weight);        
         }
     }
 }

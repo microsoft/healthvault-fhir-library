@@ -6,32 +6,29 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Collections.Generic;
-using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Codes.HealthVault;
+using System.IO;
+using System.Reflection;
 
-namespace Microsoft.HealthVault.Fhir.Constants
+namespace Microsoft.HealthVault.Fhir.UnitTests.Samples
 {
-    /// <summary>
-    /// This class defines easy to use HealthVault vocabs as codeable concepts
-    /// </summary>
-    public static class HealthVaultVocabularies
+    class SampleUtil
     {
-        public const string HealthVaultCodedValueFormat = "{0}:{1}";
-
-        public const string VitalStatistics = "vital-statistics";
-        public const string BloodGlucoseMeasurementContext = "glucose-measurement-context";
-        public const string BloodGlucoseMeasurementType = "glucose-measurement-type";
-        public const string OutsideOperatingTemperature = "outside-operating-temperature";
-        public const string ReadingNormalcy = "reading-normalcy";
-        public const string IsControlTest = "is-control-test";
-
-        public const string Fhir = "fhir";
-        public const string Wc = "wc";
-
-        public static CodeableConcept BodyWeight = new CodeableConcept()
+        /// <summary>
+        /// Gets file stored in the Samples directory and marked as embedded resource
+        /// </summary>
+        /// <param name="sampleFilename">the file's name</param>
+        /// <returns></returns>
+        public static string GetSampleContent(string sampleFilename)
         {
-            Coding = new List<Coding>() { HealthVaultVitalStatisticsCodes.s_bodyWeight }
-        };
+            string resourceName = $"Microsoft.HealthVault.Fhir.UnitTests.Samples.{sampleFilename}";
+            var assemblies = Assembly.GetExecutingAssembly().GetManifestResourceNames();
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
     }
 }

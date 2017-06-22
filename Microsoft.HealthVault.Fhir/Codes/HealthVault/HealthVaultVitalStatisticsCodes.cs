@@ -7,6 +7,7 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Constants;
 
 namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
 {
@@ -15,14 +16,14 @@ namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
     /// </summary>
     public static class HealthVaultVitalStatisticsCodes
     {
-        public const string System = "http://healthvault.com/vocabularies/vital-statistics";
+        public static readonly string System = VocabularyUris.HealthVaultVocabulariesUri;
 
-        internal static Coding BodyWeight = new Coding()
+        internal static readonly Coding s_bodyWeight = new Coding()
         {
-            Code = "Wgt",
+            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "wgt"),
             Version = "1",
             System = System,
-            Display = "Body Weight"
-        };            
+            Display = "Body Weight",
+        };     
     }
 }

@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Fhir", "Microsoft.HealthVault.Fhir\Microsoft.HealthVault.Fhir.csproj", "{A1D4D196-C91C-4B70-A413-E715A8143BF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Fhir.UnitTests", "Microsoft.HealthVault.Fhir.UnitTests\Microsoft.HealthVault.Fhir.UnitTests.csproj", "{268A8E77-4E69-4AA2-B602-C4C222EE48A5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.HealthVault.Fhir.UnitTests", "Microsoft.HealthVault.Fhir.UnitTests\Microsoft.HealthVault.Fhir.UnitTests.csproj", "{A0B6CA91-6DCC-429B-86C9-30CE91229817}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{A1D4D196-C91C-4B70-A413-E715A8143BF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1D4D196-C91C-4B70-A413-E715A8143BF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1D4D196-C91C-4B70-A413-E715A8143BF9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{268A8E77-4E69-4AA2-B602-C4C222EE48A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{268A8E77-4E69-4AA2-B602-C4C222EE48A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{268A8E77-4E69-4AA2-B602-C4C222EE48A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{268A8E77-4E69-4AA2-B602-C4C222EE48A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0B6CA91-6DCC-429B-86C9-30CE91229817}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0B6CA91-6DCC-429B-86C9-30CE91229817}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0B6CA91-6DCC-429B-86C9-30CE91229817}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0B6CA91-6DCC-429B-86C9-30CE91229817}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

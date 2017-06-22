@@ -6,7 +6,10 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
+
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Vocabularies;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
 
@@ -32,39 +35,94 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         /// <returns>The HealthVault thing</returns>
         public static ThingBase ToHealthVault(this Observation observation)
         {
-            // ToDo: detect the type from the codeable values
-            return observation.ToWeight();
+            var type = VocabToHealthVaultHelper.DetectHealthVaultTypeFromObservation(observation);
+
+            if (type == Weight.TypeId)
+            {
+                return observation.ToWeight();
+            }
+
+            if (type == BloodGlucose.TypeId)
+            {
+                return observation.ToBloodGlucose();
+            }
+
+            return null;
         }
 
-        private static Weight ToWeight(this Observation observation)
-        {
-            var weight = new Weight();
-            var value = observation.Value as Quantity;
+        internal static T ToThingBase<T>(this Observation observation) where T : ThingBase, new() {
+            T baseThing = new T();
 
+            Guid id;
+            if (Guid.TryParse(observation.Id, out id))
+            {
+                baseThing.Key = new ThingKey(id);
+            }
+
+            Guid version;
+            if (observation.Meta != null && observation.Meta.VersionId != null && Guid.TryParse(observation.Meta.VersionId, out version))
+            {
+                baseThing.Key.VersionStamp = version;
+            }
+
+            ThingFlags flags;
+            var extensionFlag = observation.GetExtension("http://healthvault.com/fhir-extensions/thing-flags");
+            if (extensionFlag != null)
+            {
+                if (extensionFlag.Value is FhirString && Enum.TryParse<ThingFlags>((extensionFlag.Value as FhirString).ToString(), out flags))
+                {
+                    baseThing.Flags = flags;
+                }
+            }
+
+            return baseThing;
+        }
+
+        internal static T GetThingValueFromQuantity<T>(Quantity value) where T : Measurement<double>, new()
+        {
             // TODO: detect the units from the code (value.Unit)
             if (value != null)
             {
                 if (value.Value.HasValue)
                 {
-                    weight.Value = new WeightValue((double)value.Value);
-                    weight.Value.DisplayValue = new DisplayValue();
-                    weight.Value.DisplayValue.Value = (double)value.Value;
-                    weight.Value.DisplayValue.Units = value.Unit;
-                    weight.Value.DisplayValue.UnitsCode = value.Code;
+                    var result = new T();
+                    result.Value = (double)value.Value;
+                    result.DisplayValue = new DisplayValue();
+                    result.DisplayValue.Value = (double)value.Value;
+                    result.DisplayValue.Units = value.Unit;
+                    result.DisplayValue.UnitsCode = value.Code;
+                    return result;
                 }
             }
 
-            var effectiveDate = observation.Effective as FhirDateTime;
+            return null;
+        }
+    
+        internal static HealthServiceDateTime GetHealthVaultTimeFromEffectiveDate(Element effectiveDate)
+        {
+            FhirDateTime dateTime = null;
 
-            if (effectiveDate != null)
+            /* Per Spec DSTU3 Effective Date in an observation can only be of type FhirDateTime or FhirPeriod
+             * in this transformation if we have a period we will map it to the start time
+             */
+            if (effectiveDate is FhirDateTime)
             {
-                var dateTime = effectiveDate.ToDateTimeOffset();
-                weight.When = new HealthServiceDateTime(
-                    new HealthServiceDate(dateTime.Year, dateTime.Month, dateTime.Day),
-                    new ApproximateTime(dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond));
+                dateTime = effectiveDate as FhirDateTime;
+            }
+            else if (effectiveDate is Period && ((Period)effectiveDate).Start != null)
+            {
+                dateTime = new FhirDateTime(((Period)effectiveDate).Start);
+            }            
+            
+            if (dateTime != null)
+            {
+                var dt = dateTime.ToDateTimeOffset();
+                return new HealthServiceDateTime(
+                    new HealthServiceDate(dt.Year, dt.Month, dt.Day),
+                    new ApproximateTime(dt.Hour, dt.Minute, dt.Second, dt.Millisecond));
             }
 
-            return weight;
+            return null;
         }
     }
 }

@@ -6,38 +6,55 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System.Collections.Generic;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Vocabularies;
 using Microsoft.HealthVault.ItemTypes;
-using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
     static partial class ThingBaseToFhir
     {
         // Register the type on the generic ThingToFhir partial class
-        public static Observation ToFhir(this Weight weight)
+        public static Observation ToFhir(this BloodGlucose bg)
         {
-            return WeightToFhir.ToFhirInternal(weight, ThingBaseToFhir.ToFhirInternal(weight));
+            return BloodGlucoseToFhir.ToFhirInternal(bg, ThingBaseToFhir.ToFhirInternal(bg));
         }
     }
 
-    /// <summary>
-    /// An extension class that transforms HealthVault weight data types into FHIR Observations
-    /// </summary>
-    internal static class WeightToFhir
+    public static class BloodGlucoseToFhir
     {
-        internal static Observation ToFhirInternal(Weight weight, Observation observation)
+        internal static Observation ToFhirInternal(BloodGlucose bg, Observation observation)
         {
-            observation.Category = new System.Collections.Generic.List<CodeableConcept>() { FhirCategories.VitalSigns };
-            observation.Code = HealthVaultVocabularies.BodyWeight;
+            var fhirCodes = new List<Coding>();
 
-            var quantity = new Quantity((decimal)weight.Value.Kilograms, "kg");
+            HealthVaultCodesToFhir.ConvertCodableValueToFhir(bg.MeasurementContext, fhirCodes);
+            HealthVaultCodesToFhir.ConvertCodableValueToFhir(bg.GlucoseMeasurementType, fhirCodes);
+
+            if (bg.OutsideOperatingTemperature.HasValue)
+            {
+                HealthVaultCodesToFhir.ConvertValueToFhir(bg.OutsideOperatingTemperature.Value.ToString(), fhirCodes, HealthVaultVocabularies.OutsideOperatingTemperature);
+            }
+
+            if (bg.ReadingNormalcy.HasValue)
+            {
+                HealthVaultCodesToFhir.ConvertValueToFhir(bg.ReadingNormalcy.Value.ToString(), fhirCodes, HealthVaultVocabularies.ReadingNormalcy);
+            }
+
+            if (bg.IsControlTest.HasValue)
+            {
+                HealthVaultCodesToFhir.ConvertValueToFhir(bg.IsControlTest.Value.ToString(), fhirCodes, HealthVaultVocabularies.IsControlTest);
+            }
+            
+            observation.Code = new CodeableConcept() { Coding = fhirCodes };
+            
+            var quantity = new Quantity((decimal)bg.Value.Value, "mmolPerL");
             observation.Value = quantity;
-            observation.Effective = new FhirDateTime(weight.When.ToLocalDateTime().ToDateTimeUnspecified());
+            observation.Effective = new FhirDateTime(bg.When.ToLocalDateTime().ToDateTimeUnspecified());
 
             return observation;
         }
+
     }
 }
