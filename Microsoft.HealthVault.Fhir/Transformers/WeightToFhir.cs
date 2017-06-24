@@ -16,26 +16,28 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 {
     static partial class ThingBaseToFhir
     {
+        internal static WeightToFhir s_weightToFhir = new WeightToFhir();
+
         // Register the type on the generic ThingToFhir partial class
         public static Observation ToFhir(this Weight weight)
         {
-            return WeightToFhir.ToFhirInternal(weight, ThingBaseToFhir.ToFhirInternal(weight));
+            return s_weightToFhir.ToFhirInternal(weight, ThingBaseToFhir.ToFhirInternal(weight));
         }
     }
 
     /// <summary>
     /// An extension class that transforms HealthVault weight data types into FHIR Observations
     /// </summary>
-    internal static class WeightToFhir
+    internal class WeightToFhir
     {
-        internal static Observation ToFhirInternal(Weight weight, Observation observation)
+        internal Observation ToFhirInternal(Weight weight, Observation observation)
         {
             observation.Category = new System.Collections.Generic.List<CodeableConcept>() { FhirCategories.VitalSigns };
             observation.Code = HealthVaultVocabularies.BodyWeight;
 
             var quantity = new Quantity((decimal)weight.Value.Kilograms, "kg");
             observation.Value = quantity;
-            observation.Effective = new FhirDateTime(weight.When.ToLocalDateTime().ToDateTimeUnspecified());
+            observation.Effective = new FhirDateTime(weight.When.ToDateTime());
 
             return observation;
         }

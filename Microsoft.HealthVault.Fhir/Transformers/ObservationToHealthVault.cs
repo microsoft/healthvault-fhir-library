@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         /// <returns>The HealthVault thing</returns>
         public static T ToHealthVault<T>(this Observation observation) where T : ThingBase
         {
-            return observation.ToHealthVault() as T;
+            return observation.ToHealthVault(typeof(T)) as T;
         }
 
         /// <summary>
@@ -35,14 +35,17 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         /// <returns>The HealthVault thing</returns>
         public static ThingBase ToHealthVault(this Observation observation)
         {
-            var type = VocabToHealthVaultHelper.DetectHealthVaultTypeFromObservation(observation);
+            return observation.ToHealthVault(VocabToHealthVaultHelper.DetectHealthVaultTypeFromObservation(observation));
+        }
 
-            if (type == Weight.TypeId)
+        private static ThingBase ToHealthVault(this Observation observation, Type type)
+        {
+            if (type == typeof(Weight))
             {
                 return observation.ToWeight();
             }
 
-            if (type == BloodGlucose.TypeId)
+            if (type == typeof(BloodGlucose))
             {
                 return observation.ToBloodGlucose();
             }

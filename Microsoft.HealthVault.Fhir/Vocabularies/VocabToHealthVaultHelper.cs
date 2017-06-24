@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
 {
     internal static class VocabToHealthVaultHelper
     {        
-        internal static Guid DetectHealthVaultTypeFromObservation(Observation observation)
+        internal static Type DetectHealthVaultTypeFromObservation(Observation observation)
         {
             if (observation.Code != null && observation.Code.Coding != null)
             {
@@ -36,18 +36,18 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
             throw new NotSupportedException();
         }
 
-        private static Guid DetectFromSnomedCd(string code)
+        private static Type DetectFromSnomedCd(string code)
         {
             switch (code.ToLowerInvariant())
             {
                 case "434912009":
-                    return BloodGlucose.TypeId;
+                    return typeof(BloodGlucose);
             }
 
             throw new NotSupportedException("The provided code is not supported");
         }
 
-        private static Guid DetectFromHealthVaultCode(string code)
+        private static Type DetectFromHealthVaultCode(string code)
         {
             var vocab = code.Split(':');
 
@@ -62,26 +62,26 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
                         switch (vocabName.ToLowerInvariant())
                         {
                             case "wgt":
-                                return Weight.TypeId;
+                                return typeof(Weight);
                         }
                         break;
                     case HealthVaultVocabularies.BloodGlucoseMeasurementContext:
                     case HealthVaultVocabularies.BloodGlucoseMeasurementType:
-                        return BloodGlucose.TypeId;
+                        return typeof(BloodGlucose);
                 }
 
             }
 
             throw new NotSupportedException("The provided code is not supported");
         }
-        private static Guid DetectFromLoincCodes(string code)
+        private static Type DetectFromLoincCodes(string code)
         {            
             switch (code)
             {
                 case "29463-7":
-                    return Weight.TypeId;
+                    return typeof(Weight);
                 case "15074-8":
-                    return BloodGlucose.TypeId;
+                    return typeof(BloodGlucose);
             }
 
             throw new NotSupportedException("The provided code is not supported");

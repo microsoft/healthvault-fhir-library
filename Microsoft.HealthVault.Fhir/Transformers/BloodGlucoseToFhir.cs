@@ -16,16 +16,18 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 {
     static partial class ThingBaseToFhir
     {
+        internal static BloodGlucoseToFhir s_bloodGlucoseToFhir = new BloodGlucoseToFhir();
+
         // Register the type on the generic ThingToFhir partial class
         public static Observation ToFhir(this BloodGlucose bg)
         {
-            return BloodGlucoseToFhir.ToFhirInternal(bg, ThingBaseToFhir.ToFhirInternal(bg));
+            return s_bloodGlucoseToFhir.ToFhirInternal(bg, ThingBaseToFhir.ToFhirInternal(bg));
         }
     }
 
-    public static class BloodGlucoseToFhir
+    public class BloodGlucoseToFhir
     {
-        internal static Observation ToFhirInternal(BloodGlucose bg, Observation observation)
+        internal Observation ToFhirInternal(BloodGlucose bg, Observation observation)
         {
             var fhirCodes = new List<Coding>();
 
@@ -51,10 +53,9 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             
             var quantity = new Quantity((decimal)bg.Value.Value, "mmolPerL");
             observation.Value = quantity;
-            observation.Effective = new FhirDateTime(bg.When.ToLocalDateTime().ToDateTimeUnspecified());
+            observation.Effective = new FhirDateTime(bg.When.ToDateTime());
 
             return observation;
         }
-
     }
 }

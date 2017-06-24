@@ -7,6 +7,9 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.IO;
+using System.Text;
+using System.Xml.XPath;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Transformers;
@@ -38,54 +41,6 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             Assert.AreEqual((decimal)75.5, value.Value);
             Assert.AreEqual("kg", value.Unit);
 
-        }
-
-        [TestMethod]
-        public void BloodGlucoseToFhir_Successful()
-        {
-            var xml = @"<blood-glucose>
-                  <when>
-                    <date>
-                      <y>2006</y>
-                      <m>1</m>
-                      <d>1</d>
-                    </date>
-                    <time>
-                      <h>9</h>
-                      <m>30</m>
-                      <s>0</s>
-                      <f>0</f>
-                    </time>
-                  </when>
-                  <value>
-                    <mmolPerL>7.444444</mmolPerL>
-                    <display units='mmolPerL'>7.444444</display>
-                  </value>
-                  <glucose-measurement-type>
-                    <text>Whole blood</text>
-                    <code>
-                      <value>wb</value>
-                      <family>wc</family>
-                      <type>glucose-measurement-type</type>
-                      <version>1</version>
-                    </code>
-                  </glucose-measurement-type>
-                  <outside-operating-temp>true</outside-operating-temp>
-                  <is-control-test>true</is-control-test>
-                  <normalcy>1</normalcy>
-                  <measurement-context>
-                    <text>Before meal</text>
-                    <code>
-                      <value>BeforeMeal</value>
-                      <family>wc</family>
-                      <type>glucose-measurement-context</type>
-                      <version>1</version>
-                    </code>
-                  </measurement-context>
-                </blood-glucose>";
-
-            var bg = BloodGlucose.Deserialize(xml);            
-            var fhir = bg.ToFhir();            
         }
     }
 }
