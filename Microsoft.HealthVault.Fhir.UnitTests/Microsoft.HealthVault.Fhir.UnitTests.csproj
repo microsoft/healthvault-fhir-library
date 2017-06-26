@@ -39,7 +39,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.HealthVault.Fhir\Microsoft.HealthVault.Fhir.csproj" />
     <Reference Include="Grace, Version=6.0.1.0, Culture=neutral, PublicKeyToken=b7d24c6367970497, processorArchitecture=MSIL">
       <HintPath>..\packages\Grace.6.0.1\lib\net45\Grace.dll</HintPath>
     </Reference>
@@ -52,17 +51,17 @@
     <Reference Include="Hl7.FhirPath, Version=0.4.2.0, Culture=neutral, PublicKeyToken=d706911480550fc3, processorArchitecture=MSIL">
       <HintPath>..\packages\Hl7.FhirPath.0.4.2\lib\net45\Hl7.FhirPath.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.HealthVault, Version=1.65.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.HealthVault.1.65.20623.2-preview\lib\netstandard1.4\Microsoft.HealthVault.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.HealthVault.RestApi, Version=1.65.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.HealthVault.1.65.20623.2-preview\lib\netstandard1.4\Microsoft.HealthVault.RestApi.dll</HintPath>
+    </Reference>
     <!--
     <Reference Include="Microsoft.HealthVault, Version=1.65.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.HealthVault.1.65.20615.4-preview\lib\netstandard1.4\Microsoft.HealthVault.dll</HintPath>
     </Reference>
 	-->
-    <Reference Include="Microsoft.HealthVault">
-      <HintPath>..\..\healthvault-dotnetstandard-sdk\Microsoft.HealthVault\bin\Debug\netstandard1.4\Microsoft.HealthVault.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.HealthVault.RestApi, Version=1.65.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.HealthVault.1.65.20615.4-preview\lib\netstandard1.4\Microsoft.HealthVault.RestApi.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Rest.ClientRuntime, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Rest.ClientRuntime.2.3.7\lib\net452\Microsoft.Rest.ClientRuntime.dll</HintPath>
     </Reference>
@@ -120,6 +119,9 @@
       <HintPath>..\packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
     </Reference>
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Reflection.TypeExtensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.TypeExtensions.4.3.0\lib\net46\System.Reflection.TypeExtensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
     </Reference>
@@ -166,6 +168,12 @@
     </None>
     <EmbeddedResource Include="Samples\FhirBloodGlucose.json" />
     <EmbeddedResource Include="Samples\FhirWeight.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.HealthVault.Fhir\Microsoft.HealthVault.Fhir.csproj">
+      <Project>{a1d4d196-c91c-4b70-a413-e715a8143bf9}</Project>
+      <Name>Microsoft.HealthVault.Fhir</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
