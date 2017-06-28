@@ -15,7 +15,7 @@ using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Vocabularies
 {
-    class HealthVaultCodesToFhir
+    internal class HealthVaultCodesToFhir
     {
         public static void ConvertCodableValueToFhir(CodableValue codableValue, List<Coding> fhirCodes)
         {

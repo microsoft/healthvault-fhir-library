@@ -9,6 +9,7 @@
 using System;
 
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Vocabularies;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
@@ -69,7 +70,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
 
             ThingFlags flags;
-            var extensionFlag = observation.GetExtension("http://healthvault.com/fhir-extensions/thing-flags");
+            var extensionFlag = observation.GetExtension(HealthVaultVocabularies.FlagsFhirExtensionName);
             if (extensionFlag != null)
             {
                 if (extensionFlag.Value is FhirString && Enum.TryParse<ThingFlags>((extensionFlag.Value as FhirString).ToString(), out flags))

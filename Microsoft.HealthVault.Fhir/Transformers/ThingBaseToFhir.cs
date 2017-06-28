@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
 
@@ -47,8 +48,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             var observation = new Observation();
             observation.Meta = new Meta();
 
-            observation.AddExtension("http://healthvault.com/fhir-extensions/thing-flags", new FhirString(thing.Flags.ToString()));
-            observation.AddExtension("http://healthvault.com/fhir-extensions/thing-state", new FhirString(thing.State.ToString()));
+            observation.AddExtension(HealthVaultVocabularies.FlagsFhirExtensionName, new FhirString(thing.Flags.ToString()));
+            observation.AddExtension(HealthVaultVocabularies.StateFhirExtensionName, new FhirString(thing.State.ToString()));
 
             observation.Status = ObservationStatus.Final;
 
