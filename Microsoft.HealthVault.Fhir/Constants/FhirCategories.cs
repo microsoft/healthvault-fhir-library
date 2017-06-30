@@ -17,6 +17,8 @@ namespace Microsoft.HealthVault.Fhir.Constants
     /// </summary>
     public static class FhirCategories
     {
+        public const string Hl7Observation = "http://hl7.org/fhir/observation-category";
+
         public static CodeableConcept VitalSigns = new CodeableConcept()
         {
             Text = "Vital Signs",

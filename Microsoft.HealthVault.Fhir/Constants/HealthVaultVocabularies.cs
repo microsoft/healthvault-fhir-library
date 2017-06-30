@@ -29,6 +29,9 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string Fhir = "fhir";
         public const string Wc = "wc";
 
+        public const string StateFhirExtensionName = "http://healthvault.com/fhir-extensions/thing-state";
+        public const string FlagsFhirExtensionName = "http://healthvault.com/fhir-extensions/thing-flags";
+
         public static CodeableConcept BodyWeight = new CodeableConcept()
         {
             Coding = new List<Coding>() { HealthVaultVitalStatisticsCodes.BodyWeight }

@@ -21,14 +21,17 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
             {
                 foreach (var code in observation.Code.Coding)
                 {
-                    switch (code.System.ToLowerInvariant())
+                    if (!string.IsNullOrWhiteSpace(code.System) && code.CodeElement != null)
                     {
-                        case VocabularyUris.SnomedCd:
-                            return DetectFromSnomedCd(code.CodeElement.Value);
-                        case VocabularyUris.Loinc:
-                            return DetectFromLoincCodes(code.CodeElement.Value);
-                        case VocabularyUris.HealthVaultVocabulariesUri:
-                            return DetectFromHealthVaultCode(code.CodeElement.Value);
+                        switch (code.System.ToLowerInvariant())
+                        {
+                            case VocabularyUris.SnomedCd:
+                                return DetectFromSnomedCd(code.CodeElement.Value);
+                            case VocabularyUris.Loinc:
+                                return DetectFromLoincCodes(code.CodeElement.Value);
+                            case VocabularyUris.HealthVaultVocabulariesUri:
+                                return DetectFromHealthVaultCode(code.CodeElement.Value);
+                        }
                     }
                 }
             }
