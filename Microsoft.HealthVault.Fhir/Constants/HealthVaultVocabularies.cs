@@ -17,6 +17,21 @@ namespace Microsoft.HealthVault.Fhir.Constants
     /// </summary>
     public static class HealthVaultVocabularies
     {
+        public const string HealthVaultCodedValueFormat = "{0}:{1}";
+
+        public const string VitalStatistics = "vital-statistics";
+        public const string BloodGlucoseMeasurementContext = "glucose-measurement-context";
+        public const string BloodGlucoseMeasurementType = "glucose-measurement-type";
+        public const string OutsideOperatingTemperature = "outside-operating-temperature";
+        public const string ReadingNormalcy = "reading-normalcy";
+        public const string IsControlTest = "is-control-test";
+
+        public const string Fhir = "fhir";
+        public const string Wc = "wc";
+
+        public const string StateFhirExtensionName = "http://healthvault.com/fhir-extensions/thing-state";
+        public const string FlagsFhirExtensionName = "http://healthvault.com/fhir-extensions/thing-flags";
+
         public static CodeableConcept BodyWeight = new CodeableConcept()
         {
             Coding = new List<Coding>() { HealthVaultVitalStatisticsCodes.BodyWeight }

@@ -6,24 +6,29 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Constants;
+using System.IO;
+using System.Reflection;
 
-namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
+namespace Microsoft.HealthVault.Fhir.UnitTests.Samples
 {
-    /// <summary>
-    /// This class is used to define the codeable values related to HealthVault Vital Statistics
-    /// </summary>
-    public static class HealthVaultVitalStatisticsCodes
+    class SampleUtil
     {
-        public static readonly string System = VocabularyUris.HealthVaultVocabulariesUri;
-
-        public static readonly Coding BodyWeight = new Coding()
+        /// <summary>
+        /// Gets file stored in the Samples directory and marked as embedded resource
+        /// </summary>
+        /// <param name="sampleFilename">the file's name</param>
+        /// <returns></returns>
+        public static string GetSampleContent(string sampleFilename)
         {
-            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "wgt"),
-            Version = "1",
-            System = System,
-            Display = "Body Weight",
-        };     
+            string resourceName = $"Microsoft.HealthVault.Fhir.UnitTests.Samples.{sampleFilename}";
+            var assemblies = Assembly.GetExecutingAssembly().GetManifestResourceNames();
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
+        }
     }
 }

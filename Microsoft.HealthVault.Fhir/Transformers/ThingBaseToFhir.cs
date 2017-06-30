@@ -9,7 +9,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
@@ -17,7 +20,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     /// <summary>
     /// An extension class that helps transform things into fhir resources
     /// </summary>
-    public static class ThingBaseToFhir
+    public static partial class ThingBaseToFhir
     {
         /// <summary>
         /// Transforms a HealthVault thing into a FHIR Observation
@@ -26,10 +29,29 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         /// <returns>A FHIR observation based on the HealthVault thing</returns>
         public static Observation ToFhir(this ThingBase thing)
         {
+            // Find registered specific ToFhir method
+            var transformerType = typeof(ThingBaseToFhir);
+            var method = transformerType.GetRuntimeMethod("ToFhir", new Type[] { thing.GetType() });
+
+            if (method != null && method.GetParameters()[0].ParameterType != typeof(ThingBase))
+            {
+                return (Observation)method.Invoke(null, new object[] { thing });
+            }
+            else
+            {
+                return thing.ToFhirInternal();
+            }
+        }
+
+        internal static Observation ToFhirInternal(this ThingBase thing)
+        {
             var observation = new Observation();
             observation.Meta = new Meta();
 
-            observation.AddExtension("http://healthvault.com/fhir-extensions/thing-flags", new FhirString(thing.Flags.ToString()));
+            observation.AddExtension(HealthVaultVocabularies.FlagsFhirExtensionName, new FhirString(thing.Flags.ToString()));
+            observation.AddExtension(HealthVaultVocabularies.StateFhirExtensionName, new FhirString(thing.State.ToString()));
+
+            observation.Status = ObservationStatus.Final;
 
             if (thing.Key != null)
             {
@@ -48,7 +70,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 if (thing.Created.Timestamp != null)
                 {
-                    observation.Issued = new DateTimeOffset(thing.Created.Timestamp);
+                    observation.Issued = thing.Created.Timestamp;
                 }
             }
 
@@ -81,8 +103,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     }
                 }
             }
-
+            
             return observation;
-        }
+        }        
     }
 }

@@ -7,23 +7,20 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.ItemTypes;
 
-namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
+namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    /// <summary>
-    /// This class is used to define the codeable values related to HealthVault Vital Statistics
-    /// </summary>
-    public static class HealthVaultVitalStatisticsCodes
+    internal static class ObservationToWeight
     {
-        public static readonly string System = VocabularyUris.HealthVaultVocabulariesUri;
-
-        public static readonly Coding BodyWeight = new Coding()
+        internal static Weight ToWeight(this Observation observation)
         {
-            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "wgt"),
-            Version = "1",
-            System = System,
-            Display = "Body Weight",
-        };     
+            var weight = observation.ToThingBase<ItemTypes.Weight>();
+
+            weight.Value = ObservationToHealthVault.GetThingValueFromQuantity<WeightValue>(observation.Value as Quantity);
+            weight.When = ObservationToHealthVault.GetHealthVaultTimeFromEffectiveDate(observation.Effective);
+
+            return weight;
+        }
     }
 }
