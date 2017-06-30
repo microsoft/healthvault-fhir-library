@@ -1,5 +1,5 @@
 # HealthVault FHIR Library
-The HealthVault FHIR Library is a community project started by Microsoft and [Get Real Health](https://www.getrealhealth.com/) seeking to produce an open source library for apps that consume [HL7's FHIR Standard](https://www.hl7.org/fhir/) so they can interoperate with HealthVault data types. 
+The HealthVault FHIR Library is a community project started by Microsoft and [Get Real Health](https://www.getrealhealth.com/) seeking to produce an open source library for apps that use [HL7's FHIR Standard](https://www.hl7.org/fhir/) so they can interoperate with the data types shared by Microsoft HealthVault and Get Real Health's CHBase. 
 
 # Contributing
 
