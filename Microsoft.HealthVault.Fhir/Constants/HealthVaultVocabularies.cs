@@ -31,7 +31,7 @@ namespace Microsoft.HealthVault.Fhir.Constants
 
         public static CodeableConcept BodyWeight = new CodeableConcept()
         {
-            Coding = new List<Coding>() { HealthVaultVitalStatisticsCodes.s_bodyWeight }
+            Coding = new List<Coding>() { HealthVaultVitalStatisticsCodes.BodyWeight }
         };
     }
 }

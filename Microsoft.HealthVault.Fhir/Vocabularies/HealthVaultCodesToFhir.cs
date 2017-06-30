@@ -17,7 +17,14 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
 {
     class HealthVaultCodesToFhir
     {
-        public static void ConvertCodableValueToFhir(CodableValue codableValue, List<Coding> fhirCodes)
+        /// <summary>
+        /// This function converts codable values into codings for FHIR. It takes a list of codings and returns it after
+        /// adding the new codings. 
+        /// </summary>
+        /// <param name="codableValue">The list of codable values to convert</param>
+        /// <param name="fhirCodes">The initial list of codings, this list will be modified to include the new ones</param>
+        /// <returns>The updated list of fhir codes</returns>
+        public static List<Coding> ConvertCodableValueToFhir(CodableValue codableValue, List<Coding> fhirCodes)
         {
             if(fhirCodes == null)
             {
@@ -43,9 +50,21 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
                     }
                 }
             }
+
+            return fhirCodes;
         }
 
-        public static void ConvertValueToFhir(string value, List<Coding> fhirCodes, string vocabName = null, string system = VocabularyUris.HealthVaultVocabulariesUri, string version = null, string display = null)
+        /// <summary>
+        /// Converts a value from FHIR and adds it to the list of codings passed on the function
+        /// </summary>
+        /// <param name="value">The value to add as a coding</param>
+        /// <param name="fhirCodes">The original list of codings</param>
+        /// <param name="vocabName">The name of the vocabulary</param>
+        /// <param name="system">The system of the vocabulary, default is HealthVault</param>
+        /// <param name="version">The version of the vocabulary</param>
+        /// <param name="display">The display text for the vocabulary</param>
+        /// <returns>The updated list of fhir codes</returns>
+        public static List<Coding> ConvertValueToFhir(string value, List<Coding> fhirCodes, string vocabName = null, string system = VocabularyUris.HealthVaultVocabulariesUri, string version = null, string display = null)
         {
             if (fhirCodes == null)
             {
@@ -64,6 +83,8 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
                 System = system,
                 Display = display
             });
+
+            return fhirCodes;
         }
     }
 }

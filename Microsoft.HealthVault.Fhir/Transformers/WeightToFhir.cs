@@ -14,23 +14,21 @@ using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    static partial class ThingBaseToFhir
+    public static partial class ThingBaseToFhir
     {
-        internal static WeightToFhir s_weightToFhir = new WeightToFhir();
-
         // Register the type on the generic ThingToFhir partial class
         public static Observation ToFhir(this Weight weight)
         {
-            return s_weightToFhir.ToFhirInternal(weight, ThingBaseToFhir.ToFhirInternal(weight));
+            return WeightToFhir.ToFhirInternal(weight, ThingBaseToFhir.ToFhirInternal(weight));
         }
     }
 
     /// <summary>
     /// An extension class that transforms HealthVault weight data types into FHIR Observations
     /// </summary>
-    internal class WeightToFhir
+    internal static class WeightToFhir
     {
-        internal Observation ToFhirInternal(Weight weight, Observation observation)
+        internal static Observation ToFhirInternal(Weight weight, Observation observation)
         {
             observation.Category = new System.Collections.Generic.List<CodeableConcept>() { FhirCategories.VitalSigns };
             observation.Code = HealthVaultVocabularies.BodyWeight;

@@ -26,7 +26,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 foreach (var code in observation.Code.Coding)
                 {
-                    if (code.System == VocabularyUris.HealthVaultVocabulariesUri)
+                    if (string.Equals(code.System, VocabularyUris.HealthVaultVocabulariesUri, StringComparison.OrdinalIgnoreCase))
                     {
                         var value = code.Code.Split(':');
                         var vocabName = value[0];
@@ -35,10 +35,18 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                         switch (vocabName)
                         {
                             case HealthVaultVocabularies.BloodGlucoseMeasurementContext:
-                                bloodGlucose.SetGlucoseMeasurementContext(code.Display, vocabCode, vocabName, HealthVaultVocabularies.Wc, code.Version);
+                                bloodGlucose.SetGlucoseMeasurementContext(
+                                    code.Display,
+                                    vocabCode,
+                                    vocabName,
+                                    HealthVaultVocabularies.Wc, code.Version);
                                 break;
                             case HealthVaultVocabularies.BloodGlucoseMeasurementType:
-                                bloodGlucose.SetGlucoseMeasurementType(code.Display, vocabCode, vocabName, HealthVaultVocabularies.Wc, code.Version);
+                                bloodGlucose.SetGlucoseMeasurementType(
+                                    code.Display, 
+                                    vocabCode, 
+                                    vocabName, 
+                                    HealthVaultVocabularies.Wc, code.Version);
                                 break;
                             case HealthVaultVocabularies.IsControlTest:
                                 bool isControlTest = false;
@@ -65,7 +73,12 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     }
                     else
                     {
-                        bloodGlucose.SetGlucoseMeasurementType(code.Display, code.Code, HealthVaultVocabularies.Fhir, code.System, code.Version);                        
+                        bloodGlucose.SetGlucoseMeasurementType(
+                            code.Display, 
+                            code.Code, 
+                            HealthVaultVocabularies.Fhir, 
+                            code.System, 
+                            code.Version);                        
                     }
                 }
             }

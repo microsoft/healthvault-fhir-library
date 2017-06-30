@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.Fhir.Codes.HL7
     {
         public const string System = "http://hl7.org/fhir/observation-category";
 
-        internal static readonly Coding s_vitalSignsCode = new Coding()
+        public static readonly Coding VitalSignsCode = new Coding()
         {
             System = System,
             Code = "vital-signs",

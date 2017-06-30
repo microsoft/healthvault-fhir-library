@@ -14,20 +14,18 @@ using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    static partial class ThingBaseToFhir
+    public static partial class ThingBaseToFhir
     {
-        internal static BloodGlucoseToFhir s_bloodGlucoseToFhir = new BloodGlucoseToFhir();
-
         // Register the type on the generic ThingToFhir partial class
         public static Observation ToFhir(this BloodGlucose bg)
         {
-            return s_bloodGlucoseToFhir.ToFhirInternal(bg, ThingBaseToFhir.ToFhirInternal(bg));
+            return BloodGlucoseToFhir.ToFhirInternal(bg, ThingBaseToFhir.ToFhirInternal(bg));
         }
     }
 
-    public class BloodGlucoseToFhir
+    internal static class BloodGlucoseToFhir
     {
-        internal Observation ToFhirInternal(BloodGlucose bg, Observation observation)
+        internal static Observation ToFhirInternal(BloodGlucose bg, Observation observation)
         {
             var fhirCodes = new List<Coding>();
 

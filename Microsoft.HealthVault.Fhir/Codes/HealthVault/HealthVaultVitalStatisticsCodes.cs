@@ -18,7 +18,7 @@ namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
     {
         public static readonly string System = VocabularyUris.HealthVaultVocabulariesUri;
 
-        internal static readonly Coding s_bodyWeight = new Coding()
+        public static readonly Coding BodyWeight = new Coding()
         {
             Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "wgt"),
             Version = "1",

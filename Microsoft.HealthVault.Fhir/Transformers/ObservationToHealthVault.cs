@@ -7,7 +7,6 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Vocabularies;
 using Microsoft.HealthVault.ItemTypes;
@@ -36,21 +35,6 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         public static ThingBase ToHealthVault(this Observation observation)
         {
             return observation.ToHealthVault(VocabToHealthVaultHelper.DetectHealthVaultTypeFromObservation(observation));
-        }
-
-        private static ThingBase ToHealthVault(this Observation observation, Type type)
-        {
-            if (type == typeof(Weight))
-            {
-                return observation.ToWeight();
-            }
-
-            if (type == typeof(BloodGlucose))
-            {
-                return observation.ToBloodGlucose();
-            }
-
-            return null;
         }
 
         internal static T ToThingBase<T>(this Observation observation) where T : ThingBase, new() {
@@ -123,6 +107,21 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 return new HealthServiceDateTime(
                     new HealthServiceDate(dt.Year, dt.Month, dt.Day),
                     new ApproximateTime(dt.Hour, dt.Minute, dt.Second, dt.Millisecond));
+            }
+
+            return null;
+        }
+
+        private static ThingBase ToHealthVault(this Observation observation, Type type)
+        {
+            if (type == typeof(Weight))
+            {
+                return observation.ToWeight();
+            }
+
+            if (type == typeof(BloodGlucose))
+            {
+                return observation.ToBloodGlucose();
             }
 
             return null;
