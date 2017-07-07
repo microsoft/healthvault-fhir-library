@@ -12,6 +12,7 @@ using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Vocabularies;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
+using UnitsNet;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
@@ -68,13 +69,31 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
         internal static T GetThingValueFromQuantity<T>(Quantity value) where T : Measurement<double>, new()
         {
-            // TODO: detect the units from the code (value.Unit)
             if (value != null)
             {
                 if (value.Value.HasValue)
                 {
                     var result = new T();
-                    result.Value = (double)value.Value;
+
+                    // Convert known units to the standard health vault value units
+                    double convertedValue;
+                    switch (value.Code)
+                    {
+                        case "[in_i]":
+                            convertedValue = UnitsNet.Length.FromInches((double)value.Value).Meters;
+                            break;
+                        case "cm":
+                            convertedValue = UnitsNet.Length.FromCentimeters((double)value.Value).Meters;
+                            break;
+                        case "[lb_av]":
+                            convertedValue = UnitsNet.Mass.FromPounds((double)value.Value).Kilograms;
+                            break;
+                        default:
+                            convertedValue = (double)value.Value;
+                            break;
+                    }
+
+                    result.Value = convertedValue;
                     result.DisplayValue = new DisplayValue();
                     result.DisplayValue.Value = (double)value.Value;
                     result.DisplayValue.Units = value.Unit;

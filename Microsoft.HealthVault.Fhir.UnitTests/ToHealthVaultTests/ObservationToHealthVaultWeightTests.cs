@@ -20,14 +20,20 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
     [TestClass]
     public class ObservationToHealthVaultWeightTests
     {
-        [TestMethod]
-        public void WeightToHealthVault_Successful()
+        private static Observation GetObservation(string fileName)
         {
-            var json = SampleUtil.GetSampleContent("FhirWeight.json");
+            var json = SampleUtil.GetSampleContent(fileName);
 
             var fhirParser = new FhirJsonParser();
             var observation = fhirParser.Parse<Observation>(json);
-            
+            return observation;
+        }
+
+        [TestMethod]
+        public void WeightToHealthVault_Successful()
+        {
+            var observation = GetObservation("FhirWeight.json");
+
             var weight = observation.ToHealthVault() as Weight;
             Assert.IsNotNull(weight);
             Assert.AreEqual(67, weight.Value.Kilograms);
@@ -35,14 +41,23 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             Assert.AreEqual("kg", weight.Value.DisplayValue.UnitsCode);
         }
 
+        [TestMethod]
+        public void WeightInPoundsToHealthVault_Successful()
+        {
+            var observation = GetObservation("FhirWeightPounds.json");
+
+            var weight = observation.ToHealthVault() as Weight;
+            Assert.IsNotNull(weight);
+            Assert.AreEqual(78.471480010000008, weight.Value.Kilograms);
+            Assert.AreEqual(173, weight.Value.DisplayValue.Value);
+            Assert.AreEqual("lb", weight.Value.DisplayValue.Units);
+            Assert.AreEqual("[lb_av]", weight.Value.DisplayValue.UnitsCode);
+        }
 
         [TestMethod]
         public void BloodGlucoseToHealthVault_Successful()
         {
-            var json = SampleUtil.GetSampleContent("FhirBloodGlucose.json");
-
-            var fhirParser = new FhirJsonParser();
-            var observation = fhirParser.Parse<Observation>(json);
+            var observation = GetObservation("FhirBloodGlucose.json");
 
             var glucose = observation.ToHealthVault() as BloodGlucose;
             Assert.IsNotNull(glucose);
