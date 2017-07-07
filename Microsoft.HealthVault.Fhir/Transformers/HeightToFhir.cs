@@ -6,33 +6,36 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.ItemTypes;
 
-namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
+namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    /// <summary>
-    /// This class is used to define the codeable values related to HealthVault Vital Statistics
-    /// </summary>
-    public static class HealthVaultVitalStatisticsCodes
+    public static partial class ThingBaseToFhir
     {
-        public static readonly string System = VocabularyUris.HealthVaultVocabulariesUri;
-
-        public static readonly Coding BodyWeight = new Coding()
+        // Register the type on the generic ThingToFhir partial class
+        public static Observation ToFhir(this Height height)
         {
-            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "wgt"),
-            Version = "1",
-            System = System,
-            Display = "Body Weight",
-        };
+            return HeightToFhir.ToFhirInternal(height, ThingBaseToFhir.ToFhirInternal(height));
+        }
+    }
 
-        public static readonly Coding BodyHeight = new Coding()
+    /// <summary>
+    /// An extension class that transforms HealthVault height data types into FHIR Observations
+    /// </summary>
+    internal static class HeightToFhir
+    {
+        internal static Observation ToFhirInternal(Height height, Observation observation)
         {
-            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "hgt"),
-            Version = "1",
-            System = System,
-            Display = "Body height",
-        };
+            observation.Category = new System.Collections.Generic.List<CodeableConcept>() { FhirCategories.VitalSigns };
+            observation.Code = HealthVaultVocabularies.BodyHeight;
+
+            var quantity = new Quantity((decimal)height.Value.Meters, "m");
+            observation.Value = quantity;
+            observation.Effective = new FhirDateTime(height.When.ToDateTime());
+
+            return observation;
+        }
     }
 }
