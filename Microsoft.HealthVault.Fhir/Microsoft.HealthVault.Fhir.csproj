@@ -6,8 +6,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\loinc.json" />
+    <None Remove="Data\snomed.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Data\loinc.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\snomed.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Hl7.Fhir.STU3" Version="0.93.4" />
     <PackageReference Include="Microsoft.HealthVault" Version="1.65.20623.2-preview" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="NodaTime" Version="2.0.2" />
   </ItemGroup>
 

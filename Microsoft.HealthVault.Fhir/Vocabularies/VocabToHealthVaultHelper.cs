@@ -7,9 +7,11 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
+using Newtonsoft.Json;
 
 namespace Microsoft.HealthVault.Fhir.Vocabularies
 {
@@ -41,10 +43,11 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
 
         private static Type DetectFromSnomedCd(string code)
         {
-            switch (code.ToLowerInvariant())
+            Dictionary<string, string> snomedCodes = JsonConvert.DeserializeObject<Dictionary<string, string>>(System.IO.File.ReadAllText(@"Data\snomed.json"));
+
+            if (snomedCodes.ContainsKey(code))
             {
-                case "434912009":
-                    return typeof(BloodGlucose);
+                return Type.GetType($"{snomedCodes[code]}, Microsoft.HealthVault");
             }
 
             throw new NotSupportedException("The provided code is not supported");
@@ -78,13 +81,12 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
             throw new NotSupportedException("The provided code is not supported");
         }
         private static Type DetectFromLoincCodes(string code)
-        {            
-            switch (code)
+        {
+            Dictionary<string, string> loincCodes = JsonConvert.DeserializeObject<Dictionary<string, string>>(System.IO.File.ReadAllText(@"Data\loinc.json"));
+
+            if (loincCodes.ContainsKey(code))
             {
-                case "29463-7":
-                    return typeof(Weight);
-                case "15074-8":
-                    return typeof(BloodGlucose);
+                return Type.GetType($"{loincCodes[code]}, Microsoft.HealthVault");
             }
 
             throw new NotSupportedException("The provided code is not supported");
