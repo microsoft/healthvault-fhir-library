@@ -7,12 +7,14 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Linq;
+using System.Reflection;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.Fhir.Units;
 using Microsoft.HealthVault.Fhir.Vocabularies;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
-using UnitsNet;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
@@ -74,30 +76,32 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 if (value.Value.HasValue)
                 {
                     var result = new T();
-
-                    // Convert known units to the standard health vault value units
                     double convertedValue;
-                    switch (value.Code)
+
+                    var unitConversion = UnitResolver.Instance.Units.FirstOrDefault(x => x.Code == value.Code);
+
+                    if (unitConversion != null)
                     {
-                        case "[in_i]":
-                            convertedValue = UnitsNet.Length.FromInches((double)value.Value).Meters;
-                            break;
-                        case "cm":
-                            convertedValue = UnitsNet.Length.FromCentimeters((double)value.Value).Meters;
-                            break;
-                        case "[lb_av]":
-                            convertedValue = UnitsNet.Mass.FromPounds((double)value.Value).Kilograms;
-                            break;
-                        default:
-                            convertedValue = (double)value.Value;
-                            break;
+                        var unitEnum = Enum.Parse(Type.GetType($"UnitsNet.Units.{unitConversion.UnitsNetUnitEnum}, UnitsNet"), unitConversion.UnitsNetSource);
+
+                        var unitType = Type.GetType($"UnitsNet.{unitConversion.UnitsNetType}, UnitsNet");
+
+                        var destinationObject = unitType.GetMethod("From", new[] {typeof(double), unitEnum.GetType()}).Invoke(null, new[] {(double)value.Value, unitEnum});
+                        
+                        convertedValue = (double)destinationObject.GetType().GetProperty(unitConversion.UnitsNetDestination).GetValue(destinationObject);
+                    }
+                    else
+                    {
+                        convertedValue = (double)value.Value;
                     }
 
                     result.Value = convertedValue;
-                    result.DisplayValue = new DisplayValue();
-                    result.DisplayValue.Value = (double)value.Value;
-                    result.DisplayValue.Units = value.Unit;
-                    result.DisplayValue.UnitsCode = value.Code;
+                    result.DisplayValue = new DisplayValue
+                    {
+                        Value = (double)value.Value,
+                        Units = value.Unit,
+                        UnitsCode = value.Code
+                    };
                     return result;
                 }
             }

@@ -1,0 +1,17 @@
+[
+    {
+        "Code": "[in_i]",
+        "UnitsNetType": "Length",
+        "UnitsNetUnitEnum": "LengthUnit",
+        "UnitsNetSource": "Inch",
+        "UnitsNetDestination": "Meters"
+
+    },
+    {
+        "Code": "[lb_av]",
+        "UnitsNetType": "Mass",
+        "UnitsNetUnitEnum": "MassUnit",
+        "UnitsNetSource": "Pound",
+        "UnitsNetDestination": "Kilograms"
+    }
+]
