@@ -51,6 +51,20 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         }
 
         [TestMethod]
+        public void WeightToObservationToHealthVault_Successful()
+        {
+            ThingBase hvWeight = new Weight(new HealthServiceDateTime(), new WeightValue(75.5));
+
+            var observation = hvWeight.ToFhir();
+
+            var weight = observation.ToHealthVault() as Weight;
+            Assert.IsNotNull(weight);
+            Assert.AreEqual(75.5, weight.Value.Kilograms);
+            Assert.AreEqual("kg", weight.Value.DisplayValue.Units);
+            Assert.AreEqual("kg", weight.Value.DisplayValue.UnitsCode);
+        }
+
+        [TestMethod]
         public void BloodGlucoseToHealthVault_Successful()
         {
             var json = SampleUtil.GetSampleContent("FhirBloodGlucose.json");
