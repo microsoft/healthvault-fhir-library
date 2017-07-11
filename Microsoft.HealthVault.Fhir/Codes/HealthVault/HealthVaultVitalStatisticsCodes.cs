@@ -32,7 +32,7 @@ namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
             Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "hgt"),
             Version = "1",
             System = System,
-            Display = "Body height",
+            Display = "Body Height",
         };
     }
 }

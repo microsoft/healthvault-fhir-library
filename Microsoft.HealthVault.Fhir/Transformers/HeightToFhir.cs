@@ -6,6 +6,7 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System.Collections.Generic;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
@@ -28,7 +29,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     {
         internal static Observation ToFhirInternal(Height height, Observation observation)
         {
-            observation.Category = new System.Collections.Generic.List<CodeableConcept>() { FhirCategories.VitalSigns };
+            observation.Category = new List<CodeableConcept>() { FhirCategories.VitalSigns };
             observation.Code = HealthVaultVocabularies.BodyHeight;
 
             var quantity = new Quantity((decimal)height.Value.Meters, "m");

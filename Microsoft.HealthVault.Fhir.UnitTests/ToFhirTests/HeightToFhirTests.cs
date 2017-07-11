@@ -19,7 +19,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
     public class HeightToFhirTests
     {
         [TestMethod]
-        public void HeightToFhir_Successful()
+        public void WhenGivenHealthVaultHeightThenTransformToFhir()
         {
             // ToDo, once deserialization is fixed on SDK, use Deserialize
             ThingBase height = new Height(new HealthServiceDateTime(), new Length(1.6));
@@ -28,10 +28,10 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             Assert.IsNotNull(observation);
             Assert.AreEqual(HealthVaultVocabularies.BodyHeight, observation.Code);
 
-            var value = observation.Value as Quantity;
-            Assert.IsNotNull(value);
-            Assert.AreEqual((decimal)1.6, value.Value);
-            Assert.AreEqual("m", value.Unit);
+            var observationValue = observation.Value as Quantity;
+            Assert.IsNotNull(observationValue);
+            Assert.AreEqual((decimal)1.6, observationValue.Value);
+            Assert.AreEqual("m", observationValue.Unit);
         }
     }
 }
