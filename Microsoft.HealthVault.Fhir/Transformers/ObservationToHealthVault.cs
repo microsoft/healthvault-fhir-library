@@ -76,7 +76,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 return null;
             }
             
-            var unitConversion = UnitResolver.Instance.Units.FirstOrDefault(x => x.Code == value.Code);
+            var unitConversion = UnitResolver.Instance.UnitConversions.FirstOrDefault(x => x.Code == value.Code);
 
             double convertedValue;
             if (unitConversion != null)

@@ -8,11 +8,11 @@ namespace Microsoft.HealthVault.Fhir.Units
     {
         private static UnitResolver _instance;
 
-        public List<UnitConversion> Units { get; set; }
+        public List<UnitConversion> UnitConversions { get; set; }
 
         private UnitResolver()
         {
-            Units = JsonConvert.DeserializeObject<List<UnitConversion>>(File.ReadAllText(@"Data\UnitConversions.json"));
+            UnitConversions = JsonConvert.DeserializeObject<List<UnitConversion>>(File.ReadAllText(@"Data\UnitConversions.json"));
         }
 
         public static UnitResolver Instance
