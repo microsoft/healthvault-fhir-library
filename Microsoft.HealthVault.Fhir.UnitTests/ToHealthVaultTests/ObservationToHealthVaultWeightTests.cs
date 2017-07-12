@@ -42,7 +42,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         }
 
         [TestMethod]
-        public void WeightInPoundsToHealthVault_Successful()
+        public void WhenFhirWeightInLbsTransformed_ThenStoredInKg()
         {
             var observation = GetObservation("FhirWeightPounds.json");
 
@@ -52,6 +52,19 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             Assert.AreEqual(173, weight.Value.DisplayValue.Value);
             Assert.AreEqual("lb", weight.Value.DisplayValue.Units);
             Assert.AreEqual("[lb_av]", weight.Value.DisplayValue.UnitsCode);
+        }
+
+        [TestMethod]
+        public void WhenFhirWeightInGramsTransformed_ThenStoredInKg()
+        {
+            var observation = GetObservation("FhirWeightGrams.json");
+
+            var weight = observation.ToHealthVault() as Weight;
+            Assert.IsNotNull(weight);
+            Assert.AreEqual(75, weight.Value.Kilograms);
+            Assert.AreEqual(75000, weight.Value.DisplayValue.Value);
+            Assert.AreEqual("g", weight.Value.DisplayValue.Units);
+            Assert.AreEqual("g", weight.Value.DisplayValue.UnitsCode);
         }
 
         [TestMethod]

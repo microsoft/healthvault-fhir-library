@@ -1,11 +1,26 @@
 [
     {
+        "Code": "cm",
+        "UnitsNetType": "Length",
+        "UnitsNetUnitEnum": "LengthUnit",
+        "UnitsNetSource": "Centimeter",
+        "UnitsNetDestination": "Meters"
+
+    },
+    {
         "Code": "[in_i]",
         "UnitsNetType": "Length",
         "UnitsNetUnitEnum": "LengthUnit",
         "UnitsNetSource": "Inch",
         "UnitsNetDestination": "Meters"
 
+    },
+    {
+        "Code": "g",
+        "UnitsNetType": "Mass",
+        "UnitsNetUnitEnum": "MassUnit",
+        "UnitsNetSource": "Gram",
+        "UnitsNetDestination": "Kilograms"
     },
     {
         "Code": "[lb_av]",
