@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Microsoft.HealthVault.Fhir.Units
+﻿namespace Microsoft.HealthVault.Fhir.Units
 {
     public class UnitConversion
     {

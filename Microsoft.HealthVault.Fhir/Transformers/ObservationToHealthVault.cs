@@ -71,42 +71,37 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
         internal static T GetThingValueFromQuantity<T>(Quantity value) where T : Measurement<double>, new()
         {
-            if (value != null)
+            if (value?.Value == null)
             {
-                if (value.Value.HasValue)
-                {
-                    var result = new T();
-                    double convertedValue;
+                return null;
+            }
+            
+            var unitConversion = UnitResolver.Instance.Units.FirstOrDefault(x => x.Code == value.Code);
 
-                    var unitConversion = UnitResolver.Instance.Units.FirstOrDefault(x => x.Code == value.Code);
-
-                    if (unitConversion != null)
-                    {
-                        var unitEnum = Enum.Parse(Type.GetType($"UnitsNet.Units.{unitConversion.UnitsNetUnitEnum}, UnitsNet"), unitConversion.UnitsNetSource);
-
-                        var unitType = Type.GetType($"UnitsNet.{unitConversion.UnitsNetType}, UnitsNet");
-
-                        var destinationObject = unitType.GetMethod("From", new[] {typeof(double), unitEnum.GetType()}).Invoke(null, new[] {(double)value.Value, unitEnum});
+            double convertedValue;
+            if (unitConversion != null)
+            {
+                var unitEnum = Enum.Parse(Type.GetType($"UnitsNet.Units.{unitConversion.UnitsNetUnitEnum}, UnitsNet"), unitConversion.UnitsNetSource);
+                var unitType = Type.GetType($"UnitsNet.{unitConversion.UnitsNetType}, UnitsNet");
+                var destinationObject = unitType.GetMethod("From", new[] {typeof(double), unitEnum.GetType()}).Invoke(null, new[] {(double)value.Value, unitEnum});
                         
-                        convertedValue = (double)destinationObject.GetType().GetProperty(unitConversion.UnitsNetDestination).GetValue(destinationObject);
-                    }
-                    else
-                    {
-                        convertedValue = (double)value.Value;
-                    }
-
-                    result.Value = convertedValue;
-                    result.DisplayValue = new DisplayValue
-                    {
-                        Value = (double)value.Value,
-                        Units = value.Unit,
-                        UnitsCode = value.Code
-                    };
-                    return result;
-                }
+                convertedValue = (double)destinationObject.GetType().GetProperty(unitConversion.UnitsNetDestination).GetValue(destinationObject);
+            }
+            else
+            {
+                convertedValue = (double)value.Value;
             }
 
-            return null;
+            return new T
+            {
+                Value = convertedValue,
+                DisplayValue = new DisplayValue
+                {
+                    Value = (double)value.Value,
+                    Units = value.Unit,
+                    UnitsCode = value.Code
+                }
+            };
         }
     
         internal static HealthServiceDateTime GetHealthVaultTimeFromEffectiveDate(Element effectiveDate)
