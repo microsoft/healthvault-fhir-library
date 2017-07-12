@@ -1,6 +1,6 @@
 ﻿namespace Microsoft.HealthVault.Fhir.Units
 {
-    public class UnitConversion
+    internal class UnitConversion
     {
         public string Code { get; set; }
         public string UnitsNetType { get; set; }

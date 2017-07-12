@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Newtonsoft.Json;
 
 namespace Microsoft.HealthVault.Fhir.Units
 {
-    public class UnitResolver
+    internal class UnitResolver
     {
         private static UnitResolver _instance;
 
@@ -14,7 +12,7 @@ namespace Microsoft.HealthVault.Fhir.Units
 
         private UnitResolver()
         {
-            Units= JsonConvert.DeserializeObject<List<UnitConversion>>(File.ReadAllText(@"Data\UnitConversions.json"));
+            Units = JsonConvert.DeserializeObject<List<UnitConversion>>(File.ReadAllText(@"Data\UnitConversions.json"));
         }
 
         public static UnitResolver Instance
