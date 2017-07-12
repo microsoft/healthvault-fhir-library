@@ -19,7 +19,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
     public class HeightToFhirTests
     {
         [TestMethod]
-        public void WhenGivenHealthVaultHeightThenTransformToFhir()
+        public void WhenHeathVaultHeightTransformedToFhir_ThenCodeAndValuesEqual()
         {
             // ToDo, once deserialization is fixed on SDK, use Deserialize
             ThingBase height = new Height(new HealthServiceDateTime(), new Length(1.6));

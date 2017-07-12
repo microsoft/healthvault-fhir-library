@@ -36,7 +36,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         }
 
         [TestMethod]
-        public void WhenGivenFhirHeightThenTransformToHealthVault()
+        public void WhenFhirHeightTransformedToHealthvault_ThenValuesEqual()
         {
             var json = SampleUtil.GetSampleContent("FhirHeight.json");
 
