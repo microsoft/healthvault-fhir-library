@@ -10,7 +10,6 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Hl7.Fhir.Model;
-using Hl7.Fhir.Utility;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Units;
 using Microsoft.HealthVault.Fhir.Vocabularies;
@@ -82,10 +81,19 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             double convertedValue;
             if (unitConversion != null)
             {
-                var unitEnum = Enum.Parse(Type.GetType($"UnitsNet.Units.{unitConversion.UnitsNetUnitEnum}, UnitsNet"), unitConversion.UnitsNetSource);
+                object unitEnum;
+                try
+                {
+                    unitEnum = Enum.Parse(Type.GetType($"UnitsNet.Units.{unitConversion.UnitsNetUnitEnum}, UnitsNet"), unitConversion.UnitsNetSource);
+                }
+                catch (ArgumentNullException e)
+                {
+                    throw new ArgumentNullException("UnitsNetUnitEnum specified not found.", e);
+                }
+                
                 var unitType = Type.GetType($"UnitsNet.{unitConversion.UnitsNetType}, UnitsNet");
-                var destinationObject = unitType.GetMethod("From", new[] {typeof(double), unitEnum.GetType()}).Invoke(null, new[] {(double)quantityValue.Value, unitEnum});
-                        
+                var destinationObject = unitType.GetMethod("From", new[] { typeof(double), unitEnum.GetType() }).Invoke(null, new[] { (double)quantityValue.Value, unitEnum });
+
                 convertedValue = (double)destinationObject.GetType().GetProperty(unitConversion.UnitsNetDestination).GetValue(destinationObject);
             }
             else
