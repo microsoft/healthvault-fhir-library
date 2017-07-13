@@ -41,16 +41,24 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
             throw new NotSupportedException();
         }
 
-        private static Type DetectFromSnomedCd(string code)
-        {
-            Dictionary<string, string> snomedCodes = JsonConvert.DeserializeObject<Dictionary<string, string>>(System.IO.File.ReadAllText(@"Data\snomed.json"));
-
-            if (snomedCodes.ContainsKey(code))
+        private static Type DetectType(Dictionary<string, string> codeDictionary, string code)
+        {            
+            if (codeDictionary != null && codeDictionary.ContainsKey(code))
             {
-                return Type.GetType($"{snomedCodes[code]}, Microsoft.HealthVault");
+                return Type.GetType($"{codeDictionary[code]}, Microsoft.HealthVault");
             }
 
             throw new NotSupportedException("The provided code is not supported");
+        }
+
+        private static Type DetectFromSnomedCd(string code)
+        {
+            return DetectType(VocabToHealthVaultDictionaries.Instance.Snomed, code);
+        }
+
+        private static Type DetectFromLoincCodes(string code)
+        {
+            return DetectType(VocabToHealthVaultDictionaries.Instance.Loinc, code);
         }
 
         private static Type DetectFromHealthVaultCode(string code)
@@ -76,17 +84,6 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
                         return typeof(BloodGlucose);
                 }
 
-            }
-
-            throw new NotSupportedException("The provided code is not supported");
-        }
-        private static Type DetectFromLoincCodes(string code)
-        {
-            Dictionary<string, string> loincCodes = JsonConvert.DeserializeObject<Dictionary<string, string>>(System.IO.File.ReadAllText(@"Data\loinc.json"));
-
-            if (loincCodes.ContainsKey(code))
-            {
-                return Type.GetType($"{loincCodes[code]}, Microsoft.HealthVault");
             }
 
             throw new NotSupportedException("The provided code is not supported");
