@@ -8,7 +8,6 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using Newtonsoft.Json;
 
 namespace Microsoft.HealthVault.Fhir.Vocabularies
@@ -23,8 +22,8 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
 
         private VocabToHealthVaultDictionaries()
         {
-            Snomed = JsonConvert.DeserializeObject<Dictionary<string, string>>(GetMapping(@"snomed.json"));
-            Loinc = JsonConvert.DeserializeObject<Dictionary<string, string>>(GetMapping(@"loinc.json"));
+            Snomed = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(@"Data\snomed.json"));
+            Loinc = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(@"Data\loinc.json"));
         }
 
         public static VocabToHealthVaultDictionaries Instance
@@ -44,18 +43,6 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
 
                 return s_instance;
             }
-        }
-
-        public static string GetMapping(string mappingFileName)
-        {            
-            string resourceName = $"Microsoft.HealthVault.Fhir.Data.{mappingFileName}";            
-            using (Stream stream = typeof(VocabToHealthVaultDictionaries).GetTypeInfo().Assembly.GetManifestResourceStream(resourceName))
-            {
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-        }
+        }        
     }
 }
