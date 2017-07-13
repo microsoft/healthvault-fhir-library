@@ -20,17 +20,8 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
     [TestClass]
     public class ObservationToHealthVaultWeightTests
     {
-        private static Observation GetObservation(string fileName)
-        {
-            var json = SampleUtil.GetSampleContent(fileName);
-
-            var fhirParser = new FhirJsonParser();
-            var observation = fhirParser.Parse<Observation>(json);
-            return observation;
-        }
-
         [TestMethod]
-        public void WeightToHealthVault_Successful()
+        public void WhenFhirWeightTransformed_ThenValuesEqual()
         {
             var observation = GetObservation("FhirWeight.json");
 
@@ -115,6 +106,15 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             Assert.IsTrue(list[0] is BloodGlucose);
             Assert.AreEqual(Weight.TypeId, list[1].TypeId);
             Assert.IsTrue(list[1] is Weight);        
+        }
+
+        private static Observation GetObservation(string fileName)
+        {
+            var json = SampleUtil.GetSampleContent(fileName);
+
+            var fhirParser = new FhirJsonParser();
+            var observation = fhirParser.Parse<Observation>(json);
+            return observation;
         }
     }
 }

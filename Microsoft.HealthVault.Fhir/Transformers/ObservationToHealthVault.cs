@@ -10,6 +10,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Hl7.Fhir.Model;
+using Hl7.Fhir.Utility;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Units;
 using Microsoft.HealthVault.Fhir.Vocabularies;
@@ -69,27 +70,27 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             return baseThing;
         }
 
-        internal static T GetThingValueFromQuantity<T>(Quantity value) where T : Measurement<double>, new()
+        internal static T GetThingValueFromQuantity<T>(Quantity quantityValue) where T : Measurement<double>, new()
         {
-            if (value?.Value == null)
+            if (quantityValue?.Value == null)
             {
                 return null;
             }
             
-            var unitConversion = UnitResolver.Instance.UnitConversions.FirstOrDefault(x => x.Code == value.Code);
+            var unitConversion = UnitResolver.Instance.UnitConversions.FirstOrDefault(x => x.Code.Equals(quantityValue.Code, StringComparison.Ordinal));
 
             double convertedValue;
             if (unitConversion != null)
             {
                 var unitEnum = Enum.Parse(Type.GetType($"UnitsNet.Units.{unitConversion.UnitsNetUnitEnum}, UnitsNet"), unitConversion.UnitsNetSource);
                 var unitType = Type.GetType($"UnitsNet.{unitConversion.UnitsNetType}, UnitsNet");
-                var destinationObject = unitType.GetMethod("From", new[] {typeof(double), unitEnum.GetType()}).Invoke(null, new[] {(double)value.Value, unitEnum});
+                var destinationObject = unitType.GetMethod("From", new[] {typeof(double), unitEnum.GetType()}).Invoke(null, new[] {(double)quantityValue.Value, unitEnum});
                         
                 convertedValue = (double)destinationObject.GetType().GetProperty(unitConversion.UnitsNetDestination).GetValue(destinationObject);
             }
             else
             {
-                convertedValue = (double)value.Value;
+                convertedValue = (double)quantityValue.Value;
             }
 
             return new T
@@ -97,9 +98,9 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 Value = convertedValue,
                 DisplayValue = new DisplayValue
                 {
-                    Value = (double)value.Value,
-                    Units = value.Unit,
-                    UnitsCode = value.Code
+                    Value = (double)quantityValue.Value,
+                    Units = quantityValue.Unit,
+                    UnitsCode = quantityValue.Code
                 }
             };
         }
