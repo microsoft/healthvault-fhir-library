@@ -8,30 +8,31 @@
 
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.Fhir.Transformers;
+using Microsoft.HealthVault.ItemTypes;
+using Microsoft.HealthVault.Thing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
+namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
 {
-    /// <summary>
-    /// This class is used to define the codeable values related to HealthVault Vital Statistics
-    /// </summary>
-    public static class HealthVaultVitalStatisticsCodes
+    [TestClass]
+    public class HeartRateToFhirTests
     {
-        public static readonly string System = VocabularyUris.HealthVaultVocabulariesUri;
-
-        public static readonly Coding BodyWeight = new Coding()
+        [TestMethod]
+        public void WhenHealthVaultHeartRateTransformedToFhir_ThenCodeAndValuesEqual()
         {
-            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "wgt"),
-            Version = "1",
-            System = System,
-            Display = "Body Weight",
-        };
+            // ToDo, once deserialization is fixed on SDK, use Deserialize
 
-        public static readonly Coding HeartRate = new Coding
-        {
-            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "pls"),
-            Version = "1",
-            System = System,
-            Display = "Heart Rate"
-        };
+            ThingBase heartRate = new HeartRate(new HealthServiceDateTime(), 65);
+
+            var observation = heartRate.ToFhir();
+            Assert.IsNotNull(observation);
+            Assert.AreEqual(HealthVaultVocabularies.HeartRate, observation.Code);
+
+            var value = observation.Value as Quantity;
+            Assert.IsNotNull(value);
+            Assert.AreEqual(65, value.Value);
+            Assert.AreEqual("/min", value.Unit);
+        }
     }
 }

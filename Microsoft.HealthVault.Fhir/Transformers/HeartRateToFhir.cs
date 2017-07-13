@@ -6,32 +6,37 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System.Collections.Generic;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.ItemTypes;
 
-namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
+namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    /// <summary>
-    /// This class is used to define the codeable values related to HealthVault Vital Statistics
-    /// </summary>
-    public static class HealthVaultVitalStatisticsCodes
+    public static partial class ThingBaseToFhir
     {
-        public static readonly string System = VocabularyUris.HealthVaultVocabulariesUri;
-
-        public static readonly Coding BodyWeight = new Coding()
+        // Register the type on the generic ThingToFhir partial class
+        public static Observation ToFhir(this HeartRate heartRate)
         {
-            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "wgt"),
-            Version = "1",
-            System = System,
-            Display = "Body Weight",
-        };
+            return HeartRateToFhir.ToFhirInternal(heartRate, ToFhirInternal(heartRate));
+        }
+    }
 
-        public static readonly Coding HeartRate = new Coding
+    /// <summary>
+    /// An extension class that transforms HealthVault heartRate data types into FHIR Observations
+    /// </summary>
+    internal static class HeartRateToFhir
+    {
+        internal static Observation ToFhirInternal(HeartRate heartRate, Observation observation)
         {
-            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "pls"),
-            Version = "1",
-            System = System,
-            Display = "Heart Rate"
-        };
+            observation.Category = new List<CodeableConcept> { FhirCategories.VitalSigns };
+            observation.Code = HealthVaultVocabularies.HeartRate;
+
+            var quantity = new Quantity(heartRate.Value, "/min");
+            observation.Value = quantity;
+            observation.Effective = new FhirDateTime(heartRate.When.ToDateTime());
+
+            return observation;
+        }
     }
 }
