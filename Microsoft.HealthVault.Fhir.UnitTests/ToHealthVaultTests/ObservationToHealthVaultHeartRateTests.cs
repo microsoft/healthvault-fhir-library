@@ -7,37 +7,28 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Constants;
-using Microsoft.HealthVault.Fhir.Vocabularies;
+using Hl7.Fhir.Serialization;
+using Microsoft.HealthVault.Fhir.Transformers;
+using Microsoft.HealthVault.Fhir.UnitTests.Samples;
 using Microsoft.HealthVault.ItemTypes;
-using Microsoft.HealthVault.Thing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.HealthVault.Fhir.Transformers
+namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
 {
-    public static partial class ThingBaseToFhir
+    [TestClass]
+    public class ObservationToHealthVaultHeartRateTests
     {
-        // Register the type on the generic ThingToFhir partial class
-        public static Observation ToFhir(this Weight weight)
+        [TestMethod]
+        public void WhenFhirHeartRateTransformedToHealthVault_ThenValuesEqual()
         {
-            return WeightToFhir.ToFhirInternal(weight, ThingBaseToFhir.ToFhirInternal(weight));
-        }
-    }
+            var json = SampleUtil.GetSampleContent("FhirHeartRate.json");
 
-    /// <summary>
-    /// An extension class that transforms HealthVault weight data types into FHIR Observations
-    /// </summary>
-    internal static class WeightToFhir
-    {
-        internal static Observation ToFhirInternal(Weight weight, Observation observation)
-        {
-            observation.Category = new System.Collections.Generic.List<CodeableConcept> { FhirCategories.VitalSigns };
-            observation.Code = HealthVaultVocabularies.BodyWeight;
+            var fhirParser = new FhirJsonParser();
+            var observation = fhirParser.Parse<Observation>(json);
 
-            var quantity = new Quantity((decimal)weight.Value.Kilograms, "kg");
-            observation.Value = quantity;
-            observation.Effective = new FhirDateTime(weight.When.ToDateTime());
-
-            return observation;
+            var heartRate = observation.ToHealthVault() as HeartRate;
+            Assert.IsNotNull(heartRate);
+            Assert.AreEqual(44, heartRate.Value);
         }
     }
 }

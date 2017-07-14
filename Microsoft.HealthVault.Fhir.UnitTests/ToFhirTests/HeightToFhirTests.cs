@@ -8,36 +8,30 @@
 
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
-using Microsoft.HealthVault.Fhir.Vocabularies;
+using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.HealthVault.Fhir.Transformers
+namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
 {
-    public static partial class ThingBaseToFhir
+    [TestClass]
+    public class HeightToFhirTests
     {
-        // Register the type on the generic ThingToFhir partial class
-        public static Observation ToFhir(this Weight weight)
+        [TestMethod]
+        public void WhenHeathVaultHeightTransformedToFhir_ThenCodeAndValuesEqual()
         {
-            return WeightToFhir.ToFhirInternal(weight, ThingBaseToFhir.ToFhirInternal(weight));
-        }
-    }
+            // ToDo, once deserialization is fixed on SDK, use Deserialize
+            ThingBase height = new Height(new HealthServiceDateTime(), new Length(1.6));
 
-    /// <summary>
-    /// An extension class that transforms HealthVault weight data types into FHIR Observations
-    /// </summary>
-    internal static class WeightToFhir
-    {
-        internal static Observation ToFhirInternal(Weight weight, Observation observation)
-        {
-            observation.Category = new System.Collections.Generic.List<CodeableConcept> { FhirCategories.VitalSigns };
-            observation.Code = HealthVaultVocabularies.BodyWeight;
+            var observation = height.ToFhir();
+            Assert.IsNotNull(observation);
+            Assert.AreEqual(HealthVaultVocabularies.BodyHeight, observation.Code);
 
-            var quantity = new Quantity((decimal)weight.Value.Kilograms, "kg");
-            observation.Value = quantity;
-            observation.Effective = new FhirDateTime(weight.When.ToDateTime());
-
-            return observation;
+            var observationValue = observation.Value as Quantity;
+            Assert.IsNotNull(observationValue);
+            Assert.AreEqual((decimal)1.6, observationValue.Value);
+            Assert.AreEqual("m", observationValue.Unit);
         }
     }
 }

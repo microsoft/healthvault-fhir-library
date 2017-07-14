@@ -33,6 +33,21 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         }
 
         [TestMethod]
+        public void WhenFhirHeightTransformedToHealthvault_ThenValuesEqual()
+        {
+            var json = SampleUtil.GetSampleContent("FhirHeight.json");
+
+            var fhirParser = new FhirJsonParser();
+            var observation = fhirParser.Parse<Observation>(json);
+
+            var height = observation.ToHealthVault() as Height;
+            Assert.IsNotNull(height);
+            Assert.AreEqual(1.73, height.Value.Meters);
+            Assert.AreEqual("m", height.Value.DisplayValue.Units);
+            Assert.AreEqual("m", height.Value.DisplayValue.UnitsCode);
+        }
+
+        [TestMethod]
         public void WhenFhirWeightInLbsTransformed_ThenStoredInKg()
         {
             var observation = GetObservation("FhirWeightPounds.json");
@@ -92,7 +107,8 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             var samples = new List<string>()
             {
                 SampleUtil.GetSampleContent("FhirBloodGlucose.json"),
-                SampleUtil.GetSampleContent("FhirWeight.json")
+                SampleUtil.GetSampleContent("FhirWeight.json"),
+                SampleUtil.GetSampleContent("FhirHeight.json"),
             };
 
             var list = new List<ThingBase>();
@@ -101,11 +117,16 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
                 list.Add(fhirParse.Parse<Observation>(sample).ToHealthVault());
             }
 
-            Assert.AreEqual(2, list.Count);
+            Assert.AreEqual(3, list.Count);
+
             Assert.AreEqual(BloodGlucose.TypeId, list[0].TypeId);
             Assert.IsTrue(list[0] is BloodGlucose);
+
             Assert.AreEqual(Weight.TypeId, list[1].TypeId);
-            Assert.IsTrue(list[1] is Weight);        
+            Assert.IsTrue(list[1] is Weight);
+
+            Assert.AreEqual(Height.TypeId, list[2].TypeId);
+            Assert.IsTrue(list[2] is Height);
         }
 
         private static Observation GetObservation(string fileName)

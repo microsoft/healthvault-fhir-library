@@ -6,38 +6,28 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Constants;
-using Microsoft.HealthVault.Fhir.Vocabularies;
 using Microsoft.HealthVault.ItemTypes;
-using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    public static partial class ThingBaseToFhir
+    internal static class ObservationToHeartRate
     {
-        // Register the type on the generic ThingToFhir partial class
-        public static Observation ToFhir(this Weight weight)
+        internal static HeartRate ToHeartRate(this Observation observation)
         {
-            return WeightToFhir.ToFhirInternal(weight, ThingBaseToFhir.ToFhirInternal(weight));
-        }
-    }
+            var heartRate = observation.ToThingBase<ItemTypes.HeartRate>();
 
-    /// <summary>
-    /// An extension class that transforms HealthVault weight data types into FHIR Observations
-    /// </summary>
-    internal static class WeightToFhir
-    {
-        internal static Observation ToFhirInternal(Weight weight, Observation observation)
-        {
-            observation.Category = new System.Collections.Generic.List<CodeableConcept> { FhirCategories.VitalSigns };
-            observation.Code = HealthVaultVocabularies.BodyWeight;
+            var observationValue = observation.Value as Quantity;
+            if (observationValue?.Value == null)
+            {
+                throw new ArgumentException("Value quantity must have a value.");
+            }
+            
+            heartRate.Value = (int)observationValue.Value.Value;
+            heartRate.When = ObservationToHealthVault.GetHealthVaultTimeFromEffectiveDate(observation.Effective);
 
-            var quantity = new Quantity((decimal)weight.Value.Kilograms, "kg");
-            observation.Value = quantity;
-            observation.Effective = new FhirDateTime(weight.When.ToDateTime());
-
-            return observation;
+            return heartRate;
         }
     }
 }
