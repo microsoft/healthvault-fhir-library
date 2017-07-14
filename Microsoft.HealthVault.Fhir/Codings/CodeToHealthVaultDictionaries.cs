@@ -11,33 +11,33 @@ using System.IO;
 using System.Reflection;
 using Newtonsoft.Json;
 
-namespace Microsoft.HealthVault.Fhir.Vocabularies
+namespace Microsoft.HealthVault.Fhir.Codings
 {
-    internal class VocabToHealthVaultDictionaries
+    internal class CodeToHealthVaultDictionaries
     {
-        private static VocabToHealthVaultDictionaries s_instance;
-        private static object _lockInstance = new object();
+        private static CodeToHealthVaultDictionaries s_instance;
+        private static object s_lockInstance = new object();
 
         internal Dictionary<string, string> Snomed { private set; get; }
         internal Dictionary<string, string> Loinc { private set; get; }
 
-        private VocabToHealthVaultDictionaries()
+        private CodeToHealthVaultDictionaries()
         {
             Snomed = JsonConvert.DeserializeObject<Dictionary<string, string>>(GetMapping(@"snomed.json"));
             Loinc = JsonConvert.DeserializeObject<Dictionary<string, string>>(GetMapping(@"loinc.json"));
         }
 
-        public static VocabToHealthVaultDictionaries Instance
+        public static CodeToHealthVaultDictionaries Instance
         {
             get
             {
                 if (s_instance == null)
                 {
-                    lock (_lockInstance)
+                    lock (s_lockInstance)
                     {
                         if (s_instance == null)
                         {
-                            s_instance = new VocabToHealthVaultDictionaries();
+                            s_instance = new CodeToHealthVaultDictionaries();
                         }
                     }
                 }
@@ -49,7 +49,7 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
         public static string GetMapping(string mappingFileName)
         {            
             string resourceName = $"Microsoft.HealthVault.Fhir.Data.{mappingFileName}";            
-            using (Stream stream = typeof(VocabToHealthVaultDictionaries).GetTypeInfo().Assembly.GetManifestResourceStream(resourceName))
+            using (Stream stream = typeof(CodeToHealthVaultDictionaries).GetTypeInfo().Assembly.GetManifestResourceStream(resourceName))
             {
                 using (StreamReader reader = new StreamReader(stream))
                 {
