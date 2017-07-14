@@ -146,6 +146,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 return observation.ToHeartRate();
             }
 
+            if (type == typeof(BloodPressure))
+            {
+                return observation.ToBloodPressure();
+            }
+
             return null;
         }
     }

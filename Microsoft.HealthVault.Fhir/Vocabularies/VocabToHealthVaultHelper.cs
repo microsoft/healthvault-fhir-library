@@ -81,6 +81,9 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
                                 return typeof(Height);
                             case "pls":
                                 return typeof(HeartRate);
+                            case "bpd":
+                            case "bps":
+                                return typeof(BloodPressure);
                         }
                         break;
                     case HealthVaultVocabularies.BloodGlucoseMeasurementContext:

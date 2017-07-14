@@ -34,7 +34,7 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string ReadingNormalcyExtensionName = BaseUri + "blood-glucose/reading-normalcy";
         public const string IsControlTestExtensionName = BaseUri + "blood-glucose/is-control-test";
 
-        public const string IrregularHeartBeatExtensionName = BaseUri + "vital-signs/bloodpressure/irregular-heartbeat";
+        public const string IrregularHeartBeatExtensionName = BaseUri + "vital-signs/blood-pressure/irregular-heartbeat";
      
         public static CodeableConcept BodyWeight = new CodeableConcept()
         {
