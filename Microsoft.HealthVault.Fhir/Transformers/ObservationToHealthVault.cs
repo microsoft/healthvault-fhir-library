@@ -130,6 +130,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 return observation.ToHeight();
             }
 
+            if (type == typeof(HeartRate))
+            {
+                return observation.ToHeartRate();
+            }
+
             return null;
         }
     }

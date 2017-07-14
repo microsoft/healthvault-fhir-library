@@ -70,6 +70,8 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
                                 return typeof(Weight);
                             case "hgt":
                                 return typeof(Height);
+                            case "pls":
+                                return typeof(HeartRate);
                         }
                         break;
                     case HealthVaultVocabularies.BloodGlucoseMeasurementContext:
@@ -91,6 +93,8 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
                     return typeof(BloodGlucose);
                 case "8302-2":
                     return typeof(Height);
+                case "8867-4":
+                    return typeof(HeartRate);
             }
 
             throw new NotSupportedException("The provided code is not supported");
