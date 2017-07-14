@@ -125,6 +125,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 return observation.ToBloodGlucose();
             }
 
+            if (type == typeof(VitalSigns))
+            {
+                return observation.ToVitalSigns();
+            }
+
             return null;
         }
     }

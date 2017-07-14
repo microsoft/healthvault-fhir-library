@@ -6,32 +6,31 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Codes.HealthVault;
 using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.ItemTypes;
 
-namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
+namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    /// <summary>
-    /// This class is used to define the codeable values related to HealthVault Vital Statistics
-    /// </summary>
-    public static class HealthVaultVitalStatisticsCodes
+    internal static class ObservationToVitalSigns
     {
-        public static readonly string System = VocabularyUris.HealthVaultVocabulariesUri;
-
-        public static readonly Coding BodyWeight = new Coding()
+        internal static VitalSigns ToVitalSigns(this Observation observation)
         {
-            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "wgt"),
-            Version = "1",
-            System = System,
-            Display = "Body Weight",
-        };
+            var vitalSigns = observation.ToThingBase<ItemTypes.VitalSigns>();
 
-        public static readonly Coding BodyTemperature = new Coding
-        {
-            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "tmp"),
-            Version = "1",
-            System = System,
-            Display = "Body Temperature",
-        };
+            var observationValue = observation.Value as Quantity;
+            var vitalSignResult = new VitalSignsResultType();
+            vitalSignResult.Value = (double?) observationValue.Value;
+            vitalSignResult.Unit = new CodableValue("Celcius", new CodedValue("Cel", "Celcius"));
+            CodableValue value = new CodableValue("Temperature", new CodedValue("Tmp", "vital-statistics", "wc", "1") );
+            vitalSignResult.Title = value;
+
+            vitalSigns.VitalSignsResults.Add(vitalSignResult);
+            vitalSigns.When = ObservationToHealthVault.GetHealthVaultTimeFromEffectiveDate(observation.Effective);
+
+            return vitalSigns;
+        }
     }
 }

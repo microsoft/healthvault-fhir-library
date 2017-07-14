@@ -49,6 +49,20 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             Assert.AreEqual("kg", weight.Value.DisplayValue.UnitsCode);
         }
 
+        [TestMethod]
+        public void GivenTemperatureTransformedToHealthVault_ThenValuesEqual()
+        {
+            var json = SampleUtil.GetSampleContent("FhirBodyTemperature.json");
+
+            var fhirParser = new FhirJsonParser();
+            var observation = fhirParser.Parse<Observation>(json);
+
+            var vitalSigns = observation.ToHealthVault() as VitalSigns;
+            Assert.IsNotNull(vitalSigns);
+            Assert.AreEqual(1, vitalSigns.VitalSignsResults.Count);
+            Assert.AreEqual(36.5, vitalSigns.VitalSignsResults[0].Value);
+            Assert.AreEqual("Celcius", vitalSigns.VitalSignsResults[0].Unit.Text);
+        }
 
         [TestMethod]
         public void BloodGlucoseToHealthVault_Successful()

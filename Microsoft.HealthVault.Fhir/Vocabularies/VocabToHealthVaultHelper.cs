@@ -85,6 +85,8 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
                     return typeof(Weight);
                 case "15074-8":
                     return typeof(BloodGlucose);
+                case "8310-5":
+                    return typeof(VitalSigns);
             }
 
             throw new NotSupportedException("The provided code is not supported");
