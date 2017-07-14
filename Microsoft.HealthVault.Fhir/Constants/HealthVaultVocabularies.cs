@@ -22,19 +22,32 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string VitalStatistics = "vital-statistics";
         public const string BloodGlucoseMeasurementContext = "glucose-measurement-context";
         public const string BloodGlucoseMeasurementType = "glucose-measurement-type";
-        public const string OutsideOperatingTemperature = "outside-operating-temperature";
-        public const string ReadingNormalcy = "reading-normalcy";
-        public const string IsControlTest = "is-control-test";
-
+        
         public const string Fhir = "fhir";
         public const string Wc = "wc";
 
-        public const string StateFhirExtensionName = "http://healthvault.com/fhir-extensions/thing-state";
-        public const string FlagsFhirExtensionName = "http://healthvault.com/fhir-extensions/thing-flags";
+        public const string BaseUri = "http://healthvault.com/";
+        public const string StateFhirExtensionName = BaseUri + "fhir-extensions/thing-state";
+        public const string FlagsFhirExtensionName = BaseUri + "fhir-extensions/thing-flags";
 
+        public const string OutsideOperatingTemperatureExtensionName = BaseUri + "blood-glucose/outside-operating-temperature";
+        public const string ReadingNormalcyExtensionName = BaseUri + "blood-glucose/reading-normalcy";
+        public const string IsControlTestExtensionName = BaseUri + "blood-glucose/is-control-test";
+
+        public const string IrregularHeartBeatExtensionName = BaseUri + "vital-signs/bloodpressure/irregular-heartbeat";
+     
         public static CodeableConcept BodyWeight = new CodeableConcept()
         {
             Coding = new List<Coding>() { HealthVaultVitalStatisticsCodes.BodyWeight }
+        };
+
+        public static CodeableConcept BloodPressure = new CodeableConcept
+        {
+            Coding = new List<Coding>
+            {
+                HealthVaultVitalStatisticsCodes.BloodPressureSystolic,
+                HealthVaultVitalStatisticsCodes.BloodPressureDiastolic
+            }
         };
     }
 }
