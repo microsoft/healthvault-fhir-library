@@ -9,7 +9,7 @@
 using System;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
-using Microsoft.HealthVault.Fhir.Vocabularies;
+using Microsoft.HealthVault.Fhir.Codings;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
 
@@ -35,7 +35,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         /// <returns>The HealthVault thing</returns>
         public static ThingBase ToHealthVault(this Observation observation)
         {
-            return observation.ToHealthVault(VocabToHealthVaultHelper.DetectHealthVaultTypeFromObservation(observation));
+            return observation.ToHealthVault(CodeToHealthVaultHelper.DetectHealthVaultTypeFromObservation(observation));
         }
 
         internal static T ToThingBase<T>(this Observation observation) where T : ThingBase, new() {
