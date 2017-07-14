@@ -30,7 +30,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     {
         internal static Observation ToFhirInternal(Weight weight, Observation observation)
         {
-            observation.Category = new System.Collections.Generic.List<CodeableConcept>() { FhirCategories.VitalSigns };
+            observation.Category = new System.Collections.Generic.List<CodeableConcept> { FhirCategories.VitalSigns };
             observation.Code = HealthVaultVocabularies.BodyWeight;
 
             var quantity = new Quantity((decimal)weight.Value.Kilograms, "kg");

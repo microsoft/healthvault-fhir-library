@@ -6,33 +6,32 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.Fhir.Transformers;
+using Microsoft.HealthVault.ItemTypes;
+using Microsoft.HealthVault.Thing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
+namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
 {
-    /// <summary>
-    /// This class is used to define the codeable values related to HealthVault Vital Statistics
-    /// </summary>
-    public static class HealthVaultVitalStatisticsCodes
+    [TestClass]
+    public class HeightToFhirTests
     {
-        public static readonly string System = VocabularyUris.HealthVaultVocabulariesUri;
-
-        public static readonly Coding BodyWeight = new Coding()
+        [TestMethod]
+        public void WhenHeathVaultHeightTransformedToFhir_ThenCodeAndValuesEqual()
         {
-            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "wgt"),
-            Version = "1",
-            System = System,
-            Display = "Body Weight",
-        };
+            // ToDo, once deserialization is fixed on SDK, use Deserialize
+            ThingBase height = new Height(new HealthServiceDateTime(), new Length(1.6));
 
-        public static readonly Coding BodyHeight = new Coding()
-        {
-            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "hgt"),
-            Version = "1",
-            System = System,
-            Display = "Body Height",
-        };
+            var observation = height.ToFhir();
+            Assert.IsNotNull(observation);
+            Assert.AreEqual(HealthVaultVocabularies.BodyHeight, observation.Code);
+
+            var observationValue = observation.Value as Quantity;
+            Assert.IsNotNull(observationValue);
+            Assert.AreEqual((decimal)1.6, observationValue.Value);
+            Assert.AreEqual("m", observationValue.Unit);
+        }
     }
 }
