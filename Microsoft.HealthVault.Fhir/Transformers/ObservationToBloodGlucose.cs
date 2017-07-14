@@ -22,6 +22,14 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             bloodGlucose.Value = ObservationToHealthVault.GetThingValueFromQuantity<BloodGlucoseMeasurement>(observation.Value as Quantity);
             bloodGlucose.When = ObservationToHealthVault.GetHealthVaultTimeFromEffectiveDate(observation.Effective);
 
+            bloodGlucose.OutsideOperatingTemperature = observation.GetBoolExtension(HealthVaultVocabularies.OutsideOperatingTemperatureExtensionName);
+            bloodGlucose.IsControlTest = observation.GetBoolExtension(HealthVaultVocabularies.IsControlTestExtensionName);
+
+            Normalcy normalcy;
+            if (Enum.TryParse<Normalcy>(observation.GetStringExtension(HealthVaultVocabularies.ReadingNormalcyExtensionName), out normalcy)){
+                bloodGlucose.ReadingNormalcy = normalcy;
+            }
+            
             if (observation.Code != null && observation.Code.Coding != null)
             {
                 foreach (var code in observation.Code.Coding)
@@ -47,27 +55,6 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                                     vocabCode, 
                                     vocabName, 
                                     HealthVaultVocabularies.Wc, code.Version);
-                                break;
-                            case HealthVaultVocabularies.IsControlTest:
-                                bool isControlTest = false;
-                                if (bool.TryParse(vocabCode, out isControlTest))
-                                {
-                                    bloodGlucose.IsControlTest = isControlTest;
-                                }
-                                break;
-                            case HealthVaultVocabularies.OutsideOperatingTemperature:
-                                bool outsideTemp = false;
-                                if (bool.TryParse(vocabCode, out outsideTemp))
-                                {
-                                    bloodGlucose.OutsideOperatingTemperature = outsideTemp;
-                                }
-                                break;
-                            case HealthVaultVocabularies.ReadingNormalcy:
-                                Normalcy normalcy = Normalcy.Unknown;
-                                if (Enum.TryParse<Normalcy>(vocabCode, out normalcy))
-                                {
-                                    bloodGlucose.ReadingNormalcy = normalcy;
-                                }
                                 break;
                         }
                     }

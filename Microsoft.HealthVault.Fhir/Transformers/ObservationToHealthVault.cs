@@ -85,7 +85,18 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             return null;
         }
-    
+
+        internal static double? GetValueFromQuantity(Quantity value)
+        {
+            // TODO: detect the units from the code (value.Unit)
+            if (value != null && value.Value.HasValue)
+            {
+                return (double)value.Value;                
+            }
+
+            return null;
+        }
+
         internal static HealthServiceDateTime GetHealthVaultTimeFromEffectiveDate(Element effectiveDate)
         {
             FhirDateTime dateTime = null;
