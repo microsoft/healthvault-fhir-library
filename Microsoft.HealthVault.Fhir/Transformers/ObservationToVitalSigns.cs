@@ -23,8 +23,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             var observationValue = observation.Value as Quantity;
             var vitalSignResult = new VitalSignsResultType();
             vitalSignResult.Value = (double?) observationValue.Value;
-            vitalSignResult.Unit = new CodableValue("Celcius", new CodedValue("Cel", "Celcius"));
-            CodableValue value = new CodableValue("Temperature", new CodedValue("Tmp", "vital-statistics", "wc", "1") );
+            vitalSignResult.Unit = new CodableValue("celcius", new CodedValue("Cel", "lab-results-units", "wc", "1"));
+            CodableValue value = new CodableValue("Temperature", new CodedValue("Tmp", "vital-statistics", "wc", "1"));
             vitalSignResult.Title = value;
 
             vitalSigns.VitalSignsResults.Add(vitalSignResult);

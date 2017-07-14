@@ -6,38 +6,61 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System.Collections.Generic;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
-using Microsoft.HealthVault.Fhir.Vocabularies;
 using Microsoft.HealthVault.ItemTypes;
-using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
     public static partial class ThingBaseToFhir
     {
         // Register the type on the generic ThingToFhir partial class
-        public static Observation ToFhir(this VitalSigns vitalSigns)
+        public static List<Observation> ToFhir(this VitalSigns vitalSigns)
         {
-            return VitalSignsToFhhir.ToFhirInternal(vitalSigns, ThingBaseToFhir.ToFhirInternal(vitalSigns));
+            return VitalSignsToFhir.ToFhirInternal(vitalSigns);
         }
     }
 
     /// <summary>
     /// An extension class that transforms HealthVault vitalSigns data types into FHIR Observations
     /// </summary>
-    internal static class VitalSignsToFhhir
+    internal static class VitalSignsToFhir
     {
-        internal static Observation ToFhirInternal(VitalSigns vitalSigns, Observation observation)
+        internal static List<Observation> ToFhirInternal(VitalSigns vitalSigns)
         {
-            observation.Category = new System.Collections.Generic.List<CodeableConcept>() { FhirCategories.VitalSigns };
-            observation.Code = HealthVaultVocabularies.BodyTemperature;
+            var baseObservation = ThingBaseToFhir.ToFhirInternal(vitalSigns);
 
-            var quantity = new Quantity((decimal)vitalSigns.VitalSignsResults[0].Value, "C");
-            observation.Value = quantity;
-            observation.Effective = new FhirDateTime(vitalSigns.When.ToDateTime());
+            var observations = new List<Observation>();
 
-            return observation;
+            foreach (var vitalSignResult in vitalSigns.VitalSignsResults)
+            {
+                switch (vitalSignResult.Title.Text)
+                {
+                    case "Temperature":
+                        var temperatureObservation = new Observation();
+                        baseObservation.CopyTo(temperatureObservation);
+
+                        temperatureObservation.Category = new List<CodeableConcept>
+                        {
+                            FhirCategories.VitalSigns
+                        };
+                        temperatureObservation.Code = HealthVaultVocabularies.BodyTemperature;
+
+                        if (vitalSignResult.Value.HasValue)
+                        { 
+                            var quantity = new Quantity((decimal)vitalSignResult.Value, "C");
+                            temperatureObservation.Value = quantity;
+                        }
+
+                        temperatureObservation.Effective = new FhirDateTime(vitalSigns.When.ToDateTime());
+
+                        observations.Add(temperatureObservation);
+                        break;
+                }
+            }
+
+            return observations;
         }
     }
 }

@@ -61,7 +61,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             Assert.IsNotNull(vitalSigns);
             Assert.AreEqual(1, vitalSigns.VitalSignsResults.Count);
             Assert.AreEqual(36.5, vitalSigns.VitalSignsResults[0].Value);
-            Assert.AreEqual("Celcius", vitalSigns.VitalSignsResults[0].Unit.Text);
+            Assert.AreEqual("celcius", vitalSigns.VitalSignsResults[0].Unit.Text);
         }
 
         [TestMethod]

@@ -29,14 +29,16 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
         {
             // ToDo, once deserialization is fixed on SDK, use Deserialize
             var vitalSigns = new VitalSigns(new HealthServiceDateTime());
-            vitalSigns.VitalSignsResults.Add(new VitalSignsResultType(new CodableValue("Temperature", "tmp", new VocabularyKey("Celcius"))));
+            vitalSigns.VitalSignsResults.Add(new VitalSignsResultType(new CodableValue("Temperature", "Tmp", new VocabularyKey("vital-statistics","wc", "1"))));
             vitalSigns.VitalSignsResults[0].Value = 35;
-            
-            var observation = vitalSigns.ToFhir();
-            Assert.IsNotNull(observation);
-            Assert.AreEqual(HealthVaultVocabularies.BodyTemperature, observation.Code);
 
-            var value = observation.Value as Quantity;
+            var observations = vitalSigns.ToFhir();
+
+            var temperatureObservation = observations[0];
+            Assert.IsNotNull(temperatureObservation);
+            Assert.AreEqual(HealthVaultVocabularies.BodyTemperature, temperatureObservation.Code);
+
+            var value = temperatureObservation.Value as Quantity;
             Assert.IsNotNull(value);
             Assert.AreEqual((decimal)35, value.Value);
             Assert.AreEqual("C", value.Unit);
