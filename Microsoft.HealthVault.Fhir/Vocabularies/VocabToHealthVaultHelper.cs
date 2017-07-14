@@ -77,6 +77,9 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
                         {
                             case "wgt":
                                 return typeof(Weight);
+                            case "bpd":
+                            case "bps":
+                                return typeof(BloodPressure);
                         }
                         break;
                     case HealthVaultVocabularies.BloodGlucoseMeasurementContext:

@@ -29,8 +29,6 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     {
         internal static Observation ToFhirInternal(BloodPressure bp, Observation observation)
         {
-            var extensions = new List<Extension>();
-
             if (bp.IrregularHeartbeatDetected.HasValue)
             {
                 observation.AddExtension(HealthVaultVocabularies.IrregularHeartBeatExtensionName, new FhirBoolean(bp.IrregularHeartbeatDetected.Value));                
@@ -57,7 +55,6 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             observation.Component = new List<Observation.ComponentComponent> { diastolicComponent, systolicComponent, pulseComponent };
             observation.Effective = new FhirDateTime(bp.When.ToDateTime());
             observation.Code = HealthVaultVocabularies.BloodPressure;
-            observation.Extension = extensions.Any() ? extensions : null;
 
             return observation;
         }

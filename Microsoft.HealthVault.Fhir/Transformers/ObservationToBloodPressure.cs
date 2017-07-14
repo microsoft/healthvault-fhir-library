@@ -32,38 +32,44 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     {
                         foreach (var code in component.Code.Coding)
                         {
-                            if(code == HealthVaultVitalStatisticsCodes.BloodPressureDiastolic)
+                            if (code.Code != null)
                             {
-                                SetDiastolic(bloodPressure, component);                                
-                            }
-                            else if(code == HealthVaultVitalStatisticsCodes.BloodPressureSystolic)
-                            {
-                                SetSystolic(bloodPressure, component);
-                            }
-                            /*else if (code == HealthVaultVitalStatisticsCodes.HeartRate)
-                            {
-                                FillPulse(bloodPressure, component);
-                                var pulse = ObservationToHealthVault.GetValueFromQuantity(component.Value as Quantity);
-                                bloodPressure.Pulse = pulse.HasValue ? (int?)pulse.Value : null;
-                            }*/
-                            else
-                            {
-                                switch (code.Code.ToLowerInvariant())
+                                if (code.System == HealthVaultVitalStatisticsCodes.System)
                                 {
-                                    // Systolic LOINC, SNOMED, ACME codes
-                                    case "8480-6":
-                                    case "271649006":
-                                    case "bp-s":
-                                        SetSystolic(bloodPressure, component);
-                                        break;
-                                    // Diastolic LOINC code
-                                    case "8462-4":
+                                    if (code.Code == HealthVaultVitalStatisticsCodes.BloodPressureDiastolic.Code)
+                                    {
                                         SetDiastolic(bloodPressure, component);
-                                        break;
-                                    default:
-                                        continue;
+                                    }
+                                    else if (code.Code == HealthVaultVitalStatisticsCodes.BloodPressureSystolic.Code)
+                                    {
+                                        SetSystolic(bloodPressure, component);
+                                    }
+                                    /*else if (code.Code == HealthVaultVitalStatisticsCodes.HeartRate.Code)
+                                    {
+                                        FillPulse(bloodPressure, component);
+                                        var pulse = ObservationToHealthVault.GetValueFromQuantity(component.Value as Quantity);
+                                        bloodPressure.Pulse = pulse.HasValue ? (int?)pulse.Value : null;
+                                    }*/
                                 }
-                                break;
+                                else
+                                {
+                                    switch (code.Code.ToLowerInvariant())
+                                    {
+                                        // Systolic LOINC, SNOMED, ACME codes
+                                        case "8480-6":
+                                        case "271649006":
+                                        case "bp-s":
+                                            SetSystolic(bloodPressure, component);
+                                            break;
+                                        // Diastolic LOINC code
+                                        case "8462-4":
+                                            SetDiastolic(bloodPressure, component);
+                                            break;
+                                        default:
+                                            continue;
+                                    }
+                                    break;
+                                }
                             }
                         }
                     }
