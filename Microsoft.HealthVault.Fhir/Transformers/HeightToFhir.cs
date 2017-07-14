@@ -7,42 +7,36 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System.Collections.Generic;
-using System.IO;
-using Newtonsoft.Json;
+using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.ItemTypes;
 
-namespace Microsoft.HealthVault.Fhir.Codings
+namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    internal class CodeToHealthVaultDictionaries
+    public static partial class ThingBaseToFhir
     {
-        private static CodeToHealthVaultDictionaries s_instance;
-        private static object s_lockInstance = new object();
-
-        internal Dictionary<string, string> Snomed { private set; get; }
-        internal Dictionary<string, string> Loinc { private set; get; }
-
-        private CodeToHealthVaultDictionaries()
+        // Register the type on the generic ThingToFhir partial class
+        public static Observation ToFhir(this Height height)
         {
-            Snomed = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(@"Data\snomed.json"));
-            Loinc = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(@"Data\loinc.json"));
+            return HeightToFhir.ToFhirInternal(height, ThingBaseToFhir.ToFhirInternal(height));
         }
+    }
 
-        public static CodeToHealthVaultDictionaries Instance
+    /// <summary>
+    /// An extension class that transforms HealthVault height data types into FHIR Observations
+    /// </summary>
+    internal static class HeightToFhir
+    {
+        internal static Observation ToFhirInternal(Height height, Observation observation)
         {
-            get
-            {
-                if (s_instance == null)
-                {
-                    lock (s_lockInstance)
-                    {
-                        if (s_instance == null)
-                        {
-                            s_instance = new CodeToHealthVaultDictionaries();
-                        }
-                    }
-                }
+            observation.Category = new List<CodeableConcept>() { FhirCategories.VitalSigns };
+            observation.Code = HealthVaultVocabularies.BodyHeight;
 
-                return s_instance;
-            }
-        }        
+            var quantity = new Quantity((decimal)height.Value.Meters, "m");
+            observation.Value = quantity;
+            observation.Effective = new FhirDateTime(height.When.ToDateTime());
+
+            return observation;
+        }
     }
 }

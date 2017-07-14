@@ -8,36 +8,31 @@
 
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
-using Microsoft.HealthVault.Fhir.Codings;
+using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.HealthVault.Fhir.Transformers
+namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
 {
-    public static partial class ThingBaseToFhir
+    [TestClass]
+    public class HeartRateToFhirTests
     {
-        // Register the type on the generic ThingToFhir partial class
-        public static Observation ToFhir(this Weight weight)
+        [TestMethod]
+        public void WhenHealthVaultHeartRateTransformedToFhir_ThenCodeAndValuesEqual()
         {
-            return WeightToFhir.ToFhirInternal(weight, ThingBaseToFhir.ToFhirInternal(weight));
-        }
-    }
+            // ToDo, once deserialization is fixed on SDK, use Deserialize
 
-    /// <summary>
-    /// An extension class that transforms HealthVault weight data types into FHIR Observations
-    /// </summary>
-    internal static class WeightToFhir
-    {
-        internal static Observation ToFhirInternal(Weight weight, Observation observation)
-        {
-            observation.Category = new System.Collections.Generic.List<CodeableConcept> { FhirCategories.VitalSigns };
-            observation.Code = HealthVaultVocabularies.BodyWeight;
+            ThingBase heartRate = new HeartRate(new HealthServiceDateTime(), 65);
 
-            var quantity = new Quantity((decimal)weight.Value.Kilograms, "kg");
-            observation.Value = quantity;
-            observation.Effective = new FhirDateTime(weight.When.ToDateTime());
+            var observation = heartRate.ToFhir();
+            Assert.IsNotNull(observation);
+            Assert.AreEqual(HealthVaultVocabularies.HeartRate, observation.Code);
 
-            return observation;
+            var value = observation.Value as Quantity;
+            Assert.IsNotNull(value);
+            Assert.AreEqual(65, value.Value);
+            Assert.AreEqual("/min", value.Unit);
         }
     }
 }

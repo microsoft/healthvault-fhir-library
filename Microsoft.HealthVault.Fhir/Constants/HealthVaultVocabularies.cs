@@ -49,5 +49,15 @@ namespace Microsoft.HealthVault.Fhir.Constants
                 HealthVaultVitalStatisticsCodes.BloodPressureDiastolic
             }
         };
+
+        public static CodeableConcept BodyHeight = new CodeableConcept()
+        {
+            Coding = new List<Coding>() { HealthVaultVitalStatisticsCodes.BodyHeight }
+        };
+
+        public static CodeableConcept HeartRate = new CodeableConcept
+        {
+            Coding = new List<Coding> { HealthVaultVitalStatisticsCodes.HeartRate }
+        };
     }
 }

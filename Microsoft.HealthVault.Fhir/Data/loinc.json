@@ -2,5 +2,6 @@
     "29463-7": "Microsoft.HealthVault.ItemTypes.Weight",
     "3141-9": "Microsoft.HealthVault.ItemTypes.Weight",
     "15074-8": "Microsoft.HealthVault.ItemTypes.BloodGlucose",
-    "85354-9": "Microsoft.HealthVault.ItemTypes.BloodPressure"
+    "8302-2": "Microsoft.HealthVault.ItemTypes.Height",
+    "8867-4": "Microsoft.HealthVault.ItemTypes.HeartRate"
 }

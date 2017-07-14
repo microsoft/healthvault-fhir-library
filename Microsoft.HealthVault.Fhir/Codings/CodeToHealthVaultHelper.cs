@@ -72,10 +72,14 @@ namespace Microsoft.HealthVault.Fhir.Codings
                 switch (vocabName.ToLowerInvariant())
                 {
                     case HealthVaultVocabularies.VitalStatistics:
-                        switch (vocabName.ToLowerInvariant())
+                        switch (vocabValue.ToLowerInvariant())
                         {
                             case "wgt":
                                 return typeof(Weight);
+                            case "hgt":
+                                return typeof(Height);
+                            case "pls":
+                                return typeof(HeartRate);
                             case "bpd":
                             case "bps":
                                 return typeof(BloodPressure);
