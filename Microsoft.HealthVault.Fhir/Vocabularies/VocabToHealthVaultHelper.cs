@@ -77,6 +77,10 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
                         {
                             case "wgt":
                                 return typeof(Weight);
+                            case "hgt":
+                                return typeof(Height);
+                            case "pls":
+                                return typeof(HeartRate);
                         }
                         break;
                     case HealthVaultVocabularies.BloodGlucoseMeasurementContext:
