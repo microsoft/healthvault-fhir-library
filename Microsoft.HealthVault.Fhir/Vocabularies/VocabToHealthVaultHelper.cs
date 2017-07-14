@@ -73,7 +73,7 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
                 switch (vocabName.ToLowerInvariant())
                 {
                     case HealthVaultVocabularies.VitalStatistics:
-                        switch (vocabName.ToLowerInvariant())
+                        switch (vocabValue.ToLowerInvariant())
                         {
                             case "wgt":
                                 return typeof(Weight);
