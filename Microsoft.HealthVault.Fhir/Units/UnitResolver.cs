@@ -15,7 +15,7 @@ namespace Microsoft.HealthVault.Fhir.Units
     internal class UnitResolver
     {
         private static volatile UnitResolver s_instance;
-        private static object _lockInstance = new object();
+        private static object s_lockInstance = new object();
 
         public List<UnitConversion> UnitConversions { get; set; }
 
@@ -30,7 +30,7 @@ namespace Microsoft.HealthVault.Fhir.Units
             {
                 if (s_instance == null)
                 {
-                    lock (_lockInstance)
+                    lock (s_lockInstance)
                     {
                         if (s_instance == null)
                         {

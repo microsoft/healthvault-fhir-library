@@ -15,6 +15,7 @@ using Microsoft.HealthVault.Fhir.Units;
 using Microsoft.HealthVault.Fhir.Vocabularies;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
+using UnitsNet;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
@@ -88,9 +89,13 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 }
                 catch (ArgumentNullException e)
                 {
-                    throw new ArgumentNullException("UnitsNetUnitEnum specified not found.", e);
+                    throw new UnitsNetException($"UnitsNet.Units.{unitConversion.UnitsNetUnitEnum} was not found in UnitsNet.Units.", e);
                 }
-                
+                catch (ArgumentException e)
+                {
+                    throw new UnitsNetException($"{unitConversion.UnitsNetSource} was not found in UnitsNet.Units.{unitConversion.UnitsNetUnitEnum}.", e);
+                }
+
                 var unitType = Type.GetType($"UnitsNet.{unitConversion.UnitsNetType}, UnitsNet");
                 var destinationObject = unitType.GetMethod("From", new[] { typeof(double), unitEnum.GetType() }).Invoke(null, new[] { (double)quantityValue.Value, unitEnum });
 
