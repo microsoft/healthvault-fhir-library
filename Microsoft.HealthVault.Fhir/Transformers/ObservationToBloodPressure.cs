@@ -82,13 +82,19 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         private static void SetSystolic(BloodPressure bloodPressure, Observation.ComponentComponent component)
         {
             var systolic = ObservationToHealthVault.GetValueFromQuantity(component.Value as Quantity);
-            bloodPressure.Systolic = systolic.HasValue ? (int)systolic.Value : 0;
+            if (systolic.HasValue)
+            {
+                bloodPressure.Systolic = (int)systolic.Value;
+            }            
         }
 
         private static void SetDiastolic(BloodPressure bloodPressure, Observation.ComponentComponent component)
         {
             var diastolic = ObservationToHealthVault.GetValueFromQuantity(component.Value as Quantity);
-            bloodPressure.Diastolic = diastolic.HasValue ? (int)diastolic.Value : 0;
+            if (diastolic.HasValue)
+            {
+                bloodPressure.Diastolic = (int)diastolic.Value;
+            }            
         }        
     }
 }

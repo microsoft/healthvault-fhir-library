@@ -32,7 +32,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 observation.AddExtension(HealthVaultVocabularies.IrregularHeartBeatExtensionName, new FhirBoolean(bp.IrregularHeartbeatDetected.Value));                
             }
-
+            
             var diastolicComponent = new Observation.ComponentComponent
             {
                 Code = new CodeableConcept() { Coding = new List<Coding> { HealthVaultVitalStatisticsCodes.BloodPressureDiastolic } },
@@ -45,13 +45,17 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 Value = new Quantity((decimal)bp.Systolic, "mmHg")
             };
 
-            var pulseComponent = new Observation.ComponentComponent
-            {
-                // Code = new CodeableConcept() { Coding = new List<Coding> { HealthVaultVitalStatisticsCodes.HeartRate } },
-                Value = new Quantity((decimal)bp.Pulse, "/min")
-            };
+            observation.Component = new List<Observation.ComponentComponent> { diastolicComponent, systolicComponent };
 
-            observation.Component = new List<Observation.ComponentComponent> { diastolicComponent, systolicComponent, pulseComponent };
+            if (bp.Pulse != null)
+            {
+                observation.Component.Add(new Observation.ComponentComponent
+                {
+                    // Code = new CodeableConcept() { Coding = new List<Coding> { HealthVaultVitalStatisticsCodes.HeartRate } },
+                    Value = new Quantity((decimal)bp.Pulse, "/min")
+                });
+            }
+           
             observation.Effective = new FhirDateTime(bp.When.ToDateTime());
             observation.Code = HealthVaultVocabularies.BloodPressure;
 

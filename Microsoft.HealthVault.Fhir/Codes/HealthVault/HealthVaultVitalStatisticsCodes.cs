@@ -42,7 +42,6 @@ namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
             System = System,
             Display = "Heart Rate"
         };
-        };
 
         public static readonly Coding BloodPressureDiastolic = new Coding()
         {
