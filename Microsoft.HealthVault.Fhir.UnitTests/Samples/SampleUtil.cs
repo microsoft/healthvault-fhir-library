@@ -21,7 +21,6 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.Samples
         public static string GetSampleContent(string sampleFilename)
         {
             string resourceName = $"Microsoft.HealthVault.Fhir.UnitTests.Samples.{sampleFilename}";
-            var assemblies = Assembly.GetExecutingAssembly().GetManifestResourceNames();
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
             {
                 using (StreamReader reader = new StreamReader(stream))

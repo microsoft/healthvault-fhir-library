@@ -22,7 +22,7 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public static CodeableConcept VitalSigns = new CodeableConcept()
         {
             Text = "Vital Signs",
-            Coding = new List<Coding>() { ObservationCategoryCodes.VitalSignsCode }
+            Coding = new List<Coding> { ObservationCategoryCodes.VitalSignsCode }
         };
     }
 }
