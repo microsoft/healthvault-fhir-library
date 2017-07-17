@@ -38,7 +38,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             return observation.ToHealthVault(VocabToHealthVaultHelper.DetectHealthVaultTypeFromObservation(observation));
         }
 
-        internal static T ToThingBase<T>(this Observation observation) where T : ThingBase, new() {
+        internal static T ToThingBase<T>(this Observation observation) where T : ThingBase, new()
+        {
             T baseThing = new T();
 
             Guid id;
