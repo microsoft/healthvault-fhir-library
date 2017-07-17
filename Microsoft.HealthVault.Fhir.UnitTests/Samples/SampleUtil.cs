@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace Microsoft.HealthVault.Fhir.UnitTests.Samples
 {
-    class SampleUtil
+    internal class SampleUtil
     {
         /// <summary>
         /// Gets file stored in the Samples directory and marked as embedded resource
