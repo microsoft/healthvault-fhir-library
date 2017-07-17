@@ -21,7 +21,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
     public class ObservationToHealthVaultWeightTests
     {
         [TestMethod]
-        public void WeightToHealthVault_Successful()
+        public void WhenFhirWeightTransformedToHealthVault_ThenValuesEqual()
         {
             var json = SampleUtil.GetSampleContent("FhirWeight.json");
 
@@ -51,7 +51,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         }
 
         [TestMethod]
-        public void WeightToObservationToHealthVault_Successful()
+        public void WhenWeightTransformedToFhirTransformedToHealthvault_ThenValuesEqual()
         {
             ThingBase hvWeight = new Weight(new HealthServiceDateTime(), new WeightValue(75.5));
 
@@ -65,7 +65,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         }
 
         [TestMethod]
-        public void BloodGlucoseToHealthVault_Successful()
+        public void WhenFhirBloodGlucoseTransformedToHealthvault_ThenValuesEqual()
         {
             var json = SampleUtil.GetSampleContent("FhirBloodGlucose.json");
 
@@ -80,7 +80,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         }
 
         [TestMethod]
-        public void MultipleObservationsToHealthVault_ReturnsCollection()
+        public void WhenMultipleFhirObservationsTransformedToHealthVault_TheValuesEqual()
         {
             var fhirParse = new FhirJsonParser();
 

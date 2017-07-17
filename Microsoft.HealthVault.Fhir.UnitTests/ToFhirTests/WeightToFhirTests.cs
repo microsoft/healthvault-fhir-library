@@ -19,7 +19,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
     public class WeightToFhirTests
     {
         [TestMethod]
-        public void WeightToFhir_Successful()
+        public void WhenHealthVaultWeightTransformedToFhir_ThenValuesEqual()
         {
             // ToDo, once deserialization is fixed on SDK, use Deserialize
             //string xml = @"<?xml version='1.0' encoding='utf-16'?>
