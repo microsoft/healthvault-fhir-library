@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
-using Newtonsoft.Json;
 
 namespace Microsoft.HealthVault.Fhir.Vocabularies
 {
