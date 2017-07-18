@@ -18,10 +18,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
 {
     [TestClass]
-    public class ObservationToHealthVaultWeightTests
+    public class ObservationToHealthVaultTests
     {
         [TestMethod]
-        public void WhenFhirWeightTransformed_ThenValuesEqual()
+        public void WhenFhirWeightTransformedToHealthVault_ThenValuesEqual()
         {
             var observation = GetObservation("FhirWeight.json");
 
@@ -35,10 +35,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         [TestMethod]
         public void WhenFhirHeightTransformedToHealthvault_ThenValuesEqual()
         {
-            var json = SampleUtil.GetSampleContent("FhirHeight.json");
-
-            var fhirParser = new FhirJsonParser();
-            var observation = fhirParser.Parse<Observation>(json);
+            var observation = GetObservation("FhirHeight.json");
 
             var height = observation.ToHealthVault() as Height;
             Assert.IsNotNull(height);
@@ -74,7 +71,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         }
 
         [TestMethod]
-        public void WeightToObservationToHealthVault_Successful()
+        public void WhenWeightTransformedToFhirTransformedToHealthvault_ThenValuesEqual()
         {
             ThingBase hvWeight = new Weight(new HealthServiceDateTime(), new WeightValue(75.5));
 
@@ -88,7 +85,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         }
 
         [TestMethod]
-        public void BloodGlucoseToHealthVault_Successful()
+        public void WhenFhirBloodGlucoseTransformedToHealthvault_ThenValuesEqual()
         {
             var observation = GetObservation("FhirBloodGlucose.json");
 
@@ -100,7 +97,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         }
 
         [TestMethod]
-        public void MultipleObservationsToHealthVault_ReturnsCollection()
+        public void WhenMultipleFhirObservationsTransformedToHealthVault_TheValuesEqual()
         {
             var fhirParse = new FhirJsonParser();
 

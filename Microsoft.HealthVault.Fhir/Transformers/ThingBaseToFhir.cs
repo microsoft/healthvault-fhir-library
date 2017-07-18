@@ -12,7 +12,6 @@ using System.Linq;
 using System.Reflection;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
-using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Fhir.Transformers

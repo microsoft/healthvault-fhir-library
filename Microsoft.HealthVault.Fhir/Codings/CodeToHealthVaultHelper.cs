@@ -89,7 +89,6 @@ namespace Microsoft.HealthVault.Fhir.Codings
                     case HealthVaultVocabularies.BloodGlucoseMeasurementType:
                         return typeof(BloodGlucose);
                 }
-
             }
 
             throw new NotSupportedException("The provided code is not supported");

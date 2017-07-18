@@ -164,7 +164,7 @@
     <Compile Include="ToFhirTests\WeightToFhirTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBloodPressure.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultHeartRateTests.cs" />
-    <Compile Include="ToHealthVaultTests\ObservationToHealthVaultWeightTests.cs" />
+    <Compile Include="ToHealthVaultTests\ObservationToHealthVaultTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -8,9 +8,7 @@
 
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
-using Microsoft.HealthVault.Fhir.Codings;
 using Microsoft.HealthVault.ItemTypes;
-using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {

@@ -6,10 +6,6 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.IO;
-using System.Text;
-using System.Xml.XPath;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Transformers;
@@ -23,7 +19,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
     public class WeightToFhirTests
     {
         [TestMethod]
-        public void WeightToFhir_Successful()
+        public void WhenHealthVaultWeightTransformedToFhir_ThenValuesEqual()
         {
             // ToDo, once deserialization is fixed on SDK, use Deserialize
             //string xml = @"<?xml version='1.0' encoding='utf-16'?>
@@ -40,7 +36,6 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             Assert.IsNotNull(value);
             Assert.AreEqual((decimal)75.5, value.Value);
             Assert.AreEqual("kg", value.Unit);
-
         }
     }
 }
