@@ -158,9 +158,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Samples\SampleUtil.cs" />
+    <Compile Include="ToFhirTests\BloodPressureToFhirTests.cs" />
     <Compile Include="ToFhirTests\HeartRateToFhirTests.cs" />
     <Compile Include="ToFhirTests\HeightToFhirTests.cs" />
     <Compile Include="ToFhirTests\WeightToFhirTests.cs" />
+    <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBloodPressure.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultHeartRateTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultWeightTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -176,6 +178,7 @@
     <EmbeddedResource Include="Samples\FhirWeight.json" />
     <EmbeddedResource Include="Samples\FhirHeartRate.json" />
     <EmbeddedResource Include="Samples\FhirHeight.json" />
+    <EmbeddedResource Include="Samples\FhirBloodPressure.json" />
     <EmbeddedResource Include="Samples\FhirWeightPounds.json" />
     <EmbeddedResource Include="Samples\FhirWeightGrams.json" />
   </ItemGroup>

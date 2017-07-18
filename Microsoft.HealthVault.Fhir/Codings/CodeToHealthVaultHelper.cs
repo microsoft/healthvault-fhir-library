@@ -11,11 +11,10 @@ using System.Collections.Generic;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
-using Newtonsoft.Json;
 
-namespace Microsoft.HealthVault.Fhir.Vocabularies
+namespace Microsoft.HealthVault.Fhir.Codings
 {
-    internal static class VocabToHealthVaultHelper
+    internal static class CodeToHealthVaultHelper
     {        
         internal static Type DetectHealthVaultTypeFromObservation(Observation observation)
         {
@@ -53,12 +52,12 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
 
         private static Type DetectFromSnomedCd(string code)
         {
-            return DetectType(VocabToHealthVaultDictionaries.Instance.Snomed, code);
+            return DetectType(CodeToHealthVaultDictionaries.Instance.Snomed, code);
         }
 
         private static Type DetectFromLoincCodes(string code)
         {
-            return DetectType(VocabToHealthVaultDictionaries.Instance.Loinc, code);
+            return DetectType(CodeToHealthVaultDictionaries.Instance.Loinc, code);
         }
 
         private static Type DetectFromHealthVaultCode(string code)
@@ -81,6 +80,9 @@ namespace Microsoft.HealthVault.Fhir.Vocabularies
                                 return typeof(Height);
                             case "pls":
                                 return typeof(HeartRate);
+                            case "bpd":
+                            case "bps":
+                                return typeof(BloodPressure);
                         }
                         break;
                     case HealthVaultVocabularies.BloodGlucoseMeasurementContext:

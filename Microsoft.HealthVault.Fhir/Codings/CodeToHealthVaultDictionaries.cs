@@ -10,33 +10,33 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace Microsoft.HealthVault.Fhir.Vocabularies
+namespace Microsoft.HealthVault.Fhir.Codings
 {
-    internal class VocabToHealthVaultDictionaries
+    internal class CodeToHealthVaultDictionaries
     {
-        private static VocabToHealthVaultDictionaries s_instance;
-        private static object _lockInstance = new object();
+        private static CodeToHealthVaultDictionaries s_instance;
+        private static object s_lockInstance = new object();
 
         internal Dictionary<string, string> Snomed { private set; get; }
         internal Dictionary<string, string> Loinc { private set; get; }
 
-        private VocabToHealthVaultDictionaries()
+        private CodeToHealthVaultDictionaries()
         {
             Snomed = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(@"Data\snomed.json"));
             Loinc = JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(@"Data\loinc.json"));
         }
 
-        public static VocabToHealthVaultDictionaries Instance
+        public static CodeToHealthVaultDictionaries Instance
         {
             get
             {
                 if (s_instance == null)
                 {
-                    lock (_lockInstance)
+                    lock (s_lockInstance)
                     {
                         if (s_instance == null)
                         {
-                            s_instance = new VocabToHealthVaultDictionaries();
+                            s_instance = new CodeToHealthVaultDictionaries();
                         }
                     }
                 }
