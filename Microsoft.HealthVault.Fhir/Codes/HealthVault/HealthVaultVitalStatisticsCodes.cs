@@ -41,5 +41,21 @@ namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
             System = System,
             Display = "Heart Rate"
         };
+
+        public static readonly Coding BloodPressureDiastolic = new Coding
+        {
+            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "bpd"),
+            Version = "1",
+            System = System,
+            Display = " Blood Pressure - Diastolic",
+        };
+
+        public static readonly Coding BloodPressureSystolic = new Coding
+        {
+            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "bps"),
+            Version = "1",
+            System = System,
+            Display = " Blood Pressure - Systolic",
+        };
     }
 }

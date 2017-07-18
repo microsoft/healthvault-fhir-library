@@ -11,8 +11,8 @@ using System.Linq;
 using System.Reflection;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.Fhir.Codings;
 using Microsoft.HealthVault.Fhir.Units;
-using Microsoft.HealthVault.Fhir.Vocabularies;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
 using UnitsNet;
@@ -39,7 +39,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         /// <returns>The HealthVault thing</returns>
         public static ThingBase ToHealthVault(this Observation observation)
         {
-            return observation.ToHealthVault(VocabToHealthVaultHelper.DetectHealthVaultTypeFromObservation(observation));
+            return observation.ToHealthVault(CodeToHealthVaultHelper.DetectHealthVaultTypeFromObservation(observation));
         }
 
         internal static T ToThingBase<T>(this Observation observation) where T : ThingBase, new()
@@ -80,32 +80,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             
             var unitConversion = UnitResolver.Instance.UnitConversions.FirstOrDefault(x => x.Code.Equals(quantityValue.Code, StringComparison.Ordinal));
 
-            double convertedValue;
-            if (unitConversion != null)
-            {
-                object unitEnum;
-                try
-                {
-                    unitEnum = Enum.Parse(Type.GetType($"UnitsNet.Units.{unitConversion.UnitsNetUnitEnum}, UnitsNet"), unitConversion.UnitsNetSource);
-                }
-                catch (ArgumentNullException e)
-                {
-                    throw new UnitsNetException($"UnitsNet.Units.{unitConversion.UnitsNetUnitEnum} was not found in UnitsNet.Units.", e);
-                }
-                catch (ArgumentException e)
-                {
-                    throw new UnitsNetException($"{unitConversion.UnitsNetSource} was not found in UnitsNet.Units.{unitConversion.UnitsNetUnitEnum}.", e);
-                }
-
-                var unitType = Type.GetType($"UnitsNet.{unitConversion.UnitsNetType}, UnitsNet");
-                var destinationObject = unitType.GetMethod("From", new[] { typeof(double), unitEnum.GetType() }).Invoke(null, new[] { (double)quantityValue.Value, unitEnum });
-
-                convertedValue = (double)destinationObject.GetType().GetProperty(unitConversion.UnitsNetDestination).GetValue(destinationObject);
-            }
-            else
-            {
-                convertedValue = (double)quantityValue.Value;
-            }
+            double convertedValue = GetQuantityInUnit(quantityValue, unitConversion);
 
             return new T
             {
@@ -118,7 +93,19 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 }
             };
         }
-    
+
+        internal static double? GetValueFromQuantity(Quantity value)
+        {
+            if(value != null && value.Value.HasValue)
+            {
+                var unitConversion = UnitResolver.Instance.UnitConversions.FirstOrDefault(x => x.Code.Equals(value.Code, StringComparison.Ordinal));
+                var convertedValue = GetQuantityInUnit(value, unitConversion);
+                return convertedValue;
+            }
+
+            return null;
+        }
+
         internal static HealthServiceDateTime GetHealthVaultTimeFromEffectiveDate(Element effectiveDate)
         {
             FhirDateTime dateTime = null;
@@ -146,6 +133,35 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             return null;
         }
 
+        private static double GetQuantityInUnit(Quantity quantityValue, Units.UnitConversion unitConversion)
+        {
+            if (unitConversion != null)
+            {
+                object unitEnum;
+                try
+                {
+                    unitEnum = Enum.Parse(Type.GetType($"UnitsNet.Units.{unitConversion.UnitsNetUnitEnum}, UnitsNet"), unitConversion.UnitsNetSource);
+                }
+                catch (ArgumentNullException e)
+                {
+                    throw new UnitsNetException($"UnitsNet.Units.{unitConversion.UnitsNetUnitEnum} was not found in UnitsNet.Units.", e);
+                }
+                catch (ArgumentException e)
+                {
+                    throw new UnitsNetException($"{unitConversion.UnitsNetSource} was not found in UnitsNet.Units.{unitConversion.UnitsNetUnitEnum}.", e);
+                }
+
+                var unitType = Type.GetType($"UnitsNet.{unitConversion.UnitsNetType}, UnitsNet");
+                var destinationObject = unitType.GetMethod("From", new[] { typeof(double), unitEnum.GetType() }).Invoke(null, new[] { (double)quantityValue.Value, unitEnum });
+
+                return (double)destinationObject.GetType().GetProperty(unitConversion.UnitsNetDestination).GetValue(destinationObject);
+            }
+            else
+            {
+                return (double)quantityValue.Value;
+            }
+        }
+
         private static ThingBase ToHealthVault(this Observation observation, Type type)
         {
             if (type == typeof(Weight))
@@ -166,6 +182,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             if (type == typeof(HeartRate))
             {
                 return observation.ToHeartRate();
+            }
+
+            if (type == typeof(BloodPressure))
+            {
+                return observation.ToBloodPressure();
             }
 
             return null;

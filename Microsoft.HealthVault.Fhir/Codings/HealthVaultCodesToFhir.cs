@@ -12,7 +12,7 @@ using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 
-namespace Microsoft.HealthVault.Fhir.Vocabularies
+namespace Microsoft.HealthVault.Fhir.Codings
 {
     internal class HealthVaultCodesToFhir
     {

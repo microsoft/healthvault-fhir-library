@@ -9,7 +9,7 @@
 using System.Collections.Generic;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
-using Microsoft.HealthVault.Fhir.Vocabularies;
+using Microsoft.HealthVault.Fhir.Codings;
 using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
@@ -34,17 +34,17 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             if (bg.OutsideOperatingTemperature.HasValue)
             {
-                HealthVaultCodesToFhir.ConvertValueToFhir(bg.OutsideOperatingTemperature.Value.ToString(), fhirCodes, HealthVaultVocabularies.OutsideOperatingTemperature);
+                observation.AddExtension(HealthVaultVocabularies.OutsideOperatingTemperatureExtensionName, new FhirBoolean(bg.OutsideOperatingTemperature.Value));
             }
 
             if (bg.ReadingNormalcy.HasValue)
             {
-                HealthVaultCodesToFhir.ConvertValueToFhir(bg.ReadingNormalcy.Value.ToString(), fhirCodes, HealthVaultVocabularies.ReadingNormalcy);
+                observation.AddExtension(HealthVaultVocabularies.ReadingNormalcyExtensionName, new FhirString(bg.ReadingNormalcy.Value.ToString()));
             }
 
             if (bg.IsControlTest.HasValue)
             {
-                HealthVaultCodesToFhir.ConvertValueToFhir(bg.IsControlTest.Value.ToString(), fhirCodes, HealthVaultVocabularies.IsControlTest);
+                observation.AddExtension(HealthVaultVocabularies.IsControlTestExtensionName, new FhirBoolean(bg.IsControlTest.Value));                
             }
             
             observation.Code = new CodeableConcept() { Coding = fhirCodes };
