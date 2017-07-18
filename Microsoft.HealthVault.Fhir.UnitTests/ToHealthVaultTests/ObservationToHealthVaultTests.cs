@@ -18,7 +18,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
 {
     [TestClass]
-    public class ObservationToHealthVaultWeightTests
+    public class ObservationToHealthVaultTests
     {
         [TestMethod]
         public void WhenFhirWeightTransformedToHealthVault_ThenValuesEqual()
@@ -35,10 +35,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         [TestMethod]
         public void WhenFhirHeightTransformedToHealthvault_ThenValuesEqual()
         {
-            var json = SampleUtil.GetSampleContent("FhirHeight.json");
-
-            var fhirParser = new FhirJsonParser();
-            var observation = fhirParser.Parse<Observation>(json);
+            var observation = GetObservation("FhirHeight.json");
 
             var height = observation.ToHealthVault() as Height;
             Assert.IsNotNull(height);

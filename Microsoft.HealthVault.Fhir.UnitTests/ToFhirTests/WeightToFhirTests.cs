@@ -36,7 +36,6 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             Assert.IsNotNull(value);
             Assert.AreEqual((decimal)75.5, value.Value);
             Assert.AreEqual("kg", value.Unit);
-
         }
     }
 }
