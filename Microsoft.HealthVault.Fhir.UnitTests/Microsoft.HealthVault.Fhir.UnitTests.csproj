@@ -152,6 +152,9 @@
     <Reference Include="System.Xml.XPath.XDocument, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Xml.XPath.XDocument.4.3.0\lib\net46\System.Xml.XPath.XDocument.dll</HintPath>
     </Reference>
+    <Reference Include="UnitsNet, Version=3.66.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\UnitsNet.3.66.0\lib\net35\UnitsNet.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Samples\SampleUtil.cs" />
@@ -173,6 +176,8 @@
     <EmbeddedResource Include="Samples\FhirWeight.json" />
     <EmbeddedResource Include="Samples\FhirHeartRate.json" />
     <EmbeddedResource Include="Samples\FhirHeight.json" />
+    <EmbeddedResource Include="Samples\FhirWeightPounds.json" />
+    <EmbeddedResource Include="Samples\FhirWeightGrams.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.HealthVault.Fhir\Microsoft.HealthVault.Fhir.csproj">
