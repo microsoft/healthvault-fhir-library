@@ -82,7 +82,6 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             Assert.AreEqual(120, systolicValue.Value);
             Assert.AreEqual("mmHg", systolicValue.Unit);
 
-
             var diastolic = components.FirstOrDefault(c => c.Code.Coding[0].Code == HealthVaultVitalStatisticsCodes.BloodPressureDiastolic.Code);
             Assert.IsNotNull(diastolic);
             var diastolicValue = diastolic.Value as Quantity;
