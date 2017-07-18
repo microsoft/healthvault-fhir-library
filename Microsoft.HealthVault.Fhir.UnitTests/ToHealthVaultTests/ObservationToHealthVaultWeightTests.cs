@@ -21,13 +21,10 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
     public class ObservationToHealthVaultWeightTests
     {
         [TestMethod]
-        public void WeightToHealthVault_Successful()
+        public void WhenFhirWeightTransformed_ThenValuesEqual()
         {
-            var json = SampleUtil.GetSampleContent("FhirWeight.json");
+            var observation = GetObservation("FhirWeight.json");
 
-            var fhirParser = new FhirJsonParser();
-            var observation = fhirParser.Parse<Observation>(json);
-            
             var weight = observation.ToHealthVault() as Weight;
             Assert.IsNotNull(weight);
             Assert.AreEqual(67, weight.Value.Kilograms);
@@ -51,6 +48,32 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         }
 
         [TestMethod]
+        public void WhenFhirWeightInLbsTransformed_ThenStoredInKg()
+        {
+            var observation = GetObservation("FhirWeightPounds.json");
+
+            var weight = observation.ToHealthVault() as Weight;
+            Assert.IsNotNull(weight);
+            Assert.AreEqual(78.471480010000008, weight.Value.Kilograms);
+            Assert.AreEqual(173, weight.Value.DisplayValue.Value);
+            Assert.AreEqual("lb", weight.Value.DisplayValue.Units);
+            Assert.AreEqual("[lb_av]", weight.Value.DisplayValue.UnitsCode);
+        }
+
+        [TestMethod]
+        public void WhenFhirWeightInGramsTransformed_ThenStoredInKg()
+        {
+            var observation = GetObservation("FhirWeightGrams.json");
+
+            var weight = observation.ToHealthVault() as Weight;
+            Assert.IsNotNull(weight);
+            Assert.AreEqual(75, weight.Value.Kilograms);
+            Assert.AreEqual(75000, weight.Value.DisplayValue.Value);
+            Assert.AreEqual("g", weight.Value.DisplayValue.Units);
+            Assert.AreEqual("g", weight.Value.DisplayValue.UnitsCode);
+        }
+
+        [TestMethod]
         public void WeightToObservationToHealthVault_Successful()
         {
             ThingBase hvWeight = new Weight(new HealthServiceDateTime(), new WeightValue(75.5));
@@ -67,10 +90,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         [TestMethod]
         public void BloodGlucoseToHealthVault_Successful()
         {
-            var json = SampleUtil.GetSampleContent("FhirBloodGlucose.json");
-
-            var fhirParser = new FhirJsonParser();
-            var observation = fhirParser.Parse<Observation>(json);
+            var observation = GetObservation("FhirBloodGlucose.json");
 
             var glucose = observation.ToHealthVault() as BloodGlucose;
             Assert.IsNotNull(glucose);
@@ -107,6 +127,15 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
 
             Assert.AreEqual(Height.TypeId, list[2].TypeId);
             Assert.IsTrue(list[2] is Height);
+        }
+
+        private static Observation GetObservation(string fileName)
+        {
+            var json = SampleUtil.GetSampleContent(fileName);
+
+            var fhirParser = new FhirJsonParser();
+            var observation = fhirParser.Parse<Observation>(json);
+            return observation;
         }
     }
 }

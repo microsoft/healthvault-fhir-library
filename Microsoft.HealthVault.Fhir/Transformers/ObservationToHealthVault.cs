@@ -7,11 +7,15 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Linq;
+using System.Reflection;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Codings;
+using Microsoft.HealthVault.Fhir.Units;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
+using UnitsNet;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
@@ -66,35 +70,52 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             return baseThing;
         }
 
-        internal static T GetThingValueFromQuantity<T>(Quantity value) where T : Measurement<double>, new()
+        internal static T GetThingValueFromQuantity<T>(Quantity quantityValue) where T : Measurement<double>, new()
         {
-            // TODO: detect the units from the code (value.Unit)
-            if (value != null)
+            if (quantityValue?.Value == null)
             {
-                if (value.Value.HasValue)
+                return null;
+            }
+            
+            var unitConversion = UnitResolver.Instance.UnitConversions.FirstOrDefault(x => x.Code.Equals(quantityValue.Code, StringComparison.Ordinal));
+
+            double convertedValue;
+            if (unitConversion != null)
+            {
+                object unitEnum;
+                try
                 {
-                    var result = new T();
-                    result.Value = (double)value.Value;
-                    result.DisplayValue = new DisplayValue();
-                    result.DisplayValue.Value = (double)value.Value;
-                    result.DisplayValue.Units = value.Unit;
-                    result.DisplayValue.UnitsCode = value.Code;
-                    return result;
+                    unitEnum = Enum.Parse(Type.GetType($"UnitsNet.Units.{unitConversion.UnitsNetUnitEnum}, UnitsNet"), unitConversion.UnitsNetSource);
                 }
+                catch (ArgumentNullException e)
+                {
+                    throw new UnitsNetException($"UnitsNet.Units.{unitConversion.UnitsNetUnitEnum} was not found in UnitsNet.Units.", e);
+                }
+                catch (ArgumentException e)
+                {
+                    throw new UnitsNetException($"{unitConversion.UnitsNetSource} was not found in UnitsNet.Units.{unitConversion.UnitsNetUnitEnum}.", e);
+                }
+
+                var unitType = Type.GetType($"UnitsNet.{unitConversion.UnitsNetType}, UnitsNet");
+                var destinationObject = unitType.GetMethod("From", new[] { typeof(double), unitEnum.GetType() }).Invoke(null, new[] { (double)quantityValue.Value, unitEnum });
+
+                convertedValue = (double)destinationObject.GetType().GetProperty(unitConversion.UnitsNetDestination).GetValue(destinationObject);
             }
-
-            return null;
-        }
-
-        internal static double? GetValueFromQuantity(Quantity value)
-        {
-            // TODO: detect the units from the code (value.Unit)
-            if (value != null && value.Value.HasValue)
+            else
             {
-                return (double)value.Value;                
+                convertedValue = (double)quantityValue.Value;
             }
 
-            return null;
+            return new T
+            {
+                Value = convertedValue,
+                DisplayValue = new DisplayValue
+                {
+                    Value = (double)quantityValue.Value,
+                    Units = quantityValue.Unit,
+                    UnitsCode = quantityValue.Code
+                }
+            };
         }
 
         internal static HealthServiceDateTime GetHealthVaultTimeFromEffectiveDate(Element effectiveDate)
