@@ -6,10 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\loinc.json" />
+    <None Remove="Data\snomed.json" />
     <None Remove="Data\UnitConversions.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Data\loinc.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\snomed.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\UnitConversions.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
