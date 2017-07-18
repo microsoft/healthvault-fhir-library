@@ -44,17 +44,19 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                                     {
                                         SetSystolic(bloodPressure, component);
                                     }
-                                    /*else if (code.Code == HealthVaultVitalStatisticsCodes.HeartRate.Code)
+                                    else if (code.Code == HealthVaultVitalStatisticsCodes.HeartRate.Code)
                                     {
-                                        FillPulse(bloodPressure, component);
-                                        var pulse = ObservationToHealthVault.GetValueFromQuantity(component.Value as Quantity);
-                                        bloodPressure.Pulse = pulse.HasValue ? (int?)pulse.Value : null;
-                                    }*/
+                                        SetPulse(bloodPressure, component);                                        
+                                    }
                                 }
                                 else
                                 {
                                     switch (code.Code.ToLowerInvariant())
                                     {
+                                        // HeartRate component 
+                                        case "8867-4":
+                                            SetPulse(bloodPressure, component);
+                                            break;
                                         // Systolic LOINC, SNOMED, ACME codes
                                         case "8480-6":
                                         case "271649006":
@@ -77,6 +79,15 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
                     
             return bloodPressure;
+        }
+
+        private static void SetPulse(BloodPressure bloodPressure, Observation.ComponentComponent component)
+        {
+            var pulse = ObservationToHealthVault.GetValueFromQuantity(component.Value as Quantity);
+            if (pulse.HasValue)
+            {
+                bloodPressure.Pulse = (int)pulse.Value;
+            }
         }
 
         private static void SetSystolic(BloodPressure bloodPressure, Observation.ComponentComponent component)

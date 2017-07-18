@@ -51,7 +51,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 observation.Component.Add(new Observation.ComponentComponent
                 {
-                    // Code = new CodeableConcept() { Coding = new List<Coding> { HealthVaultVitalStatisticsCodes.HeartRate } },
+                    Code = new CodeableConcept() { Coding = new List<Coding> { HealthVaultVitalStatisticsCodes.HeartRate } },
                     Value = new Quantity((decimal)bp.Pulse, "/min")
                 });
             }

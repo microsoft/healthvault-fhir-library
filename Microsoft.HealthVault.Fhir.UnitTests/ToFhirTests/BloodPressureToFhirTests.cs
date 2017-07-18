@@ -53,5 +53,49 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             Assert.AreEqual(60, diastolicValue.Value);
             Assert.AreEqual("mmHg", diastolicValue.Unit);
         }
+
+        [TestMethod]
+        public void WhenHealthVaultBloodPressureWithPulseTransformedToFhir_ThenCodeAndValuesEqual()
+        {
+            // ToDo, once deserialization is fixed on SDK, use Deserialize
+
+            ThingBase bloodPressure = new BloodPressure(new HealthServiceDateTime(), 120, 60)
+            {
+                Pulse = 55
+            };
+
+            var observation = bloodPressure.ToFhir();
+            Assert.IsNotNull(observation);
+            Assert.IsNotNull(observation.Code);
+            Assert.IsNotNull(observation.Code.Coding);
+            Assert.AreEqual(2, observation.Code.Coding.Count);
+            Assert.AreEqual(HealthVaultVocabularies.BloodPressure.Coding[0], observation.Code.Coding[0]);
+            Assert.AreEqual(HealthVaultVocabularies.BloodPressure.Coding[1], observation.Code.Coding[1]);            
+
+            var components = observation.Component;
+            Assert.AreEqual(3, components.Count);
+
+            var systolic = components.FirstOrDefault(c => c.Code.Coding[0].Code == HealthVaultVitalStatisticsCodes.BloodPressureSystolic.Code);
+            Assert.IsNotNull(systolic);
+            var systolicValue = systolic.Value as Quantity;
+            Assert.IsNotNull(systolicValue);
+            Assert.AreEqual(120, systolicValue.Value);
+            Assert.AreEqual("mmHg", systolicValue.Unit);
+
+
+            var diastolic = components.FirstOrDefault(c => c.Code.Coding[0].Code == HealthVaultVitalStatisticsCodes.BloodPressureDiastolic.Code);
+            Assert.IsNotNull(diastolic);
+            var diastolicValue = diastolic.Value as Quantity;
+            Assert.IsNotNull(diastolicValue);
+            Assert.AreEqual(60, diastolicValue.Value);
+            Assert.AreEqual("mmHg", diastolicValue.Unit);
+
+            var hr = components.FirstOrDefault(c => c.Code.Coding[0].Code == HealthVaultVitalStatisticsCodes.HeartRate.Code);
+            Assert.IsNotNull(hr);
+            var hrValue = hr.Value as Quantity;
+            Assert.IsNotNull(hrValue);
+            Assert.AreEqual(55, hrValue.Value);
+            Assert.AreEqual("/min", hrValue.Unit);
+        }
     }
 }
