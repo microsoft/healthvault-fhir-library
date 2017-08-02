@@ -159,6 +159,7 @@
   <ItemGroup>
     <Compile Include="Samples\SampleUtil.cs" />
     <Compile Include="ToFhirTests\BloodPressureToFhirTests.cs" />
+    <Compile Include="ToFhirTests\BodyDimensionToFhirTests.cs" />
     <Compile Include="ToFhirTests\HeartRateToFhirTests.cs" />
     <Compile Include="ToFhirTests\HeightToFhirTests.cs" />
     <Compile Include="ToFhirTests\WeightToFhirTests.cs" />
