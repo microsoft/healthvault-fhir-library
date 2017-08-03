@@ -41,6 +41,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             var quantity = new Quantity((decimal)bodyDimension.Value.Meters, "m");
             observation.Value = quantity;
 
+            // ToDo: Change to use the ApproximateDateTime.ToFhir() extension when brought in with body composition pr.
             observation.Effective = new FhirDateTime(
                 bodyDimension.When.ApproximateDate.Year,
                 bodyDimension.When.ApproximateDate.Month ?? 1,
