@@ -11,6 +11,7 @@ using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NodaTime;
 
 namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
 {
@@ -21,7 +22,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
         public void WhenHeathVaultBodyCompositionTransformedToFhir_ThenCodeAndValuesEqual()
         {
             var bodyComposition = new BodyComposition(
-                new ApproximateDateTime(new DateTime(2017, 8, 3, 8, 30, 01)),
+                new ApproximateDateTime(new LocalDateTime(2017, 8, 3, 8, 30, 01)),
                 new CodableValue("Body fat percentage", new CodedValue("fat-percent", "body-composition-measurement-names", "wc", "1")),
                 new BodyCompositionValue{ MassValue = new WeightValue(10), PercentValue = 0.15 }
             )
@@ -51,7 +52,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
         public void WhenHeathVaultBodyCompositionOnlyWeightTransformedToFhir_ThenCodeAndValuesEqual()
         {
             var bodyComposition = new BodyComposition(
-                new ApproximateDateTime(new DateTime(2017, 8, 3, 8, 30, 01)),
+                new ApproximateDateTime(new LocalDateTime(2017, 8, 3, 8, 30, 01)),
                 new CodableValue("Body fat percentage", new CodedValue("fat-percent", "body-composition-measurement-names", "wc", "1")),
                 new BodyCompositionValue { MassValue = new WeightValue(10) }
             );

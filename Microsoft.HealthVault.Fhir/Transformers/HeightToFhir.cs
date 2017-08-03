@@ -34,7 +34,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             var quantity = new Quantity((decimal)height.Value.Meters, "m");
             observation.Value = quantity;
-            observation.Effective = new FhirDateTime(height.When.ToDateTime());
+            observation.Effective = new FhirDateTime(height.When.ToLocalDateTime().ToDateTimeUnspecified());
 
             return observation;
         }

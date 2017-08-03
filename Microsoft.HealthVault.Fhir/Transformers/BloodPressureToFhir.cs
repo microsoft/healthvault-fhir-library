@@ -56,7 +56,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 });
             }
            
-            observation.Effective = new FhirDateTime(bp.When.ToDateTime());
+            observation.Effective = new FhirDateTime(bp.When.ToLocalDateTime().ToDateTimeUnspecified());
             observation.Code = HealthVaultVocabularies.BloodPressure;
 
             return observation;

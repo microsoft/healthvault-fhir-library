@@ -33,7 +33,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             var quantity = new Quantity((decimal)weight.Value.Kilograms, "kg");
             observation.Value = quantity;
-            observation.Effective = new FhirDateTime(weight.When.ToDateTime());
+            observation.Effective = new FhirDateTime(weight.When.ToLocalDateTime().ToDateTimeUnspecified());
 
             return observation;
         }

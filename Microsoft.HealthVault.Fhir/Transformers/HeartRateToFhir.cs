@@ -34,7 +34,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             var quantity = new Quantity(heartRate.Value, "/min");
             observation.Value = quantity;
-            observation.Effective = new FhirDateTime(heartRate.When.ToDateTime());
+            observation.Effective = new FhirDateTime(heartRate.When.ToLocalDateTime().ToDateTimeUnspecified());
 
             return observation;
         }

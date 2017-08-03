@@ -51,7 +51,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             
             var quantity = new Quantity((decimal)bg.Value.Value, "mmolPerL");
             observation.Value = quantity;
-            observation.Effective = new FhirDateTime(bg.When.ToDateTime());
+            observation.Effective = new FhirDateTime(bg.When.ToLocalDateTime().ToDateTimeUnspecified());
 
             return observation;
         }
