@@ -11,6 +11,8 @@ using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Codings;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
+using UnitsNet;
+using UnitsNet.Units;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
@@ -43,8 +45,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 var massValue = new Observation.ComponentComponent
                 {
-                    Code = new CodeableConcept { Coding = codings },
-                    Value = new Quantity((decimal)bodyComposition.Value.MassValue.Kilograms, "kg")
+                    Code = new CodeableConcept { Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(bodyComposition.MeasurementName, null) },
+                    Value = new Quantity((decimal)bodyComposition.Value.MassValue.Kilograms, UnitAbbreviations.Kilogram)
                 };
                 observation.Component.Add(massValue);
             }
@@ -53,8 +55,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             { 
                 var percentageValue = new Observation.ComponentComponent
                 {
-                    Code = new CodeableConcept { Coding = codings },
-                    Value = new Quantity((decimal)bodyComposition.Value.PercentValue.Value, "%")
+                    Code = new CodeableConcept { Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(bodyComposition.MeasurementName, null) },
+                    Value = new Quantity((decimal)bodyComposition.Value.PercentValue.Value, UnitAbbreviations.Percent)
                 };
                 observation.Component.Add(percentageValue);
             }

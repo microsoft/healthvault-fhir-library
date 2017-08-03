@@ -32,7 +32,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             observation.Category = new List<CodeableConcept>() { FhirCategories.VitalSigns };
             observation.Code = HealthVaultVocabularies.BodyHeight;
 
-            var quantity = new Quantity((decimal)height.Value.Meters, "m");
+            var quantity = new Quantity((decimal)height.Value.Meters, UnitAbbreviations.Meter);
             observation.Value = quantity;
             observation.Effective = new FhirDateTime(height.When.ToLocalDateTime().ToDateTimeUnspecified());
 

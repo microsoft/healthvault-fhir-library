@@ -6,8 +6,9 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using Hl7.Fhir.Model;
+using Hl7.Fhir.Serialization;
+using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -40,12 +41,12 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             var massValue = observation.Component[0].Value as Quantity;
             Assert.IsNotNull(massValue);
             Assert.AreEqual(10, massValue.Value);
-            Assert.AreEqual("kg", massValue.Unit);
+            Assert.AreEqual(UnitAbbreviations.Kilogram, massValue.Unit);
 
             var percentageValue = observation.Component[1].Value as Quantity;
             Assert.IsNotNull(percentageValue);
             Assert.AreEqual((decimal)0.15, percentageValue.Value);
-            Assert.AreEqual("%", percentageValue.Unit);
+            Assert.AreEqual(UnitAbbreviations.Percent, percentageValue.Unit);
         }
 
         [TestMethod]
@@ -66,7 +67,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             var massValue = observation.Component[0].Value as Quantity;
             Assert.IsNotNull(massValue);
             Assert.AreEqual(10, massValue.Value);
-            Assert.AreEqual("kg", massValue.Unit);
+            Assert.AreEqual(UnitAbbreviations.Kilogram, massValue.Unit);
         }
     }
 }

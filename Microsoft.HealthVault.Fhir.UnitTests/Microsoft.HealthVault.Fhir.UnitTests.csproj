@@ -168,6 +168,7 @@
     <Compile Include="ToFhirTests\HeightToFhirTests.cs" />
     <Compile Include="ToFhirTests\WeightToFhirTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBloodPressure.cs" />
+    <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyCompositionTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultHeartRateTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -186,6 +187,7 @@
     <EmbeddedResource Include="Samples\FhirBloodPressure.json" />
     <EmbeddedResource Include="Samples\FhirWeightPounds.json" />
     <EmbeddedResource Include="Samples\FhirWeightGrams.json" />
+    <EmbeddedResource Include="Samples\FhirBodyComposition.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.HealthVault.Fhir\Microsoft.HealthVault.Fhir.csproj">
