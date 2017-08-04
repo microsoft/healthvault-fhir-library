@@ -88,6 +88,8 @@ namespace Microsoft.HealthVault.Fhir.Codings
                     case HealthVaultVocabularies.BloodGlucoseMeasurementContext:
                     case HealthVaultVocabularies.BloodGlucoseMeasurementType:
                         return typeof(BloodGlucose);
+                    case HealthVaultVocabularies.BodyDimensionMeasurementNames:
+                        return typeof(BodyDimension);
                 }
             }
 

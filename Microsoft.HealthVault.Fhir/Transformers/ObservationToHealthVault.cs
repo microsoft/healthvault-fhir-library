@@ -77,7 +77,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 return null;
             }
-            
+
             var unitConversion = UnitResolver.Instance.UnitConversions.FirstOrDefault(x => x.Code.Equals(quantityValue.Code, StringComparison.Ordinal));
 
             double convertedValue = GetQuantityInUnit(quantityValue, unitConversion);
@@ -96,7 +96,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
         internal static double? GetValueFromQuantity(Quantity value)
         {
-            if(value != null && value.Value.HasValue)
+            if (value != null && value.Value.HasValue)
             {
                 var unitConversion = UnitResolver.Instance.UnitConversions.FirstOrDefault(x => x.Code.Equals(value.Code, StringComparison.Ordinal));
                 var convertedValue = GetQuantityInUnit(value, unitConversion);
@@ -107,6 +107,36 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         }
 
         internal static HealthServiceDateTime GetHealthVaultTimeFromEffectiveDate(Element effectiveDate)
+        {
+            var dateTime = GetFhirDateTime(effectiveDate);
+
+            if (dateTime != null)
+            {
+                var dt = dateTime.ToDateTimeOffset();
+                return new HealthServiceDateTime(
+                    new HealthServiceDate(dt.Year, dt.Month, dt.Day),
+                    new ApproximateTime(dt.Hour, dt.Minute, dt.Second, dt.Millisecond));
+            }
+
+            return null;
+        }
+
+        internal static ApproximateDateTime GetApproximateDateTimeFromEffectiveDate(Element effectiveDate)
+        {
+            var dateTime = GetFhirDateTime(effectiveDate);
+
+            if (dateTime != null)
+            {
+                var dt = dateTime.ToDateTimeOffset();
+                return new ApproximateDateTime(
+                    new ApproximateDate(dt.Year, dt.Month, dt.Day),
+                    new ApproximateTime(dt.Hour, dt.Minute, dt.Second, dt.Millisecond));
+            }
+
+            return null;
+        }
+
+        private static FhirDateTime GetFhirDateTime(Element effectiveDate)
         {
             FhirDateTime dateTime = null;
 
@@ -120,17 +150,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             else if (effectiveDate is Period && ((Period)effectiveDate).Start != null)
             {
                 dateTime = new FhirDateTime(((Period)effectiveDate).Start);
-            }            
-            
-            if (dateTime != null)
-            {
-                var dt = dateTime.ToDateTimeOffset();
-                return new HealthServiceDateTime(
-                    new HealthServiceDate(dt.Year, dt.Month, dt.Day),
-                    new ApproximateTime(dt.Hour, dt.Minute, dt.Second, dt.Millisecond));
             }
-
-            return null;
+            return dateTime;
         }
 
         private static double GetQuantityInUnit(Quantity quantityValue, Units.UnitConversion unitConversion)
@@ -187,6 +208,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             if (type == typeof(BloodPressure))
             {
                 return observation.ToBloodPressure();
+            }
+
+            if (type == typeof(BodyDimension))
+            {
+                return observation.ToBodyDimension();
             }
 
             return null;

@@ -6,43 +6,30 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Serialization;
-using Hl7.Fhir.Support;
 using Microsoft.HealthVault.Fhir.Transformers;
+using Microsoft.HealthVault.Fhir.UnitTests.Samples;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
+namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
 {
     [TestClass]
-    public class BodyDimensionToFhirTests
+    public class ObservationToHealthVaultBodyDimensionTests
     {
         [TestMethod]
-        public void WhenHealthVaultBodyDimensionTransformedToFhir_ThenCodeAndValuesEqual()
+        public void WhenFhirBodyDimensionTransformedToHealthvault_ThenValuesEqual()
         {
-            var testDateTime = new DateTime(2017, 8, 2, 11, 13, 14);
+            var json = SampleUtil.GetSampleContent("FhirBodyDimension.json");
 
-            var bodyDimension = new BodyDimension(
-                new ApproximateDateTime(testDateTime),
-                new CodableValue("Left bicep size", 
-                new CodedValue("BicepCircumferenceLeft","body-dimension-measurement-names","wc", "1")),new Length(0.15)
-                );
+            var fhirParser = new FhirJsonParser();
+            var observation = fhirParser.Parse<Observation>(json);
 
-            var observation = bodyDimension.ToFhir();
-
-            Assert.IsNotNull(observation);
-            Assert.AreEqual("body-dimension-measurement-names:BicepCircumferenceLeft", observation.Code.Coding[0].Code);
-
-            var when = observation.Effective as FhirDateTime;
-            Assert.IsNotNull(when);
-            Assert.AreEqual(testDateTime, when.ToDateTime().Value);
-
-            var value = observation.Value as Quantity;
-            Assert.IsNotNull(value);
-            Assert.AreEqual((decimal)0.15, value.Value);
-            Assert.AreEqual("m", value.Unit);
+            var bodyDimension = observation.ToHealthVault() as BodyDimension;
+            Assert.IsNotNull(bodyDimension);
+            Assert.AreEqual(0.15, bodyDimension.Value.Meters);
+            Assert.AreEqual("Left bicep size", bodyDimension.MeasurementName.Text);
         }
     }
 }
