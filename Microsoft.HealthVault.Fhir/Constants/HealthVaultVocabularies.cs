@@ -22,9 +22,19 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string VitalStatistics = "vital-statistics";
         public const string BloodGlucoseMeasurementContext = "glucose-measurement-context";
         public const string BloodGlucoseMeasurementType = "glucose-measurement-type";
-        
+
+        public const string SleepJournalAM = "sleep-journal-am";
+        public const string SleepJournalAMBedtime = "bed-time";
+        public const string SleepJournalAMWaketime = "wake-time";
+        public const string SleepJournalAMSleepMinutes = "sleep-minutes";
+        public const string SleepJournalAMSettlingMinutes = "settling-minutes";
+        public const string SleepJournalAMAwakening = "awakening";
+        public const string SleepJournalAMWakeState = "wake-state";
+        public const string SleepJournalAMMedication = "medication";
+
         public const string Fhir = "fhir";
         public const string Wc = "wc";
+        public const string Medication = "Medication";
 
         public const string BaseUri = "http://healthvault.com/";
         public const string StateFhirExtensionName = BaseUri + "fhir-extensions/thing-state";
