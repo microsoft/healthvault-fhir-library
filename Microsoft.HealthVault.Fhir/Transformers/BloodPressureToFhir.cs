@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         // Register the type on the generic ThingToFhir partial class
         public static Observation ToFhir(this BloodPressure bp)
         {
-            return BloodPressureToFhir.ToFhirInternal(bp, ThingBaseToFhir.ToFhirInternal(bp));
+            return BloodPressureToFhir.ToFhirInternal(bp, ToFhirInternal<Observation>(bp));
         }
     }
 
@@ -30,9 +30,9 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         {
             if (bp.IrregularHeartbeatDetected.HasValue)
             {
-                observation.AddExtension(HealthVaultVocabularies.IrregularHeartBeatExtensionName, new FhirBoolean(bp.IrregularHeartbeatDetected.Value));                
+                observation.AddExtension(HealthVaultVocabularies.IrregularHeartBeatExtensionName, new FhirBoolean(bp.IrregularHeartbeatDetected.Value));
             }
-            
+
             var diastolicComponent = new Observation.ComponentComponent
             {
                 Code = new CodeableConcept() { Coding = new List<Coding> { HealthVaultVitalStatisticsCodes.BloodPressureDiastolic } },
@@ -55,7 +55,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     Value = new Quantity((decimal)bp.Pulse, "/min")
                 });
             }
-           
+
             observation.Effective = new FhirDateTime(bp.When.ToDateTime());
             observation.Code = HealthVaultVocabularies.BloodPressure;
 

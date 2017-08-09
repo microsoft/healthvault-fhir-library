@@ -157,10 +157,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ToFhirTests\ToFhirResourceTests.cs" />
     <Compile Include="Samples\SampleUtil.cs" />
     <Compile Include="ToFhirTests\BloodPressureToFhirTests.cs" />
     <Compile Include="ToFhirTests\HeartRateToFhirTests.cs" />
     <Compile Include="ToFhirTests\HeightToFhirTests.cs" />
+    <Compile Include="ToFhirTests\ToFhirDomainResourceTests.cs" />
+    <Compile Include="ToFhirTests\ToFhirObservationTests.cs" />
     <Compile Include="ToFhirTests\WeightToFhirTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBloodPressure.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultHeartRateTests.cs" />
