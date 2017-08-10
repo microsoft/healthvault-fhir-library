@@ -5,7 +5,6 @@ namespace Microsoft.HealthVault.Fhir.FhirExtensions
 {
     public static class DomainResourceExtensions
     {
-
         public static void AddNoteAsText(this DomainResource domainResource, string note)
         {
             if (!string.IsNullOrEmpty(note))

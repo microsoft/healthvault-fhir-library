@@ -6,25 +6,25 @@ namespace Microsoft.HealthVault.Fhir.FhirExtensions
 {
     public static class ResourceExtensions
     {
-        public static void SetIdentity(this Resource observation, ThingKey key)
+        public static void SetIdentity(this Resource resource, ThingKey key)
         {
             if (key != null)
             {
-                observation._setId(key.Id);
-                observation._setVersionStamp(key.VersionStamp);
+                resource.SetId(key.Id);
+                resource.SetVersionStamp(key.VersionStamp);
             }
         }
 
-        private static void _setVersionStamp(this Resource resource, Guid versionStamp)
+        private static void SetVersionStamp(this Resource resource, Guid versionStamp)
         {
             if (versionStamp != Guid.Empty)
             {
-                resource._createMetaIfNeeded();
+                resource.CreateMetaIfNeeded();
                 resource.Meta.VersionId = versionStamp.ToString();
             }
         }
 
-        private static void _setId(this Resource resource, Guid id)
+        private static void SetId(this Resource resource, Guid id)
         {
             if (id != Guid.Empty)
             {
@@ -36,15 +36,17 @@ namespace Microsoft.HealthVault.Fhir.FhirExtensions
         {
             if (lastUpdated != null)
             {
-                resource._createMetaIfNeeded();
+                resource.CreateMetaIfNeeded();
                 resource.Meta.LastUpdated = new DateTimeOffset?(lastUpdated.Timestamp);
             }
         }
 
-        private static void _createMetaIfNeeded(this Resource resource)
+        private static void CreateMetaIfNeeded(this Resource resource)
         {
             if (resource.Meta == null)
+            {
                 resource.Meta = new Meta();
+            }
         }
     }
 }
