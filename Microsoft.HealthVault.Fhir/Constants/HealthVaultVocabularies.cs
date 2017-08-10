@@ -22,7 +22,14 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string VitalStatistics = "vital-statistics";
         public const string BloodGlucoseMeasurementContext = "glucose-measurement-context";
         public const string BloodGlucoseMeasurementType = "glucose-measurement-type";
-        
+
+        public const string Exercise = "exercise";
+        public const string ExerciseActivity = "activity";
+        public const string ExerciseDistance = "distance";
+        public const string ExerciseDuration = "duration";
+        public const string ExerciseDetail = "exercise/detail";
+        public const string ExerciseSegment = "exercise/segment";
+
         public const string Fhir = "fhir";
         public const string Wc = "wc";
 
