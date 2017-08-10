@@ -90,6 +90,14 @@ namespace Microsoft.HealthVault.Fhir.Codings
                         return typeof(BloodGlucose);
                 }
             }
+            else
+            {
+                switch (code)
+                {
+                    case HealthVaultVocabularies.SleepJournalAM:
+                        return typeof(SleepJournalAM);
+                }
+            }
 
             throw new NotSupportedException("The provided code is not supported");
         }

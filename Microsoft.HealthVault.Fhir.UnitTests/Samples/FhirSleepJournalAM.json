@@ -1,0 +1,157 @@
+﻿{
+    "resourceType": "Observation",
+    "extension": [
+        {
+            "url": "http://healthvault.com/fhir-extensions/thing-flags",
+            "valueString": "None"
+        },
+        {
+            "url": "http://healthvault.com/fhir-extensions/thing-state",
+            "valueString": "Active"
+        }
+    ],
+    "status": "final",
+    "category": [
+        {
+            "coding": [
+                {
+                    "system": "http://hl7.org/fhir/observation-category",
+                    "code": "vital-signs",
+                    "display": "Vital Signs"
+                }
+            ],
+            "text": "Vital Signs"
+        }
+    ],
+    "code": {
+        "coding": [
+            {
+                "system": "http://healthvault.com/vocabularies/",
+                "code": "sleep-journal-am"
+            }
+        ]
+    },
+    "effectiveDateTime": "2017-08-04T16:56:27.798-07:00",
+    "component": [
+        {
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "code": "bed-time"
+                    }
+                ]
+            },
+            "valueTime": "22:30:00.9"
+        },
+        {
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "code": "wake-time"
+                    }
+                ]
+            },
+            "valueTime": "06:28:00.1823"
+        },
+        {
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "code": "sleep-minutes"
+                    }
+                ]
+            },
+            "valueQuantity": {
+                "value": 100,
+                "unit": "min",
+                "system": "http://unitsofmeasure.org",
+                "code": "min"
+            }
+        },
+        {
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "code": "settling-minutes"
+                    }
+                ]
+            },
+            "valueQuantity": {
+                "value": 110,
+                "unit": "min",
+                "system": "http://unitsofmeasure.org",
+                "code": "min"
+            }
+        },
+        {
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "code": "awakening"
+                    }
+                ]
+            },
+            "valuePeriod": {
+                "start": "1900-01-01T23:30:00-08:00",
+                "end": "1900-01-02T00:10:00-08:00"
+            }
+        },
+        {
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "code": "awakening"
+                    }
+                ]
+            },
+            "valuePeriod": {
+                "start": "1900-01-01T00:30:00-08:00",
+                "end": "1900-01-01T00:40:00-08:00"
+            }
+        },
+        {
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "code": "wake-state"
+                    }
+                ]
+            },
+            "valueCodeableConcept": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "code": "Tired"
+                    }
+                ]
+            }
+        },
+        {
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "code": "medication"
+                    }
+                ]
+            },
+            "valueCodeableConcept": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "version": "2",
+                        "code": "Mayo:ccabbac8-58f0-4e88-a1eb-538e21e7524d",
+                        "display": "Benzaclin"
+                    }
+                ]
+            }
+        }
+    ]
+}

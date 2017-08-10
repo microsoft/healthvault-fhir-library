@@ -189,6 +189,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 return observation.ToBloodPressure();
             }
 
+            if(type == typeof(SleepJournalAM))
+            {
+                return observation.ToSleepJournalAM();
+            }
+
             return null;
         }
     }
