@@ -38,7 +38,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 var distanceValue = new Observation.ComponentComponent
                 {
-                    Code = new CodeableConcept { Coding = new List<Coding> { new Coding(VocabularyUris.HealthVaultVocabulariesUri, HealthVaultVocabularies.ExerciseDistance) } },
+                    Code = new CodeableConcept { Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(new CodableValue(HealthVaultVocabularies.ExerciseDistance, HealthVaultVocabularies.ExerciseDistance, HealthVaultVocabularies.Exercise, HealthVaultVocabularies.Wc, "1"), null) },
                     Value = new Quantity((decimal)exercise.Distance.Value, "m") //TODO: switch to constant once body composition PR (#15) is in
                 };
                 observation.Component.Add(distanceValue);
@@ -48,7 +48,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 var durationValue = new Observation.ComponentComponent
                 {
-                    Code = new CodeableConcept { Coding = new List<Coding> { new Coding(VocabularyUris.HealthVaultVocabulariesUri, HealthVaultVocabularies.ExerciseDuration) } },
+                    Code = new CodeableConcept { Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(new CodableValue(HealthVaultVocabularies.ExerciseDuration, HealthVaultVocabularies.ExerciseDuration, HealthVaultVocabularies.Exercise, HealthVaultVocabularies.Wc, "1"), null) },
                     Value = new Quantity((decimal)exercise.Duration.Value, "min") //TODO: switch to constant once body composition PR (#15) is in
                 };
                 observation.Component.Add(durationValue);
@@ -71,7 +71,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             
             var activityValue = new Observation.ComponentComponent
             {
-                Code = new CodeableConcept { Coding = new List<Coding> { new Coding(VocabularyUris.HealthVaultVocabulariesUri, HealthVaultVocabularies.ExerciseActivity) } },
+                Code = new CodeableConcept { Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(new CodableValue(HealthVaultVocabularies.ExerciseActivity, HealthVaultVocabularies.ExerciseActivity, HealthVaultVocabularies.Exercise, HealthVaultVocabularies.Wc, "1"), null) },
                 Value = new CodeableConcept { Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(exercise.Activity, null) }
             };
             observation.Component.Add(activityValue);
@@ -109,7 +109,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             extension.Extension.Add(new Extension("exercise-detail-value", new Quantity
             {
                 Value = (decimal)exerciseDetail.Value.Value,
-                Unit = exerciseDetail.Value.Units[0].Value
+                Unit = exerciseDetail.Value.Units[0].Value,
             }));
           
             return extension;
