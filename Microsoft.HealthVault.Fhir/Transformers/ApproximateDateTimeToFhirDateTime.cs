@@ -6,37 +6,38 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Collections.Generic;
+using System;
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    public static partial class ThingBaseToFhir
+    public static partial class ItemBaseToFhir
     {
-        // Register the type on the generic ThingToFhir partial class
-        public static Observation ToFhir(this Height height)
+        // Register the type on the generic ItemBaseToFhir partial class
+        public static FhirDateTime ToFhir(this ApproximateDateTime approximateDateTime)
         {
-            return HeightToFhir.ToFhirInternal(height, ThingBaseToFhir.ToFhirInternal(height));
+            return ApproximateDateTimeToFhir.ToFhirInternal(approximateDateTime);
         }
     }
 
     /// <summary>
-    /// An extension class that transforms HealthVault height data types into FHIR Observations
+    /// An extension class that transforms HealthVault approximate date times into FHIR date times
     /// </summary>
-    internal static class HeightToFhir
+    public class ApproximateDateTimeToFhir
     {
-        internal static Observation ToFhirInternal(Height height, Observation observation)
+        internal static FhirDateTime ToFhirInternal(ApproximateDateTime approximateDateTime)
         {
-            observation.Category = new List<CodeableConcept>() { FhirCategories.VitalSigns };
-            observation.Code = HealthVaultVocabularies.BodyHeight;
+            var dateTime = new DateTime(
+                approximateDateTime.ApproximateDate.Year,
+                approximateDateTime.ApproximateDate.Month ?? 1,
+                approximateDateTime.ApproximateDate.Day ?? 1,
+                approximateDateTime.ApproximateTime?.Hour ?? 0,
+                approximateDateTime.ApproximateTime?.Minute ?? 0,
+                approximateDateTime.ApproximateTime?.Second ?? 0,
+                approximateDateTime.ApproximateTime?.Millisecond ?? 0);
 
-            var quantity = new Quantity((decimal)height.Value.Meters, UnitAbbreviations.Meter);
-            observation.Value = quantity;
-            observation.Effective = new FhirDateTime(height.When.ToLocalDateTime().ToDateTimeUnspecified());
-
-            return observation;
+            return new FhirDateTime(dateTime);
         }
     }
 }
