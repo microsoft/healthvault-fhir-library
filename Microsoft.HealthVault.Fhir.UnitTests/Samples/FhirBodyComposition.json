@@ -1,0 +1,87 @@
+﻿{
+    "resourceType": "Observation",
+    "extension": [
+        {
+            "url": "http://healthvault.com/fhir-extensions/thing-flags",
+            "valueString": "None"
+        },
+        {
+            "url": "http://healthvault.com/fhir-extensions/thing-state",
+            "valueString": "Active"
+        }
+    ],
+    "status": "final",
+    "category": [
+        {
+            "coding": [
+                {
+                    "system": "http://hl7.org/fhir/observation-category",
+                    "code": "vital-signs",
+                    "display": "Vital Signs"
+                }
+            ],
+            "text": "Vital Signs"
+        }
+    ],
+    "code": {
+        "coding": [
+            {
+                "system": "http://healthvault.com/vocabularies/",
+                "version": "1",
+                "code": "body-composition-measurement-methods:DXA",
+                "display": "DXA/DEXA"
+            },
+            {
+                "system": "http://healthvault.com/vocabularies/",
+                "version": "1",
+                "code": "body-composition-sites:Trunk",
+                "display": "Trunk"
+            },
+            {
+                "system": "http://healthvault.com/vocabularies/",
+                "version": "1",
+                "code": "body-composition-measurement-names:fat-percent",
+                "display": "Body fat percentage"
+            }
+        ]
+    },
+    "effectiveDateTime": "2017-08-03T08:30:01-07:00",
+    "component": [
+        {
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "version": "1",
+                        "code": "body-composition-measurement-names:fat-percent",
+                        "display": "Body fat percentage"
+                    }
+                ]
+            },
+            "valueQuantity": {
+                "value": 10,
+                "unit": "kg",
+                "system": "http://unitsofmeasure.org",
+                "code": "kg"
+            }
+        },
+        {
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "version": "1",
+                        "code": "body-composition-measurement-names:fat-percent",
+                        "display": "Body fat percentage"
+                    }
+                ]
+            },
+            "valueQuantity": {
+                "value": 0.15,
+                "unit": "%",
+                "system": "http://unitsofmeasure.org",
+                "code": "%"
+            }
+        }
+    ]
+}

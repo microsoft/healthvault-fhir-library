@@ -23,6 +23,11 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string BloodGlucoseMeasurementContext = "glucose-measurement-context";
         public const string BloodGlucoseMeasurementType = "glucose-measurement-type";
 
+        public const string BodyCompositionMeasurementMethods = "body-composition-measurement-methods";
+        public const string BodyCompositionSites = "body-composition-sites";
+        public const string BodyCompositionMeasurementNames = "body-composition-measurement-names";
+
+
         public const string Exercise = "exercise";
         public const string ExerciseActivity = "activity";
         public const string ExerciseDistance = "distance";

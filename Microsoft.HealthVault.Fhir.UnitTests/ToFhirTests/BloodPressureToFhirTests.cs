@@ -43,7 +43,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             var systolicValue = systolic.Value as Quantity;
             Assert.IsNotNull(systolicValue);
             Assert.AreEqual(120, systolicValue.Value);
-            Assert.AreEqual("mmHg", systolicValue.Unit);
+            Assert.AreEqual(UnitAbbreviations.MillimeterOfMecury, systolicValue.Unit);
 
 
             var diastolic = components.FirstOrDefault(c => c.Code.Coding[0].Code == HealthVaultVitalStatisticsCodes.BloodPressureDiastolic.Code);
@@ -51,7 +51,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             var diastolicValue = diastolic.Value as Quantity;
             Assert.IsNotNull(diastolicValue);
             Assert.AreEqual(60, diastolicValue.Value);
-            Assert.AreEqual("mmHg", diastolicValue.Unit);
+            Assert.AreEqual(UnitAbbreviations.MillimeterOfMecury, diastolicValue.Unit);
         }
 
         [TestMethod]
@@ -80,21 +80,21 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             var systolicValue = systolic.Value as Quantity;
             Assert.IsNotNull(systolicValue);
             Assert.AreEqual(120, systolicValue.Value);
-            Assert.AreEqual("mmHg", systolicValue.Unit);
+            Assert.AreEqual(UnitAbbreviations.MillimeterOfMecury, systolicValue.Unit);
 
             var diastolic = components.FirstOrDefault(c => c.Code.Coding[0].Code == HealthVaultVitalStatisticsCodes.BloodPressureDiastolic.Code);
             Assert.IsNotNull(diastolic);
             var diastolicValue = diastolic.Value as Quantity;
             Assert.IsNotNull(diastolicValue);
             Assert.AreEqual(60, diastolicValue.Value);
-            Assert.AreEqual("mmHg", diastolicValue.Unit);
+            Assert.AreEqual(UnitAbbreviations.MillimeterOfMecury, diastolicValue.Unit);
 
             var hr = components.FirstOrDefault(c => c.Code.Coding[0].Code == HealthVaultVitalStatisticsCodes.HeartRate.Code);
             Assert.IsNotNull(hr);
             var hrValue = hr.Value as Quantity;
             Assert.IsNotNull(hrValue);
             Assert.AreEqual(55, hrValue.Value);
-            Assert.AreEqual("/min", hrValue.Unit);
+            Assert.AreEqual(UnitAbbreviations.PerMinute, hrValue.Unit);
         }
     }
 }
