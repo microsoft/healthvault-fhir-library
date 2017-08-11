@@ -8,6 +8,7 @@
 
 using System;
 using Hl7.Fhir.Model;
+using Hl7.Fhir.Support;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 
@@ -23,6 +24,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             foreach(var component in observation.Component)
             {
+                if (component.Code == null || component.Code.Coding.IsNullOrEmpty() || component.Value == null)
+                {
+                    continue;
+                }
+
                 switch (component.Code.Coding[0].Code)
                 {
                     case HealthVaultVocabularies.SleepJournalAMBedtime:
@@ -32,14 +38,14 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                         sleepJournalAm.WakeTime = ((Time)component.Value).ToAppoximateTime();
                         break;
                     case HealthVaultVocabularies.SleepJournalAMSleepMinutes:
-                        var sleepMinutes = ((Quantity)component.Value);
+                        var sleepMinutes = (Quantity)component.Value;
                         if (sleepMinutes.Value.HasValue)
                         {
                             sleepJournalAm.SleepMinutes = (int)sleepMinutes.Value.Value;
                         }
                         break;
                     case HealthVaultVocabularies.SleepJournalAMSettlingMinutes:
-                        var settlingMinutes = ((Quantity)component.Value);
+                        var settlingMinutes = (Quantity)component.Value;
                         if (settlingMinutes.Value.HasValue)
                         {
                             sleepJournalAm.SettlingMinutes = (int)settlingMinutes.Value.Value;
@@ -47,14 +53,26 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                         break;
                     case HealthVaultVocabularies.SleepJournalAMWakeState:
                         WakeState wakeState;
-                        if(Enum.TryParse(((CodeableConcept)component.Value).Coding[0].Code, out wakeState))
+                        var wakeStateValue = (CodeableConcept)component.Value;
+
+                        if (wakeStateValue.Coding.IsNullOrEmpty())
+                        {
+                            break;
+                        }
+
+                        if (Enum.TryParse(wakeStateValue.Coding[0].Code, out wakeState))
                         {
                             sleepJournalAm.WakeState = wakeState;
                         }
                         break;
                     case HealthVaultVocabularies.SleepJournalAMMedication:
-                        
-                        var coding = ((CodeableConcept)component.Value).Coding[0];
+                        var medicationValue = (CodeableConcept)component.Value;
+                        if (medicationValue.Coding.IsNullOrEmpty())
+                        {
+                            break;
+                        }
+
+                        var coding = medicationValue.Coding[0];
 
                         var value = coding.Code.Split(':');
                         var vocabName = value[0];

@@ -89,5 +89,10 @@ namespace Microsoft.HealthVault.Fhir.Codings
 
             return fhirCodes;
         }
+
+        internal static CodeableConcept CreateVocabularyCodeableConcept(string code)
+        {
+            return new CodeableConcept { Coding = new List<Coding> { new Coding(VocabularyUris.HealthVaultVocabulariesUri, code) } };
+        }
     }
 }

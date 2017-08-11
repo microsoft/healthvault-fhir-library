@@ -41,28 +41,28 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             var bedtimeComponent = new Observation.ComponentComponent
             {
-                Code = new CodeableConcept { Coding = new List<Coding> { new Coding(VocabularyUris.HealthVaultVocabulariesUri, HealthVaultVocabularies.SleepJournalAMBedtime) } },
+                Code = HealthVaultCodesToFhir.CreateVocabularyCodeableConcept(HealthVaultVocabularies.SleepJournalAMBedtime),
                 Value = sleepJournalAM.Bedtime.ToFhir()
             };
             observation.Component.Add(bedtimeComponent);
 
             var waketimeComponent = new Observation.ComponentComponent
             {
-                Code = new CodeableConcept { Coding = new List<Coding> { new Coding(VocabularyUris.HealthVaultVocabulariesUri, HealthVaultVocabularies.SleepJournalAMWaketime) } },
+                Code = HealthVaultCodesToFhir.CreateVocabularyCodeableConcept(HealthVaultVocabularies.SleepJournalAMWaketime),
                 Value = sleepJournalAM.WakeTime.ToFhir()
             };
             observation.Component.Add(waketimeComponent);
 
             var sleepMinutesComponent = new Observation.ComponentComponent
             {
-                Code = new CodeableConcept { Coding = new List<Coding> { new Coding(VocabularyUris.HealthVaultVocabulariesUri, HealthVaultVocabularies.SleepJournalAMSleepMinutes) } },
+                Code = HealthVaultCodesToFhir.CreateVocabularyCodeableConcept(HealthVaultVocabularies.SleepJournalAMSleepMinutes),
                 Value = new Quantity(sleepJournalAM.SleepMinutes, UnitAbbreviations.Minute)
             };
             observation.Component.Add(sleepMinutesComponent);
 
             var settlingMinutesComponent = new Observation.ComponentComponent
             {
-                Code = new CodeableConcept { Coding = new List<Coding> { new Coding(VocabularyUris.HealthVaultVocabulariesUri, HealthVaultVocabularies.SleepJournalAMSettlingMinutes) } },
+                Code = HealthVaultCodesToFhir.CreateVocabularyCodeableConcept(HealthVaultVocabularies.SleepJournalAMSettlingMinutes),
                 Value = new Quantity(sleepJournalAM.SettlingMinutes, UnitAbbreviations.Minute)
             };
             observation.Component.Add(settlingMinutesComponent);
@@ -89,7 +89,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
                     var awakeningComponent = new Observation.ComponentComponent
                     {
-                        Code = new CodeableConcept { Coding = new List<Coding> { new Coding(VocabularyUris.HealthVaultVocabulariesUri, HealthVaultVocabularies.SleepJournalAMAwakening) } },
+                        Code = HealthVaultCodesToFhir.CreateVocabularyCodeableConcept(HealthVaultVocabularies.SleepJournalAMAwakening),
                         Value = new Period(new FhirDateTime(dummyDateTimeStart), new FhirDateTime(dummyDateTimeEnd))
                     };
                     observation.Component.Add(awakeningComponent);
@@ -98,8 +98,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             var wakeStateComponent = new Observation.ComponentComponent
             {
-                Code = new CodeableConcept { Coding = new List<Coding> { new Coding(VocabularyUris.HealthVaultVocabulariesUri, HealthVaultVocabularies.SleepJournalAMWakeState) } },
-                Value = new CodeableConcept { Coding = new List<Coding> { new Coding(VocabularyUris.HealthVaultVocabulariesUri, sleepJournalAM.WakeState.ToString()) } }
+                Code = HealthVaultCodesToFhir.CreateVocabularyCodeableConcept(HealthVaultVocabularies.SleepJournalAMWakeState),
+                Value = HealthVaultCodesToFhir.CreateVocabularyCodeableConcept(sleepJournalAM.WakeState.ToString())
             };
             observation.Component.Add(wakeStateComponent);
 
@@ -107,7 +107,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 var medicationComponenet = new Observation.ComponentComponent
                 {
-                    Code = new CodeableConcept { Coding = new List<Coding> { new Coding(VocabularyUris.HealthVaultVocabulariesUri, HealthVaultVocabularies.SleepJournalAMMedication) } },
+                    Code = HealthVaultCodesToFhir.CreateVocabularyCodeableConcept(HealthVaultVocabularies.SleepJournalAMMedication),
                     Value = new CodeableConcept { Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(sleepJournalAM.Medications, null) }
                 };
                 observation.Component.Add(medicationComponenet);
