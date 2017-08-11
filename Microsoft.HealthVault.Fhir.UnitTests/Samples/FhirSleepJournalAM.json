@@ -145,7 +145,7 @@
             "valueCodeableConcept": {
                 "coding": [
                     {
-                        "system": "http://healthvault.com/vocabularies/",
+                        "system": "http://healthvault.com/vocabularies/RxNorm",
                         "version": "2",
                         "code": "Mayo:ccabbac8-58f0-4e88-a1eb-538e21e7524d",
                         "display": "Benzaclin"

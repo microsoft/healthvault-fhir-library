@@ -33,7 +33,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             sleepJournalAM.Awakenings.Add(new Occurrence(new ApproximateTime(23, 30), 40));
             sleepJournalAM.Awakenings.Add(new Occurrence(new ApproximateTime(0, 30), 10));
 
-            sleepJournalAM.Medications = new CodableValue("Benzaclin", new CodedValue("ccabbac8-58f0-4e88-a1eb-538e21e7524d", "Mayo", "Medication", "2" ));
+            sleepJournalAM.Medications = new CodableValue("Benzaclin", new CodedValue("ccabbac8-58f0-4e88-a1eb-538e21e7524d", "Mayo", "RxNorm", "2" ));
 
             var observation = sleepJournalAM.ToFhir();
 

@@ -64,7 +64,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                         {
                             VocabularyName = vocabName,
                             Value = vocabCode,
-                            Family = HealthVaultVocabularies.Medication,
+                            Family = coding.System.Replace(VocabularyUris.HealthVaultVocabulariesUri, ""),
                             Version = coding.Version
                         };
 

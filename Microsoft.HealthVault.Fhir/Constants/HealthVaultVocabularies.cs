@@ -34,7 +34,8 @@ namespace Microsoft.HealthVault.Fhir.Constants
 
         public const string Fhir = "fhir";
         public const string Wc = "wc";
-        public const string Medication = "Medication";
+        public const string RxNorm = "RxNorm";
+        public const string Dmd = "dmd";
 
         public const string BaseUri = "http://healthvault.com/";
         public const string StateFhirExtensionName = BaseUri + "fhir-extensions/thing-state";
