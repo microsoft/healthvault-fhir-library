@@ -49,9 +49,9 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             
             observation.Code = new CodeableConcept() { Coding = fhirCodes };
             
-            var quantity = new Quantity((decimal)bg.Value.Value, "mmolPerL");
+            var quantity = new Quantity((decimal)bg.Value.Value, UnitAbbreviations.MillimolesPerLiter);
             observation.Value = quantity;
-            observation.Effective = new FhirDateTime(bg.When.ToDateTime());
+            observation.Effective = new FhirDateTime(bg.When.ToLocalDateTime().ToDateTimeUnspecified());
 
             return observation;
         }

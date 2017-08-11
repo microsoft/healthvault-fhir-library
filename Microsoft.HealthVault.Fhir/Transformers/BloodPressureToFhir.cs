@@ -36,13 +36,13 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             var diastolicComponent = new Observation.ComponentComponent
             {
                 Code = new CodeableConcept() { Coding = new List<Coding> { HealthVaultVitalStatisticsCodes.BloodPressureDiastolic } },
-                Value = new Quantity((decimal)bp.Diastolic, "mmHg")
+                Value = new Quantity((decimal)bp.Diastolic, UnitAbbreviations.MillimeterOfMecury)
             };
 
             var systolicComponent = new Observation.ComponentComponent
             {
                 Code = new CodeableConcept() { Coding = new List<Coding> { HealthVaultVitalStatisticsCodes.BloodPressureSystolic } },
-                Value = new Quantity((decimal)bp.Systolic, "mmHg")
+                Value = new Quantity((decimal)bp.Systolic, UnitAbbreviations.MillimeterOfMecury)
             };
 
             observation.Component = new List<Observation.ComponentComponent> { diastolicComponent, systolicComponent };
@@ -52,11 +52,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 observation.Component.Add(new Observation.ComponentComponent
                 {
                     Code = new CodeableConcept() { Coding = new List<Coding> { HealthVaultVitalStatisticsCodes.HeartRate } },
-                    Value = new Quantity((decimal)bp.Pulse, "/min")
+                    Value = new Quantity((decimal)bp.Pulse, UnitAbbreviations.PerMinute)
                 });
             }
            
-            observation.Effective = new FhirDateTime(bp.When.ToDateTime());
+            observation.Effective = new FhirDateTime(bp.When.ToLocalDateTime().ToDateTimeUnspecified());
             observation.Code = HealthVaultVocabularies.BloodPressure;
 
             return observation;
