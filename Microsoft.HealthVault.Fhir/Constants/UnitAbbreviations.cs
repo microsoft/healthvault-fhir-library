@@ -11,6 +11,7 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string Meter = "m";
         public const string MillimeterOfMecury = "mmHg";
         public const string MillimolesPerLiter = "mmol/L";
+        public const string Minute = "min";
         public const string Percent = "%";
         public const string PerMinute = "/min";
         public const string Pound = "lb";

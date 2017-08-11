@@ -1,8 +1,6 @@
 ﻿{
     "resourceType": "Observation",
-    "text": {
-        "div": "New Swim"
-    },
+    "text": { "div": "New Swim" },
     "extension": [
         {
             "url": "http://healthvault.com/fhir-extensions/thing-flags",
@@ -195,7 +193,7 @@
             }
         ]
     },
-    "effectiveDateTime": "2017-08-11T11:12:42-07:00",
+    "effectiveDateTime": "2017-08-11T21:35:32.763-07:00",
     "component": [
         {
             "code": {
@@ -203,8 +201,8 @@
                     {
                         "system": "http://healthvault.com/vocabularies/",
                         "version": "1",
-                        "code": "exercise:distance",
-                        "display": "distance"
+                        "code": "exercise:exercise-distance",
+                        "display": "exercise-distance"
                     }
                 ]
             },
@@ -221,8 +219,8 @@
                     {
                         "system": "http://healthvault.com/vocabularies/",
                         "version": "1",
-                        "code": "exercise:duration",
-                        "display": "duration"
+                        "code": "exercise:exercise-duration",
+                        "display": "exercise-duration"
                     }
                 ]
             },
@@ -239,8 +237,8 @@
                     {
                         "system": "http://healthvault.com/vocabularies/",
                         "version": "1",
-                        "code": "exercise:activity",
-                        "display": "activity"
+                        "code": "exercise:exercise-activity",
+                        "display": "exercise-activity"
                     }
                 ]
             },

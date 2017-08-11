@@ -56,6 +56,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     var value = code.Code.Split(':');
                     var vocabCode = value.Length == 2 ? value[1] : null;
 
+                    if (component.Value == null)
+                    {
+                        continue;
+                    }
+
                     switch (vocabCode)
                     {
                         case HealthVaultVocabularies.ExerciseDistance:
@@ -73,16 +78,19 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                             }
                             break;
                         case HealthVaultVocabularies.ExerciseActivity:
-                            if (component.Value != null)
+                            var activityCodeableConcept = (CodeableConcept)component.Value;
+
+                            if (activityCodeableConcept.Coding.IsNullOrEmpty())
                             {
-                                var coding = ((CodeableConcept)component.Value).Coding[0];
-
-                                var activityValue = coding.Code.Split(':');
-                                var activityValueVocabName = activityValue[0];
-                                var activityValueCode = activityValue.Length == 2 ? activityValue[1] : null;
-
-                                exercise.SetActivity(coding.Display, activityValueCode, activityValueVocabName, HealthVaultVocabularies.Wc, coding.Version);
+                                break;
                             }
+                            var coding = activityCodeableConcept.Coding[0];
+
+                            var activityValue = coding.Code.Split(':');
+                            var activityValueVocabName = activityValue[0];
+                            var activityValueCode = activityValue.Length == 2 ? activityValue[1] : null;
+
+                            exercise.SetActivity(coding.Display, activityValueCode, activityValueVocabName, HealthVaultVocabularies.Wc, coding.Version);
                             break;
                     }
                 }
@@ -100,7 +108,13 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 switch (extension.Url)
                 {
                     case HealthVaultExtensions.ExerciseSegmentActivity:
-                        var activityCoding = ((CodeableConcept) extension.Value).Coding[0];
+                        var activityCodeableConcept = (CodeableConcept) extension.Value;
+                        if (activityCodeableConcept.Coding.IsNullOrEmpty())
+                        {
+                            break;
+                        }
+
+                        var activityCoding = activityCodeableConcept.Coding[0];
                         var value = activityCoding.Code.Split(':');
                         var vocabName = value[0];
                         var vocabCode = value.Length == 2 ? value[1] : null;
@@ -115,9 +129,9 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                         break;
                     case HealthVaultExtensions.ExerciseSegmentDistance:
                         var valueQuantity = (Quantity) extension.Value;
-                        if (valueQuantity != null)
+                        if (valueQuantity?.Value != null)
                         {
-                            exerciseSegment.Distance = new Length((double) valueQuantity.Value.Value);
+                            exerciseSegment.Distance = new Length((double) valueQuantity.Value);
                         }
                         break;
                     case HealthVaultExtensions.ExerciseSegmentOffset:
@@ -149,17 +163,29 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
         private static string GetExerciseDetail(Extension detail, out ExerciseDetail exerciseDetail)
         {
-            string key = "";
+            var key = "";
             exerciseDetail = new ExerciseDetail();
+
             foreach (var extension in detail.Extension)
             {
+                if (extension.Value == null)
+                {
+                    continue;
+                }
+
                 switch (extension.Url)
                 {
                     case HealthVaultExtensions.ExerciseDetailName:
                         key = ((FhirString)extension.Value).Value;
                         break;
                     case HealthVaultExtensions.ExerciseDetailType:
-                        var code = ((CodeableConcept)extension.Value).Coding[0];
+                        var typeCodeableConcept = (CodeableConcept)extension.Value;
+                        if (typeCodeableConcept.Coding.IsNullOrEmpty())
+                        {
+                            break;
+                        }
+
+                        var code = typeCodeableConcept.Coding[0];
                         var value = code.Code.Split(':');
                         var vocabName = value[0];
                         var vocabCode = value.Length == 2 ? value[1] : null;
@@ -179,6 +205,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                         break;
                 }
             }
+
             return key;
         }
     }

@@ -6,13 +6,14 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Linq;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NodaTime;
+using NodaTime.Extensions;
 
 namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 {
@@ -35,7 +36,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             exerciseSegment.Details.Add("segment 1 - lap 1", new ExerciseDetail(swimmingCodableValue[0], new StructuredMeasurement(46.2, secondsCodableValue)));
             exerciseSegment.Details.Add("segment 1 - lap 2", new ExerciseDetail(swimmingCodableValue[0], new StructuredMeasurement(21, secondsCodableValue)));
 
-            var exercise = new Exercise(new ApproximateDateTime(DateTime.Now), swimmingCodableValue)
+            var exercise = new Exercise(new ApproximateDateTime(SystemClock.Instance.InUtc().GetCurrentLocalDateTime()), swimmingCodableValue)
             {
                 Distance = new Length(30),
                 Duration = 10,

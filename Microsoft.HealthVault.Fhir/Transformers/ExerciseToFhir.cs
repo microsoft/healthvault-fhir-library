@@ -39,7 +39,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 var distanceValue = new Observation.ComponentComponent
                 {
                     Code = new CodeableConcept { Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(new CodableValue(HealthVaultVocabularies.ExerciseDistance, HealthVaultVocabularies.ExerciseDistance, HealthVaultVocabularies.Exercise, HealthVaultVocabularies.Wc, "1"), null) },
-                    Value = new Quantity((decimal)exercise.Distance.Value, "m") //TODO: switch to constant once body composition PR (#15) is in
+                    Value = new Quantity((decimal)exercise.Distance.Value, UnitAbbreviations.Meter)
                 };
                 observation.Component.Add(distanceValue);
             }
@@ -49,7 +49,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 var durationValue = new Observation.ComponentComponent
                 {
                     Code = new CodeableConcept { Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(new CodableValue(HealthVaultVocabularies.ExerciseDuration, HealthVaultVocabularies.ExerciseDuration, HealthVaultVocabularies.Exercise, HealthVaultVocabularies.Wc, "1"), null) },
-                    Value = new Quantity((decimal)exercise.Duration.Value, "min") //TODO: switch to constant once body composition PR (#15) is in
+                    Value = new Quantity((decimal)exercise.Duration.Value, UnitAbbreviations.Minute)
                 };
                 observation.Component.Add(durationValue);
             }
@@ -59,15 +59,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 Div = exercise.Title
             };
 
-            // ToDo: Change to use the ApproximateDateTime.ToFhir() extension when brought in with body composition pr (#15).
-            observation.Effective = new FhirDateTime(
-                exercise.When.ApproximateDate.Year,
-                exercise.When.ApproximateDate.Month ?? 1,
-                exercise.When.ApproximateDate.Day ?? 1,
-                exercise.When.ApproximateTime.Hour,
-                exercise.When.ApproximateTime.Minute,
-                exercise.When.ApproximateTime.Second ?? 0
-            );
+            observation.Effective = exercise.When.ToFhir();
             
             var activityValue = new Observation.ComponentComponent
             {
@@ -140,7 +132,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseSegmentDistance, new Quantity
                 {
                     Value = (decimal)segment.Distance.Value,
-                    Unit = "m" //TODO: switch to constant once body composition PR (#15) is in
+                    Unit = UnitAbbreviations.Meter
                 }));
             }
 
