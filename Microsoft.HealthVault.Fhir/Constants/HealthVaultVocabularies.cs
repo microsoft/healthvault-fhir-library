@@ -27,8 +27,6 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string ExerciseActivity = "activity";
         public const string ExerciseDistance = "distance";
         public const string ExerciseDuration = "duration";
-        public const string ExerciseDetail = "exercise/detail";
-        public const string ExerciseSegment = "exercise/segment";
 
         public const string Fhir = "fhir";
         public const string Wc = "wc";

@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 foreach (var detail in detailExtensions)
                 {
                     ExerciseDetail exerciseDetail;
-                    var key = GetExerciseDetailKey(detail, out exerciseDetail);
+                    var key = GetExerciseDetail(detail, out exerciseDetail);
 
                     if (!string.IsNullOrEmpty(key))
                     {
@@ -125,7 +125,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                         break;
                     case HealthVaultExtensions.ExerciseDetail:
                         ExerciseDetail exerciseDetail;
-                        var key = GetExerciseDetailKey(extension, out exerciseDetail);
+                        var key = GetExerciseDetail(extension, out exerciseDetail);
 
                         if (!string.IsNullOrEmpty(key))
                         {
@@ -147,7 +147,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             exercise.Activity.Add(new CodedValue(code, vocabName, family, version));
         }
 
-        private static string GetExerciseDetailKey(Extension detail, out ExerciseDetail exerciseDetail)
+        private static string GetExerciseDetail(Extension detail, out ExerciseDetail exerciseDetail)
         {
             string key = "";
             exerciseDetail = new ExerciseDetail();
