@@ -99,19 +99,20 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         {
             var extension = new Extension
             {
-                Url = HealthVaultVocabularies.BaseUri + HealthVaultVocabularies.ExerciseDetail
+                Url = HealthVaultExtensions.ExerciseDetail
             };
 
-            extension.Extension.Add(new Extension("exercise-detail-name", new FhirString(key)));
+            extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseDetailName, new FhirString(key)));
 
-            extension.Extension.Add(new Extension("exercise-detail-type", new CodeableConcept{Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(new CodableValue(exerciseDetail.Name.Value, exerciseDetail.Name), null) }));
+            extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseDetailType, new CodeableConcept{Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(new CodableValue(exerciseDetail.Name.Value, exerciseDetail.Name), null) }));
 
-            extension.Extension.Add(new Extension("exercise-detail-value", new Quantity
+            extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseDetailValue, new Quantity
             {
                 Value = (decimal)exerciseDetail.Value.Value,
-                Unit = exerciseDetail.Value.Units[0].Value,
+                Unit = exerciseDetail.Value.Units.Text,
+                Code = exerciseDetail.Value.Units[0].Value,
+                System = HealthVaultCodesToFhir.GetVocabularyUrl(exerciseDetail.Value.Units[0].VocabularyName, exerciseDetail.Value.Units[0].Version),
             }));
-          
             return extension;
         }
 
@@ -119,24 +120,24 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         {
             var extension = new Extension
             {
-                Url = HealthVaultVocabularies.BaseUri + HealthVaultVocabularies.ExerciseSegment
+                Url = HealthVaultExtensions.ExerciseSegment
             };
             
-            extension.Extension.Add(new Extension("exercise-segment-activity", new CodeableConcept { Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(segment.Activity, null) }));
+            extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseSegmentActivity, new CodeableConcept { Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(segment.Activity, null) }));
 
             if (!string.IsNullOrEmpty(segment.Title))
             {
-                extension.Extension.Add(new Extension("exercise-segment-title", new FhirString(segment.Title)));
+                extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseSegmentTitle, new FhirString(segment.Title)));
             }
 
             if (segment.Duration.HasValue)
             { 
-                extension.Extension.Add(new Extension("exercise-segment-duration", new FhirDecimal((decimal)segment.Duration)));
+                extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseSegmentDuration, new FhirDecimal((decimal)segment.Duration)));
             }
 
             if (segment.Distance != null)
             {
-                extension.Extension.Add(new Extension("exercise-segment-distance", new Quantity
+                extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseSegmentDistance, new Quantity
                 {
                     Value = (decimal)segment.Distance.Value,
                     Unit = "m" //TODO: switch to constant once body composition PR (#15) is in
@@ -145,7 +146,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             if (segment.Offset.HasValue)
             {
-                extension.Extension.Add(new Extension("exercise-segment-offset", new FhirDecimal((decimal)segment.Offset)));
+                extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseSegmentOffset, new FhirDecimal((decimal)segment.Offset)));
             }
 
             if (segment.Details != null)

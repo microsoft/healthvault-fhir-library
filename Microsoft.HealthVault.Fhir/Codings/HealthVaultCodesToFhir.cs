@@ -85,5 +85,16 @@ namespace Microsoft.HealthVault.Fhir.Codings
 
             return fhirCodes;
         }
+
+        /// <summary>
+        /// Returns a URL to be used for system that includes the vocabulary name and version
+        /// </summary>
+        /// <param name="vocabularyName">The name of the vocabulary</param>
+        /// <param name="version">The version of the vocabulary</param>
+        /// <returns></returns>
+        public static string GetVocabularyUrl(string vocabularyName, string version)
+        {
+            return $"{VocabularyUris.HealthVaultVocabulariesUri}{vocabularyName}/{version}";
+        }
     }
 }
