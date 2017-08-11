@@ -34,23 +34,17 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             
             if (bodyDimension.MeasurementName != null)
             {
-                observation.Code = new CodeableConcept();
-                observation.Code.Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(bodyDimension.MeasurementName, new List<Coding>());
+                observation.Code = new CodeableConcept
+                {
+                    Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(bodyDimension.MeasurementName, new List<Coding>())
+                };
             }
 
-            var quantity = new Quantity((decimal)bodyDimension.Value.Meters, "m");
+            var quantity = new Quantity((decimal)bodyDimension.Value.Meters, UnitAbbreviations.Meter);
             observation.Value = quantity;
 
-            // ToDo: Change to use the ApproximateDateTime.ToFhir() extension when brought in with body composition pr.
-            observation.Effective = new FhirDateTime(
-                bodyDimension.When.ApproximateDate.Year,
-                bodyDimension.When.ApproximateDate.Month ?? 1,
-                bodyDimension.When.ApproximateDate.Day ?? 1,
-                bodyDimension.When.ApproximateTime.Hour,
-                bodyDimension.When.ApproximateTime.Minute,
-                bodyDimension.When.ApproximateTime.Second ?? 0
-            );
-                
+            observation.Effective = bodyDimension.When.ToFhir();
+
             return observation;
         }
     }

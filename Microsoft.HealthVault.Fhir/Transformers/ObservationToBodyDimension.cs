@@ -17,12 +17,12 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     {
         internal static BodyDimension ToBodyDimension(this Observation observation)
         {
-            var bodyDimension = observation.ToThingBase<ItemTypes.BodyDimension>();
+            var bodyDimension = observation.ToThingBase<BodyDimension>();
 
             bodyDimension.Value = ObservationToHealthVault.GetThingValueFromQuantity<Length>(observation.Value as Quantity);
             bodyDimension.When = ObservationToHealthVault.GetApproximateDateTimeFromEffectiveDate(observation.Effective);
 
-            if (observation.Code != null && observation.Code.Coding != null)
+            if (observation.Code?.Coding != null)
             {
                 foreach (var code in observation.Code.Coding)
                 {
