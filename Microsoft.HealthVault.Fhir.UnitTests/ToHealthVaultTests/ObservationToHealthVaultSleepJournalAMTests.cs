@@ -30,7 +30,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             Assert.IsNotNull(sleepJournalAm);
 
             Assert.AreEqual(new ApproximateTime(22, 30, 0, 900), sleepJournalAm.Bedtime);
-            Assert.AreEqual(new ApproximateTime(6, 28, 0, 182), sleepJournalAm.WakeTime);
+            Assert.AreEqual(new ApproximateTime(6, 28, 59, 182), sleepJournalAm.WakeTime);
             Assert.AreEqual(100, sleepJournalAm.SleepMinutes);
             Assert.AreEqual(110, sleepJournalAm.SettlingMinutes);
             Assert.AreEqual(WakeState.Tired, sleepJournalAm.WakeState);

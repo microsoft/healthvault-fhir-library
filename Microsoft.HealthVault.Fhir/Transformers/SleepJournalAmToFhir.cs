@@ -9,7 +9,6 @@
 using System;
 using System.Collections.Generic;
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Codes.HealthVault;
 using Microsoft.HealthVault.Fhir.Codings;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
@@ -36,7 +35,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             observation.Code = new CodeableConcept(VocabularyUris.HealthVaultVocabulariesUri, HealthVaultVocabularies.SleepJournalAM);
             
-            observation.Effective = new FhirDateTime(sleepJournalAM.When.ToDateTime());
+            observation.Effective = new FhirDateTime(sleepJournalAM.When.ToLocalDateTime().ToDateTimeUnspecified());
 
             observation.Component = new List<Observation.ComponentComponent>();
 
@@ -57,14 +56,14 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             var sleepMinutesComponent = new Observation.ComponentComponent
             {
                 Code = new CodeableConcept { Coding = new List<Coding> { new Coding(VocabularyUris.HealthVaultVocabulariesUri, HealthVaultVocabularies.SleepJournalAMSleepMinutes) } },
-                Value = new Quantity(sleepJournalAM.SleepMinutes, "min")
+                Value = new Quantity(sleepJournalAM.SleepMinutes, UnitAbbreviations.Minute)
             };
             observation.Component.Add(sleepMinutesComponent);
 
             var settlingMinutesComponent = new Observation.ComponentComponent
             {
                 Code = new CodeableConcept { Coding = new List<Coding> { new Coding(VocabularyUris.HealthVaultVocabulariesUri, HealthVaultVocabularies.SleepJournalAMSettlingMinutes) } },
-                Value = new Quantity(sleepJournalAM.SettlingMinutes, "min")
+                Value = new Quantity(sleepJournalAM.SettlingMinutes, UnitAbbreviations.Minute)
             };
             observation.Component.Add(settlingMinutesComponent);
 

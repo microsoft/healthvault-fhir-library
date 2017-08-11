@@ -6,11 +6,14 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NodaTime;
+using NodaTime.Extensions;
+using Period = Hl7.Fhir.Model.Period;
 
 namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
 {
@@ -20,9 +23,8 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
         [TestMethod]
         public void WhenHeathVaultSleepJournalAMTransformedToFhir_ThenCodeAndValuesEqual()
         {
-            // ToDo, once deserialization is fixed on SDK, use Deserialize
-            var sleepJournalAM = new SleepJournalAM(
-                new HealthServiceDateTime(DateTime.Now),
+            var sleepJournalAm = new SleepJournalAM(
+                new HealthServiceDateTime(SystemClock.Instance.InUtc().GetCurrentLocalDateTime()),
                 new ApproximateTime(22, 30),
                 new ApproximateTime(6,28),
                 100,
@@ -30,20 +32,20 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
                 WakeState.Tired
                 );
 
-            sleepJournalAM.Awakenings.Add(new Occurrence(new ApproximateTime(23, 30), 40));
-            sleepJournalAM.Awakenings.Add(new Occurrence(new ApproximateTime(0, 30), 10));
+            sleepJournalAm.Awakenings.Add(new Occurrence(new ApproximateTime(23, 30), 40));
+            sleepJournalAm.Awakenings.Add(new Occurrence(new ApproximateTime(0, 30), 10));
 
-            sleepJournalAM.Medications = new CodableValue("Benzaclin", new CodedValue("ccabbac8-58f0-4e88-a1eb-538e21e7524d", "Mayo", "RxNorm", "2" ));
+            sleepJournalAm.Medications = new CodableValue("Benzaclin", new CodedValue("ccabbac8-58f0-4e88-a1eb-538e21e7524d", "Mayo", "RxNorm", "2" ));
 
-            var observation = sleepJournalAM.ToFhir();
+            var observation = sleepJournalAm.ToFhir();
 
             Assert.IsNotNull(observation);
             Assert.AreEqual("22:30:00.000", observation.Component[0].Value.ToString());
             Assert.AreEqual("06:28:00.000", observation.Component[1].Value.ToString());
-            Assert.AreEqual((decimal)100, ((Quantity)observation.Component[2].Value).Value);
-            Assert.AreEqual("min", ((Quantity)observation.Component[2].Value).Unit);
-            Assert.AreEqual((decimal)110, ((Quantity)observation.Component[3].Value).Value);
-            Assert.AreEqual("min", ((Quantity)observation.Component[3].Value).Unit);
+            Assert.AreEqual(100, ((Quantity)observation.Component[2].Value).Value);
+            Assert.AreEqual(UnitAbbreviations.Minute, ((Quantity)observation.Component[2].Value).Unit);
+            Assert.AreEqual(110, ((Quantity)observation.Component[3].Value).Value);
+            Assert.AreEqual(UnitAbbreviations.Minute, ((Quantity)observation.Component[3].Value).Unit);
 
             Assert.AreEqual(new FhirDateTime(1900, 01, 01, 23, 30), ((Period)observation.Component[4].Value).StartElement);
             Assert.AreEqual(new FhirDateTime(1900, 01, 02, 0, 10), ((Period)observation.Component[4].Value).EndElement);

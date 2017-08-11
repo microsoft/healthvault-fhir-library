@@ -29,13 +29,13 @@ namespace Microsoft.HealthVault.Fhir.Constants
 
 
         public const string SleepJournalAM = "sleep-journal-am";
-        public const string SleepJournalAMBedtime = "bed-time";
-        public const string SleepJournalAMWaketime = "wake-time";
-        public const string SleepJournalAMSleepMinutes = "sleep-minutes";
-        public const string SleepJournalAMSettlingMinutes = "settling-minutes";
-        public const string SleepJournalAMAwakening = "awakening";
-        public const string SleepJournalAMWakeState = "wake-state";
-        public const string SleepJournalAMMedication = "medication";
+        public const string SleepJournalAMBedtime = "sleep-journal-bed-time";
+        public const string SleepJournalAMWaketime = "sleep-journal-wake-time";
+        public const string SleepJournalAMSleepMinutes = "sleep-journal-sleep-minutes";
+        public const string SleepJournalAMSettlingMinutes = "sleep-journal-settling-minutes";
+        public const string SleepJournalAMAwakening = "sleep-journal-awakening";
+        public const string SleepJournalAMWakeState = "sleep-journal-wake-state";
+        public const string SleepJournalAMMedication = "sleep-journal-medication";
 
         public const string Fhir = "fhir";
         public const string Wc = "wc";
