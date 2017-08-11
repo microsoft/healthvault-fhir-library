@@ -69,13 +69,13 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 if (thing.Created.Timestamp != null)
                 {
-                    observation.Issued = thing.Created.Timestamp;
+                    observation.Issued = thing.Created.Timestamp.ToDateTimeOffset();
                 }
             }
 
             if (thing.LastUpdated != null)
             {
-                observation.Meta.LastUpdated = new DateTimeOffset?(thing.LastUpdated.Timestamp);
+                observation.Meta.LastUpdated = thing.LastUpdated.Timestamp.ToDateTimeOffset();
             }
 
             if (thing.CommonData != null)

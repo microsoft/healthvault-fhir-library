@@ -35,7 +35,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             var value = observation.Value as Quantity;
             Assert.IsNotNull(value);
             Assert.AreEqual((decimal)75.5, value.Value);
-            Assert.AreEqual("kg", value.Unit);
+            Assert.AreEqual(UnitAbbreviations.Kilogram, value.Unit);
         }
     }
 }

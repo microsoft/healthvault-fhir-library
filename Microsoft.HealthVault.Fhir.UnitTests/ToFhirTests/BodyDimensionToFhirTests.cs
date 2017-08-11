@@ -13,6 +13,7 @@ using Hl7.Fhir.Support;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NodaTime;
 
 namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 {
@@ -22,7 +23,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
         [TestMethod]
         public void WhenHealthVaultBodyDimensionTransformedToFhir_ThenCodeAndValuesEqual()
         {
-            var testDateTime = new DateTime(2017, 8, 2, 11, 13, 14);
+            var testDateTime = new LocalDateTime(2017, 8, 2, 11, 13, 14);
 
             var bodyDimension = new BodyDimension(
                 new ApproximateDateTime(testDateTime),
@@ -37,7 +38,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 
             var when = observation.Effective as FhirDateTime;
             Assert.IsNotNull(when);
-            Assert.AreEqual(testDateTime, when.ToDateTime().Value);
+            Assert.AreEqual(testDateTime.ToDateTimeUnspecified(), when.ToDateTime().Value);
 
             var value = observation.Value as Quantity;
             Assert.IsNotNull(value);

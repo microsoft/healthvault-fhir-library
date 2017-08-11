@@ -147,9 +147,9 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 dateTime = effectiveDate as FhirDateTime;
             }
-            else if (effectiveDate is Period && ((Period)effectiveDate).Start != null)
+            else if (effectiveDate is Period && ((Period) effectiveDate).Start != null)
             {
-                dateTime = new FhirDateTime(((Period)effectiveDate).Start);
+                dateTime = new FhirDateTime(((Period) effectiveDate).Start);
             }
             return dateTime;
         }
@@ -208,6 +208,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             if (type == typeof(BloodPressure))
             {
                 return observation.ToBloodPressure();
+            }
+
+            if (type == typeof(BodyComposition))
+            {
+                return observation.ToBodyComposition();
             }
 
             if (type == typeof(BodyDimension))

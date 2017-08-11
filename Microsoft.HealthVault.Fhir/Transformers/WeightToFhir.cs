@@ -31,9 +31,9 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             observation.Category = new System.Collections.Generic.List<CodeableConcept> { FhirCategories.VitalSigns };
             observation.Code = HealthVaultVocabularies.BodyWeight;
 
-            var quantity = new Quantity((decimal)weight.Value.Kilograms, "kg");
+            var quantity = new Quantity((decimal)weight.Value.Kilograms, UnitAbbreviations.Kilogram);
             observation.Value = quantity;
-            observation.Effective = new FhirDateTime(weight.When.ToDateTime());
+            observation.Effective = new FhirDateTime(weight.When.ToLocalDateTime().ToDateTimeUnspecified());
 
             return observation;
         }
