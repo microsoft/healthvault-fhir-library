@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices.ComTypes;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Thing;
@@ -26,7 +27,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         /// </summary>
         /// <param name="thing">The HealthVault thing to transform</param>
         /// <returns>A FHIR observation based on the HealthVault thing</returns>
-        public static Observation ToFhir(this ThingBase thing)
+        public static T ToFhir<T>(this ThingBase thing) where T : DomainResource, new()
         {
             // Find registered specific ToFhir method
             var transformerType = typeof(ThingBaseToFhir);
@@ -34,76 +35,83 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             if (method != null && method.GetParameters()[0].ParameterType != typeof(ThingBase))
             {
-                return (Observation)method.Invoke(null, new object[] { thing });
+                return (T)method.Invoke(null, new object[] { thing });
             }
             else
             {
-                return thing.ToFhirInternal();
+                return thing.ToFhirInternal<T>();
             }
         }
 
-        internal static Observation ToFhirInternal(this ThingBase thing)
+        internal static T ToFhirInternal<T>(this ThingBase thing) where T : DomainResource, new()
         {
-            var observation = new Observation();
-            observation.Meta = new Meta();
+            var fhirObject = new T();
+            fhirObject.Meta = new Meta();
 
-            observation.AddExtension(HealthVaultVocabularies.FlagsFhirExtensionName, new FhirString(thing.Flags.ToString()));
-            observation.AddExtension(HealthVaultVocabularies.StateFhirExtensionName, new FhirString(thing.State.ToString()));
+            fhirObject.AddExtension(HealthVaultVocabularies.FlagsFhirExtensionName, new FhirString(thing.Flags.ToString()));
+            fhirObject.AddExtension(HealthVaultVocabularies.StateFhirExtensionName, new FhirString(thing.State.ToString()));
 
-            observation.Status = ObservationStatus.Final;
 
             if (thing.Key != null)
             {
                 if (thing.Key.Id != null)
                 {
-                    observation.Id = thing.Key.Id.ToString();
+                    fhirObject.Id = thing.Key.Id.ToString();
                 }
 
                 if (thing.Key.VersionStamp != null)
                 {
-                    observation.Meta.VersionId = thing.Key.VersionStamp.ToString();
+                    fhirObject.Meta.VersionId = thing.Key.VersionStamp.ToString();
                 }
             }
 
-            if (thing.Created != null)
+            if (typeof(T) == typeof(Observation))
             {
-                if (thing.Created.Timestamp != null)
+                (fhirObject as Observation).Status = ObservationStatus.Final;
+
+                if (thing.Created != null)
                 {
-                    observation.Issued = thing.Created.Timestamp.ToDateTimeOffset();
+                    if (thing.Created.Timestamp != null)
+                    {
+                        (fhirObject as Observation).Issued = thing.Created.Timestamp.ToDateTimeOffset();
+                    }
                 }
             }
 
             if (thing.LastUpdated != null)
             {
-                observation.Meta.LastUpdated = thing.LastUpdated.Timestamp.ToDateTimeOffset();
+                fhirObject.Meta.LastUpdated = thing.LastUpdated.Timestamp.ToDateTimeOffset();
             }
 
             if (thing.CommonData != null)
             {
                 if (!string.IsNullOrEmpty(thing.CommonData.Note))
                 {
-                    observation.Text = new Narrative() { Div = thing.CommonData.Note };
+                    fhirObject.Text = new Narrative() { Div = thing.CommonData.Note };
                 }
 
-                if (!string.IsNullOrEmpty(thing.CommonData.Source))
+                if (typeof(T) == typeof(Observation))
                 {
-                    observation.Device = new ResourceReference(thing.CommonData.Source);
-                }
-
-                if (thing.CommonData.RelatedItems != null && thing.CommonData.RelatedItems.Any())
-                {
-                    observation.Related = new List<Observation.RelatedComponent>();
-                    foreach (var item in thing.CommonData.RelatedItems)
+                    if (!string.IsNullOrEmpty(thing.CommonData.Source))
                     {
-                        if (item.ItemKey != null)
+                        (fhirObject as Observation).Device = new ResourceReference(thing.CommonData.Source);
+                    }
+
+                    if (thing.CommonData.RelatedItems != null && thing.CommonData.RelatedItems.Any())
+                    {
+                        //observation.Related = new List<Observation.RelatedComponent>();
+                        foreach (var item in thing.CommonData.RelatedItems)
                         {
-                            observation.Related.Add(new Observation.RelatedComponent() { Target = new ResourceReference($"observation/{item.ItemKey.Id}") });
+                            if (item.ItemKey != null)
+                            {
+                                (fhirObject as Observation).Related.Add(new Observation.RelatedComponent() { Target = new ResourceReference($"observation/{item.ItemKey.Id}") });
+                            }
                         }
                     }
                 }
             }
             
-            return observation;
+            return fhirObject;
         }        
     }
 }

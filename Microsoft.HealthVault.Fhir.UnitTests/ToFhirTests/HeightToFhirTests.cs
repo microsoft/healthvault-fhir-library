@@ -24,7 +24,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             // ToDo, once deserialization is fixed on SDK, use Deserialize
             ThingBase height = new Height(new HealthServiceDateTime(), new Length(1.6));
 
-            var observation = height.ToFhir();
+            var observation = height.ToFhir<Observation>();
             Assert.IsNotNull(observation);
             Assert.AreEqual(HealthVaultVocabularies.BodyHeight, observation.Code);
 

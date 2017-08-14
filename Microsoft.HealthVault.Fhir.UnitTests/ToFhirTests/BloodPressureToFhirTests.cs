@@ -27,7 +27,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
 
             ThingBase bloodPressure = new BloodPressure(new HealthServiceDateTime(), 120, 60);
 
-            var observation = bloodPressure.ToFhir();
+            var observation = bloodPressure.ToFhir<Observation>();
             Assert.IsNotNull(observation);
             Assert.IsNotNull(observation.Code);
             Assert.IsNotNull(observation.Code.Coding);
@@ -64,7 +64,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
                 Pulse = 55
             };
 
-            var observation = bloodPressure.ToFhir();
+            var observation = bloodPressure.ToFhir<Observation>();
             Assert.IsNotNull(observation);
             Assert.IsNotNull(observation.Code);
             Assert.IsNotNull(observation.Code.Coding);

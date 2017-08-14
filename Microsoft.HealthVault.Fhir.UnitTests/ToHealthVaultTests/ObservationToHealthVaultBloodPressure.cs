@@ -39,7 +39,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         {
             ThingBase hvBloodPressure = new BloodPressure(new HealthServiceDateTime(), 120, 60);
 
-            var observation = hvBloodPressure.ToFhir();
+            var observation = hvBloodPressure.ToFhir<Observation>();
 
             var bp = observation.ToHealthVault() as BloodPressure;
             Assert.IsNotNull(bp);

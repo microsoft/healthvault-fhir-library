@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
 
             ThingBase weight = new Weight(new HealthServiceDateTime(), new WeightValue(75.5));            
             
-            var observation = weight.ToFhir();
+            var observation = weight.ToFhir<Observation>();
             Assert.IsNotNull(observation);
             Assert.AreEqual(HealthVaultVocabularies.BodyWeight, observation.Code);
 
