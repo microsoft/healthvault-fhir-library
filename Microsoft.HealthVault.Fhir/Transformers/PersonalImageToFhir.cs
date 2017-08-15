@@ -24,7 +24,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     }
 
     /// <summary>
-    /// An extension class that transforms HealthVault personal image data types into FHIR Observations
+    /// An extension class that transforms HealthVault personal image data types into FHIR Patient
     /// </summary>
     internal static class PersonalImageToFhir
     {

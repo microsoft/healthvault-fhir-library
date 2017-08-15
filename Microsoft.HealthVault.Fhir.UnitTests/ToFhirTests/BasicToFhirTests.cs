@@ -36,7 +36,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
                     new Language(new CodableValue("French", "fr", "iso639-1", "iso", "1"), false),
                 }
             };
-
+            
             var patient = basic.ToFhir<Patient>();
 
             Assert.IsNotNull(patient);

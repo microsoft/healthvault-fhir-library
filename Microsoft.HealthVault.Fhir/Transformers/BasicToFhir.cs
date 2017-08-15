@@ -18,7 +18,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     }
 
     /// <summary>
-    /// An extension class that transforms HealthVault basic data types into FHIR Observations
+    /// An extension class that transforms HealthVault basic data types into FHIR Patient
     /// </summary>
     internal static class BasicToFhir
     {
