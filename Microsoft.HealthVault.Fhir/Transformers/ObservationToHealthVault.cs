@@ -108,20 +108,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
         internal static HealthServiceDateTime GetHealthVaultTimeFromEffectiveDate(Element effectiveDate)
         {
-            FhirDateTime dateTime = null;
+            var dateTime = GetFhirDateTime(effectiveDate);
 
-            /* Per Spec DSTU3 Effective Date in an observation can only be of type FhirDateTime or FhirPeriod
-             * in this transformation if we have a period we will map it to the start time
-             */
-            if (effectiveDate is FhirDateTime)
-            {
-                dateTime = effectiveDate as FhirDateTime;
-            }
-            else if (effectiveDate is Period && ((Period)effectiveDate).Start != null)
-            {
-                dateTime = new FhirDateTime(((Period)effectiveDate).Start);
-            }            
-            
             if (dateTime != null)
             {
                 var dt = dateTime.ToDateTimeOffset();
@@ -131,6 +119,39 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
 
             return null;
+        }
+
+        internal static ApproximateDateTime GetApproximateDateTimeFromEffectiveDate(Element effectiveDate)
+        {
+            var dateTime = GetFhirDateTime(effectiveDate);
+
+            if (dateTime != null)
+            {
+                var dt = dateTime.ToDateTimeOffset();
+                return new ApproximateDateTime(
+                    new ApproximateDate(dt.Year, dt.Month, dt.Day),
+                    new ApproximateTime(dt.Hour, dt.Minute, dt.Second, dt.Millisecond));
+            }
+
+            return null;
+        }
+
+        private static FhirDateTime GetFhirDateTime(Element effectiveDate)
+        {
+            FhirDateTime dateTime = null;
+
+            /* Per Spec DSTU3 Effective Date in an observation can only be of type FhirDateTime or FhirPeriod
+             * in this transformation if we have a period we will map it to the start time
+             */
+            if (effectiveDate is FhirDateTime)
+            {
+                dateTime = effectiveDate as FhirDateTime;
+            }
+            else if (effectiveDate is Period && ((Period) effectiveDate).Start != null)
+            {
+                dateTime = new FhirDateTime(((Period) effectiveDate).Start);
+            }
+            return dateTime;
         }
 
         private static double GetQuantityInUnit(Quantity quantityValue, Units.UnitConversion unitConversion)
@@ -187,6 +208,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             if (type == typeof(BloodPressure))
             {
                 return observation.ToBloodPressure();
+            }
+
+            if (type == typeof(BodyComposition))
+            {
+                return observation.ToBodyComposition();
             }
 
             return null;

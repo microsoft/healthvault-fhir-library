@@ -32,9 +32,9 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             observation.Category = new List<CodeableConcept> { FhirCategories.VitalSigns };
             observation.Code = HealthVaultVocabularies.HeartRate;
 
-            var quantity = new Quantity(heartRate.Value, "/min");
+            var quantity = new Quantity(heartRate.Value, UnitAbbreviations.PerMinute);
             observation.Value = quantity;
-            observation.Effective = new FhirDateTime(heartRate.When.ToDateTime());
+            observation.Effective = new FhirDateTime(heartRate.When.ToLocalDateTime().ToDateTimeUnspecified());
 
             return observation;
         }

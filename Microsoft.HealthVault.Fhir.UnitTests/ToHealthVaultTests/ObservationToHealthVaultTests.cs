@@ -9,6 +9,7 @@
 using System.Collections.Generic;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Serialization;
+using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.Fhir.UnitTests.Samples;
 using Microsoft.HealthVault.ItemTypes;
@@ -28,8 +29,8 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             var weight = observation.ToHealthVault() as Weight;
             Assert.IsNotNull(weight);
             Assert.AreEqual(67, weight.Value.Kilograms);
-            Assert.AreEqual("kg", weight.Value.DisplayValue.Units);
-            Assert.AreEqual("kg", weight.Value.DisplayValue.UnitsCode);
+            Assert.AreEqual(UnitAbbreviations.Kilogram, weight.Value.DisplayValue.Units);
+            Assert.AreEqual(UnitAbbreviations.Kilogram, weight.Value.DisplayValue.UnitsCode);
         }
 
         [TestMethod]
@@ -40,8 +41,8 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             var height = observation.ToHealthVault() as Height;
             Assert.IsNotNull(height);
             Assert.AreEqual(1.73, height.Value.Meters);
-            Assert.AreEqual("m", height.Value.DisplayValue.Units);
-            Assert.AreEqual("m", height.Value.DisplayValue.UnitsCode);
+            Assert.AreEqual(UnitAbbreviations.Meter, height.Value.DisplayValue.Units);
+            Assert.AreEqual(UnitAbbreviations.Meter, height.Value.DisplayValue.UnitsCode);
         }
 
         [TestMethod]
@@ -53,8 +54,8 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             Assert.IsNotNull(weight);
             Assert.AreEqual(78.471480010000008, weight.Value.Kilograms);
             Assert.AreEqual(173, weight.Value.DisplayValue.Value);
-            Assert.AreEqual("lb", weight.Value.DisplayValue.Units);
-            Assert.AreEqual("[lb_av]", weight.Value.DisplayValue.UnitsCode);
+            Assert.AreEqual(UnitAbbreviations.Pound, weight.Value.DisplayValue.Units);
+            Assert.AreEqual(UnitAbbreviations.PoundUcum, weight.Value.DisplayValue.UnitsCode);
         }
 
         [TestMethod]
@@ -66,8 +67,8 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             Assert.IsNotNull(weight);
             Assert.AreEqual(75, weight.Value.Kilograms);
             Assert.AreEqual(75000, weight.Value.DisplayValue.Value);
-            Assert.AreEqual("g", weight.Value.DisplayValue.Units);
-            Assert.AreEqual("g", weight.Value.DisplayValue.UnitsCode);
+            Assert.AreEqual(UnitAbbreviations.Gram, weight.Value.DisplayValue.Units);
+            Assert.AreEqual(UnitAbbreviations.Gram, weight.Value.DisplayValue.UnitsCode);
         }
 
         [TestMethod]
@@ -80,8 +81,8 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             var weight = observation.ToHealthVault() as Weight;
             Assert.IsNotNull(weight);
             Assert.AreEqual(75.5, weight.Value.Kilograms);
-            Assert.AreEqual("kg", weight.Value.DisplayValue.Units);
-            Assert.AreEqual("kg", weight.Value.DisplayValue.UnitsCode);
+            Assert.AreEqual(UnitAbbreviations.Kilogram, weight.Value.DisplayValue.Units);
+            Assert.AreEqual(UnitAbbreviations.Kilogram, weight.Value.DisplayValue.UnitsCode);
         }
 
         [TestMethod]
@@ -92,8 +93,8 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             var glucose = observation.ToHealthVault() as BloodGlucose;
             Assert.IsNotNull(glucose);
             Assert.AreEqual(6.3, glucose.Value.Value);
-            Assert.AreEqual("mmol/l", glucose.Value.DisplayValue.Units);
-            Assert.AreEqual("mmol/L", glucose.Value.DisplayValue.UnitsCode);           
+            Assert.AreEqual(UnitAbbreviations.MillimolesPerLiter.ToLower(), glucose.Value.DisplayValue.Units);
+            Assert.AreEqual(UnitAbbreviations.MillimolesPerLiter, glucose.Value.DisplayValue.UnitsCode);           
         }
 
         [TestMethod]

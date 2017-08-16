@@ -37,7 +37,7 @@ namespace Microsoft.HealthVault.Fhir.FhirExtensions
             if (lastUpdated != null)
             {
                 resource.CreateMetaIfNeeded();
-                resource.Meta.LastUpdated = new DateTimeOffset?(lastUpdated.Timestamp);
+                resource.Meta.LastUpdated = lastUpdated.Timestamp.ToDateTimeOffset();
             }
         }
 

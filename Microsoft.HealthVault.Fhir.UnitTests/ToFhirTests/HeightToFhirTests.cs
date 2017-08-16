@@ -31,7 +31,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             var observationValue = observation.Value as Quantity;
             Assert.IsNotNull(observationValue);
             Assert.AreEqual((decimal)1.6, observationValue.Value);
-            Assert.AreEqual("m", observationValue.Unit);
+            Assert.AreEqual(UnitAbbreviations.Meter, observationValue.Unit);
         }
     }
 }

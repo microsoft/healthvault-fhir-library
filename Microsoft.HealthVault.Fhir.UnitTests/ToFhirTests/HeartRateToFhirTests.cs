@@ -32,7 +32,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             var value = observation.Value as Quantity;
             Assert.IsNotNull(value);
             Assert.AreEqual(65, value.Value);
-            Assert.AreEqual("/min", value.Unit);
+            Assert.AreEqual(UnitAbbreviations.PerMinute, value.Unit);
         }
     }
 }

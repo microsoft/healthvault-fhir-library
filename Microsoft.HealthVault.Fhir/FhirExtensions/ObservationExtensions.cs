@@ -46,7 +46,7 @@ namespace Microsoft.HealthVault.Fhir.FhirExtensions
         {
             if (created != null)
             {
-                observation.Issued = created.Timestamp;
+                observation.Issued = created.Timestamp.ToDateTimeOffset();
             }
         }
 
