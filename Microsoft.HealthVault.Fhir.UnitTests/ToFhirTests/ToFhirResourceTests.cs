@@ -86,5 +86,12 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.AreEqual(activeState.ToString(), extendable.GetStringExtension(HealthVaultVocabularies.StateFhirExtensionName));
         }
 
+        [TestMethod]
+        public void WhenAnUnsupportedHealthVaultThingIsTransformedToFhir_NotImplementedExceptionIsThrown()
+        {
+            ThingBase thing = new ActionPlanWrapper();
+
+            Assert.ThrowsException<NotImplementedException>(() => { thing.ToFhir(); });
+        }
     }
 }
