@@ -123,6 +123,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 {
                     givenNames.Add(personal.Name.First);
                 }
+
                 if (!string.IsNullOrEmpty(personal.Name.Middle))
                 {
                     givenNames.Add(personal.Name.Middle);

@@ -11,24 +11,24 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     public static partial class ThingBaseToFhir
     {
         // Register the type on the generic ThingToFhir partial class
-        public static Patient ToFhir(this ItemTypes.Basic basic)
+        public static Patient ToFhir(this ItemTypes.BasicV2 basic)
         {
-            return BasicToFhir.ToFhirInternal(basic, ThingBaseToFhir.ToFhirInternal<Patient>(basic));
+            return BasicV2ToFhir.ToFhirInternal(basic, ThingBaseToFhir.ToFhirInternal<Patient>(basic));
         }
 
         // Register the type on the generic ThingToFhir partial class
-        public static Patient ToFhir(this ItemTypes.Basic basic, Patient patient)
+        public static Patient ToFhir(this ItemTypes.BasicV2 basic, Patient patient)
         {
-            return BasicToFhir.ToFhirInternal(basic, patient);
+            return BasicV2ToFhir.ToFhirInternal(basic, patient);
         }
     }
 
     /// <summary>
     /// An extension class that transforms HealthVault basic data types into FHIR Patient
     /// </summary>
-    internal static class BasicToFhir
+    internal static class BasicV2ToFhir
     {
-        internal static Patient ToFhirInternal(ItemTypes.Basic basic, Patient patient)
+        internal static Patient ToFhirInternal(ItemTypes.BasicV2 basic, Patient patient)
         {
             if (basic.Gender.HasValue)
             {
@@ -83,13 +83,14 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 }
             }
 
-            patient.Address.Add(new Hl7.Fhir.Model.Address
-            {
-                City = basic.City,
-                State = basic.StateOrProvince,
-                PostalCode = basic.PostalCode,
-                Country = basic.Country
-            });
+            //todo: change this to an extension
+            //patient.Address.Add(new Hl7.Fhir.Model.Address
+            //{
+            //    City = basic.City,
+            //    State = basic.StateOrProvince,
+            //    PostalCode = basic.PostalCode,
+            //    Country = basic.Country
+            //});
 
             return patient;
         }
