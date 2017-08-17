@@ -168,6 +168,7 @@
     <Compile Include="ToFhirTests\ContactToFhirTests.cs" />
     <Compile Include="ToFhirTests\HeartRateToFhirTests.cs" />
     <Compile Include="ToFhirTests\HeightToFhirTests.cs" />
+    <Compile Include="ToFhirTests\MultipleToFhirPatientTests.cs" />
     <Compile Include="ToFhirTests\PersonalImageToFhirTests.cs" />
     <Compile Include="ToFhirTests\PersonalToFhirTests.cs" />
     <Compile Include="ToFhirTests\WeightToFhirTests.cs" />

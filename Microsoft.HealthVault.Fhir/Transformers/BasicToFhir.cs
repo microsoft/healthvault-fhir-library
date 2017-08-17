@@ -15,6 +15,12 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         {
             return BasicToFhir.ToFhirInternal(basic, ThingBaseToFhir.ToFhirInternal<Patient>(basic));
         }
+
+        // Register the type on the generic ThingToFhir partial class
+        public static Patient ToFhir(this ItemTypes.Basic basic, Patient patient)
+        {
+            return BasicToFhir.ToFhirInternal(basic, patient);
+        }
     }
 
     /// <summary>
