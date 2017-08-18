@@ -92,6 +92,8 @@ namespace Microsoft.HealthVault.Fhir.Codings
                     case HealthVaultVocabularies.BodyCompositionMeasurementMethods:
                     case HealthVaultVocabularies.BodyCompositionSites:
                         return typeof(BodyComposition);
+                    case HealthVaultVocabularies.BodyDimensionMeasurementNames:
+                        return typeof(BodyDimension);
                 }
             }
 

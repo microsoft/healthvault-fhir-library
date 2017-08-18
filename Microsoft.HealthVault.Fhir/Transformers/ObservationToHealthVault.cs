@@ -77,7 +77,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 return null;
             }
-            
+
             var unitConversion = UnitResolver.Instance.UnitConversions.FirstOrDefault(x => x.Code.Equals(quantityValue.Code, StringComparison.Ordinal));
 
             double convertedValue = GetQuantityInUnit(quantityValue, unitConversion);
@@ -96,7 +96,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
         internal static double? GetValueFromQuantity(Quantity value)
         {
-            if(value != null && value.Value.HasValue)
+            if (value != null && value.Value.HasValue)
             {
                 var unitConversion = UnitResolver.Instance.UnitConversions.FirstOrDefault(x => x.Code.Equals(value.Code, StringComparison.Ordinal));
                 var convertedValue = GetQuantityInUnit(value, unitConversion);
@@ -213,6 +213,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             if (type == typeof(BodyComposition))
             {
                 return observation.ToBodyComposition();
+            }
+
+            if (type == typeof(BodyDimension))
+            {
+                return observation.ToBodyDimension();
             }
 
             return null;
