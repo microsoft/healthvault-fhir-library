@@ -105,13 +105,13 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                             Millisecond = startTime.Millisecond
                         };
 
-                        var occurance = new Occurrence
+                        var occurrence = new Occurrence
                         {
                             When = approximateTime,
                             Minutes = (endTime - startTime).Minutes
                         };
 
-                        sleepJournalAm.Awakenings.Add(occurance);
+                        sleepJournalAm.Awakenings.Add(occurrence);
                         break;
                 }
             }
