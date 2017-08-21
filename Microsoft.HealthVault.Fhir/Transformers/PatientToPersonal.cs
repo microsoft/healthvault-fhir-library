@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     {
         internal static Personal ToPersonal(this Patient patient)
         {
-            var personal = patient.ToThingBase<ItemTypes.Personal>();
+            var personal = patient.ToThingBase<Personal>();
             var hasValue = false;
 
             personal.BloodType = ((CodeableConcept)patient.Extension.FirstOrDefault(x => x.Url == HealthVaultExtensions.PatientBloodType)?.Value)?.ToCodableValue();
@@ -80,7 +80,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             if (!patient.Name.IsNullOrEmpty())
             {
                 hasValue = true;
-                var patientName = patient.Name[0];
+                var patientName = patient.Name.First();
                 var name = new Name
                 {
                     Full = patientName.Text,

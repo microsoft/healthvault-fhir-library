@@ -18,7 +18,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
     public class PersonalImageToFhirTests
     {
         [TestMethod]
-        public void WhenPersonalImageTransformedToFhir_ThenAttachementAddedToPatient()
+        public void WhenPersonalImageTransformedToFhir_ThenPhotoAddedToPatient()
         {
             var personalImage = new PersonalImage();
             string resourceName = "Microsoft.HealthVault.Fhir.UnitTests.Samples.HealthVaultIcon.png";

@@ -22,7 +22,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
     public class PatientToHealthVaultTests
     {
         [TestMethod]
-        public void WhenEmptyPatientTransformedToHealthVault_ThenEmptyObjects()
+        public void WhenEmptyPatientTransformedToHealthVault_ThenEmptyList()
         {
             var patient = new Patient();
 
@@ -51,7 +51,10 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
                         Assert.AreEqual(1975, basic.BirthYear);
                         Assert.AreEqual(Gender.Female, basic.Gender);
                         Assert.AreEqual(DayOfWeek.Sunday, basic.FirstDayOfWeek);
-                        //todo: implement basic address extension
+                        Assert.AreEqual("Redmond", basic.City);
+                        Assert.AreEqual("Washington", basic.StateOrProvince.Text);
+                        Assert.AreEqual("98052", basic.PostalCode);
+                        Assert.AreEqual("United States of America", basic.Country.Text);
                         Assert.AreEqual(2, basic.Languages.Count);
                         Assert.AreEqual("English", basic.Languages[0].SpokenLanguage.Text);
                         Assert.AreEqual(true, basic.Languages[0].IsPrimary);

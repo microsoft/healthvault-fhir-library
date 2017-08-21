@@ -11,12 +11,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Hl7.Fhir.Model;
-using Hl7.Fhir.Serialization;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Address = Microsoft.HealthVault.ItemTypes.Address;
 
 namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 {
@@ -26,7 +24,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
         [TestMethod]
         public void WhenMultipleHeathVaultThingsTransformedToFhirPatient_ThenCodeAndValuesEqual()
         {
-            var basic = new ItemTypes.BasicV2
+            var basic = new BasicV2
             {
                 Gender = Gender.Female,
                 BirthYear = 1975,
@@ -42,10 +40,10 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
                 }
             };
 
-            var patient = basic.ToFhir<Patient>();
+            var patient = basic.ToFhir();
 
             var contact = new Contact();
-            contact.ContactInformation.Address.Add(new Address
+            contact.ContactInformation.Address.Add(new ItemTypes.Address
             {
                 Street = { "123 Main St.", "Apt. 3B" },
                 City = "Redmond",
@@ -57,7 +55,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
                 IsPrimary = true,
             });
 
-            contact.ContactInformation.Address.Add(new Address
+            contact.ContactInformation.Address.Add(new ItemTypes.Address
             {
                 Street = { "1 Back Lane" },
                 City = "Holmfirth",
@@ -145,8 +143,6 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             };
 
             personal.ToFhir(patient);
-
-            var json = FhirSerializer.SerializeToJson(patient);
 
             Assert.IsNotNull(patient);
             // Basic Portion

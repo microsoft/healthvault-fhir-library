@@ -6,7 +6,6 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Collections.Generic;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Support;
 using Microsoft.HealthVault.Fhir.Constants;
@@ -95,7 +94,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 System = ContactPoint.ContactPointSystem.Email,
                 Value = email.Address,
-                Rank = email.IsPrimary.HasValue ? 1 : (int?)null,
+                Rank = email.IsPrimary.HasValue && email.IsPrimary.Value ? 1 : (int?)null,
             };
 
             if (!string.IsNullOrEmpty(email.Description))
@@ -112,7 +111,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 System = ContactPoint.ContactPointSystem.Phone,
                 Value = phone.Number,
-                Rank = phone.IsPrimary.HasValue ? 1 : (int?)null,
+                Rank = phone.IsPrimary.HasValue && phone.IsPrimary.Value ? 1 : (int?)null,
             };
 
             if (!string.IsNullOrEmpty(phone.Description))

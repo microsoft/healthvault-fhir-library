@@ -21,7 +21,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         internal static BasicV2 ToBasicV2(this Patient patient)
         {
             var hasValue = false;
-            var basicV2 = patient.ToThingBase<ItemTypes.BasicV2>();
+            var basicV2 = patient.ToThingBase<BasicV2>();
 
             if (patient.Gender.HasValue)
             {
@@ -49,10 +49,9 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             if (patient.Extension.Any(x => x.Url == HealthVaultExtensions.FirstDayOfWeek))
             {
                 hasValue = true;
-                DayOfWeek dayOfWeek;
                 var stringDayOfWeek = ((Coding)patient.Extension.First(x => x.Url == HealthVaultExtensions.FirstDayOfWeek).Value).Display;
 
-                if (Enum.TryParse(stringDayOfWeek, out dayOfWeek))
+                if (Enum.TryParse(stringDayOfWeek, out DayOfWeek dayOfWeek))
                 {
                     basicV2.FirstDayOfWeek = dayOfWeek;
                 }
@@ -74,21 +73,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 hasValue = true;
                 foreach (var communication in patient.Communication)
                 {
-                    var language = new Language();
-
-                    var code = communication.Language.Coding[0];
-                    var value = code.Code.Split(':');
-                    var vocabName = value[0];
-                    var vocabCode = value.Length == 2 ? value[1] : null;
-
-                    language.SpokenLanguage = new CodableValue(
-                        code.Display,
-                        vocabCode,
-                        vocabName,
-                        code.System,
-                        code.Version
-                        );
-
+                    var language = new Language
+                    {
+                        SpokenLanguage = communication.Language.ToCodableValue()
+                    };
+                    
                     if (communication.Preferred.HasValue)
                     {
                         language.IsPrimary = communication.Preferred.Value;
@@ -98,12 +87,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 }
             }
 
-            if (hasValue)
-            {
-                return basicV2;
-            }
-
-            return null;
+            return hasValue ? basicV2 : null;
         }
     }
 }

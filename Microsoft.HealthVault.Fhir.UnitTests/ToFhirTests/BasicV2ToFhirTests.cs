@@ -17,10 +17,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
 {
     [TestClass]
-    public class BasicToFhirTests
+    public class BasicV2ToFhirTests
     {
         [TestMethod]
-        public void WhenHealthVaultBasicTransformedToFhir_ThenCodeAndValuesEqual()
+        public void WhenHealthVaultBasicV2TransformedToFhir_ThenCodeAndValuesEqual()
         {
             var basic = new ItemTypes.BasicV2
             {

@@ -25,9 +25,9 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
         {
             // ToDo, once deserialization is fixed on SDK, use Deserialize
 
-            ThingBase bloodPressure = new BloodPressure(new HealthServiceDateTime(), 120, 60);
+            var bloodPressure = new BloodPressure(new HealthServiceDateTime(), 120, 60);
 
-            var observation = bloodPressure.ToFhir<Observation>();
+            var observation = bloodPressure.ToFhir();
             Assert.IsNotNull(observation);
             Assert.IsNotNull(observation.Code);
             Assert.IsNotNull(observation.Code.Coding);
@@ -59,12 +59,12 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
         {
             // ToDo, once deserialization is fixed on SDK, use Deserialize
 
-            ThingBase bloodPressure = new BloodPressure(new HealthServiceDateTime(), 120, 60)
+            var bloodPressure = new BloodPressure(new HealthServiceDateTime(), 120, 60)
             {
                 Pulse = 55
             };
 
-            var observation = bloodPressure.ToFhir<Observation>();
+            var observation = bloodPressure.ToFhir();
             Assert.IsNotNull(observation);
             Assert.IsNotNull(observation.Code);
             Assert.IsNotNull(observation.Code.Coding);

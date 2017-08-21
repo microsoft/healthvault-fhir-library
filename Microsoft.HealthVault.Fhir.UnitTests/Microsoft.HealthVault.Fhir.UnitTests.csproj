@@ -163,7 +163,7 @@
     <Compile Include="Samples\SampleUtil.cs" />
     <Compile Include="ToFhirTests\ApproximateDateTimeToFhirTests.cs" />
     <Compile Include="ToFhirTests\ApproximateTimeToFhirTimeTests.cs" />
-    <Compile Include="ToFhirTests\BasicToFhirTests.cs" />
+    <Compile Include="ToFhirTests\BasicV2ToFhirTests.cs" />
     <Compile Include="ToFhirTests\BloodPressureToFhirTests.cs" />
     <Compile Include="ToFhirTests\BodyCompositionToFhirTests.cs" />
     <Compile Include="ToFhirTests\BodyDimensionToFhirTests.cs" />

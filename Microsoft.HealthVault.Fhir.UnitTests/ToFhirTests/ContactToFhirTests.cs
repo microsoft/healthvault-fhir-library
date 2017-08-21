@@ -8,10 +8,10 @@
 
 using System.Linq;
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Address = Microsoft.HealthVault.ItemTypes.Address;
 
 namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 {
@@ -22,7 +22,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
         public void WhenHealthVaultContactTransformedToFhir_ThenValuesEqual()
         {
             var contact = new Contact();
-            contact.ContactInformation.Address.Add(new Address
+            contact.ContactInformation.Address.Add(new ItemTypes.Address
             {
                 Street = { "123 Main St.", "Apt. 3B"},
                 City = "Redmond",
@@ -34,7 +34,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
                 IsPrimary = true,
             });
 
-            contact.ContactInformation.Address.Add(new Address
+            contact.ContactInformation.Address.Add(new ItemTypes.Address
             {
                 Street = { "1 Back Lane" },
                 City = "Holmfirth",
@@ -70,9 +70,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
                 Description = "Phone 2",
             });
 
-
             var patient = contact.ToFhir();
-
             Assert.IsNotNull(patient);
 
             Assert.AreEqual(2, patient.Address.Count);
@@ -85,17 +83,17 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.AreEqual("98052", address1.PostalCode);
             Assert.AreEqual("USA", address1.Country);
             Assert.AreEqual("Home address", address1.Text);
-            Assert.AreEqual(true, ((FhirBoolean)address1.Extension.First(x => x.Url == "is-primary").Value).Value);
+            Assert.AreEqual(true, ((FhirBoolean)address1.Extension.First(x => x.Url == HealthVaultExtensions.IsPrimary).Value).Value);
 
             Assert.AreEqual(4, patient.Telecom.Count);
-            var email1 = patient.Telecom[0];
+            var email1 = patient.Telecom.First(x => x.System == ContactPoint.ContactPointSystem.Email);
             Assert.AreEqual("person1@example.com", email1.Value);
-            Assert.AreEqual("Address 1", ((FhirString)email1.Extension.First(x => x.Url == "description").Value).Value);
+            Assert.AreEqual("Address 1", ((FhirString)email1.Extension.First(x => x.Url == HealthVaultExtensions.Description).Value).Value);
             Assert.AreEqual(1, email1.Rank);
 
-            var phone1 = patient.Telecom[2];
+            var phone1 = patient.Telecom.First(x => x.System == ContactPoint.ContactPointSystem.Phone);
             Assert.AreEqual("1-425-555-0100", phone1.Value);
-            Assert.AreEqual("Phone 1", ((FhirString)phone1.Extension.First(x => x.Url == "description").Value).Value);
+            Assert.AreEqual("Phone 1", ((FhirString)phone1.Extension.First(x => x.Url == HealthVaultExtensions.Description).Value).Value);
             Assert.AreEqual(1, phone1.Rank);
         }
     }
