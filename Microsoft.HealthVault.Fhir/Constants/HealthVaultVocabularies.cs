@@ -27,6 +27,8 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string BodyCompositionSites = "body-composition-sites";
         public const string BodyCompositionMeasurementNames = "body-composition-measurement-names";
 
+        public const string BodyDimensionMeasurementNames = "body-dimension-measurement-names";
+
         public const string Exercise = "exercise";
         public const string ExerciseActivity = "exercise-activity";
         public const string ExerciseDistance = "exercise-distance";
