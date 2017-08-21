@@ -22,7 +22,7 @@
 		"valueString": "patient via InstantPHR patient portal"
 	},
     {
-		"url": "http://healthvault.com/condition-occurence",
+		"url": "http://healthvault.com/condition-occurrence",
 		"valueString": "intermittent"
 	}],
  

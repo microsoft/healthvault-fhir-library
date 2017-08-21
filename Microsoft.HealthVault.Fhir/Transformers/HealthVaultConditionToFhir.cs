@@ -1,4 +1,12 @@
-﻿using System;
+﻿// Copyright (c) Get Real Health.  All rights reserved.
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+using System;
 using System.Collections.Generic;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Codings;
@@ -21,10 +29,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     /// </summary>
     internal static class HealthVaultConditionToFhir
     {
-
         internal static Condition ToFhirInternal(HVCondition cd, Condition fhirCondition)
         {
-
             var fhirCodes = new List<Coding>();
             if (cd.CommonData != null)
             {
@@ -37,8 +43,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             if (cd.Name != null)
             {
-                fhirCondition.Code = new CodeableConcept() { Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(cd.Name, fhirCodes) };
-                fhirCondition.Code.Text = fhirCondition.Code.Coding[0].Display;
+                fhirCondition.Code = new CodeableConcept() { Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(cd.Name, fhirCodes),Text= cd.Name.Text};   
             }
 
             if (cd.Status != null)
@@ -66,19 +71,19 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
         private static void SetClinicalStatusCode(this Condition fhirCondition, ItemTypes.CodableValue status)
         {
-            foreach (ItemTypes.CodedValue cvalue in status)
+            foreach (ItemTypes.CodedValue cValue in status)
             {
                 Condition.ConditionClinicalStatusCodes clinicalStatusCode;
-                if (cvalue.Value != null)
+                if (cValue.Value != null)
                 {
-                    if (Enum.TryParse(cvalue.Value, true, out clinicalStatusCode))
+                    if (Enum.TryParse(cValue.Value, true, out clinicalStatusCode))
                     {
                         fhirCondition.ClinicalStatus = clinicalStatusCode;
                         return;
                     }
                     else
                     {
-                        fhirCondition.AddExtension(HealthVaultVocabularies.ConditionOccurenceExentsionName, new FhirString(cvalue.Value));
+                        fhirCondition.AddExtension(HealthVaultVocabularies.ConditionOccurrenceExtensionName, new FhirString(cValue.Value));
                         return;
                     }
                 }
