@@ -1,6 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Codings;
 using Microsoft.HealthVault.Fhir.Constants;
@@ -48,49 +53,57 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             if (basic.BirthYear.HasValue)
             {
-                patient.Extension.Add(new Extension
-                {
-                    Url = "https://healthvault.com/extensions/birth-year",
-                    Value = new FhirDecimal(basic.BirthYear)
-                });
+                patient.Extension.Add(
+                    new Extension
+                    {
+                        Url = HealthVaultExtensions.PatientBirthYear,
+                        Value = new FhirDecimal(basic.BirthYear)
+                    }
+                );
             }
 
             if (basic.FirstDayOfWeek.HasValue)
             {
-                patient.Extension.Add(new Extension
-                {
-                    Url = "https://healthvault.com/extensions/first-day-of-week",
-                    Value = new Coding
+                patient.Extension.Add(
+                    new Extension
                     {
-                        Code = ((int)basic.FirstDayOfWeek).ToString(),
-                        Display = basic.FirstDayOfWeek.Value.ToString()
+                        Url = HealthVaultExtensions.FirstDayOfWeek,
+                        Value = new Coding
+                        {
+                            Code = ((int)basic.FirstDayOfWeek).ToString(),
+                            Display = basic.FirstDayOfWeek.Value.ToString()
+                        }
                     }
-                });
+                );
             }
 
             if (basic.Languages != null && basic.Languages.Count > 0)
             {
                 foreach (var language in basic.Languages)
                 {
-                    patient.Communication.Add(new Patient.CommunicationComponent
-                    {
-                        Language = new CodeableConcept
+                    patient.Communication.Add(
+                        new Patient.CommunicationComponent
                         {
-                            Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(language.SpokenLanguage, null)
-                        },
-                        Preferred = language.IsPrimary
-                    });
+                            Language = new CodeableConcept
+                            {
+                                Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(language.SpokenLanguage, null)
+                            },
+                            Preferred = language.IsPrimary
+                        }
+                    );
                 }
             }
+            
+            var basicAddress = new Extension
+            {
+                Url = HealthVaultExtensions.PatientBasicAddress
+            };
 
-            //todo: change this to an extension
-            //patient.Address.Add(new Hl7.Fhir.Model.Address
-            //{
-            //    City = basic.City,
-            //    State = basic.StateOrProvince,
-            //    PostalCode = basic.PostalCode,
-            //    Country = basic.Country
-            //});
+            basicAddress.Extension.Add(new Extension(HealthVaultExtensions.PatientBasicAddressCity, new FhirString(basic.City)));
+            basicAddress.Extension.Add(new Extension(HealthVaultExtensions.PatientBasicAddressState, basic.StateOrProvince.ToFhir()));
+            basicAddress.Extension.Add(new Extension(HealthVaultExtensions.PatientBasicAddressPostalCode, new FhirString(basic.PostalCode)));
+            basicAddress.Extension.Add(new Extension(HealthVaultExtensions.PatientBasicAddressCountry, basic.Country.ToFhir()));
+            patient.Extension.Add(basicAddress);
 
             return patient;
         }

@@ -6,11 +6,8 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Codings;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 
@@ -41,11 +38,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             if (personal.BirthDate?.Date != null)
             {
                 patient.BirthDateElement = new Date(personal.BirthDate.Date.Year, personal.BirthDate.Date.Month, personal.BirthDate.Date.Day);
-            }
 
-            if (personal.BirthDate?.Time != null)
-            {
-                patient.Extension.Add(new Extension("patient-birth-time", new Time(personal.BirthDate.Time.ToString())));
+                if (personal.BirthDate?.Time != null)
+                {
+                    patient.BirthDateElement.Extension.Add(new Extension(HealthVaultExtensions.PatientBirthTime,personal.BirthDate.Time.ToFhir()));
+                }
             }
 
             if (personal.DateOfDeath != null)
@@ -59,55 +56,37 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             if (personal.BloodType != null)
             {
-                patient.Extension.Add(new Extension(
-                    "patient-blood-type",
-                    new CodeableConcept{Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(personal.BloodType, null)
-                    }));
+                patient.Extension.Add(new Extension(HealthVaultExtensions.PatientBloodType, personal.BloodType.ToFhir()));
             }
 
             if (!string.IsNullOrEmpty(personal.EmploymentStatus))
             {
-                patient.Extension.Add(new Extension("patient-employment-status", new FhirString(personal.EmploymentStatus)));
+                patient.Extension.Add(new Extension(HealthVaultExtensions.PatientEmploymentStatus,new FhirString(personal.EmploymentStatus)));
             }
 
             if (personal.Ethnicity != null)
             {
-                patient.Extension.Add(new Extension(
-                    "patient-ethnicity",
-                    new CodeableConcept
-                    {
-                        Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(personal.Ethnicity, null)
-                    }));
+                patient.Extension.Add(new Extension(HealthVaultExtensions.PatientEthnicity, personal.Ethnicity.ToFhir()));
             }
 
             if (personal.HighestEducationLevel != null)
             {
-                patient.Extension.Add(new Extension(
-                    "patient-highest-education-level",
-                    new CodeableConcept
-                    {
-                        Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(personal.HighestEducationLevel, null)
-                    }));
+                patient.Extension.Add(new Extension(HealthVaultExtensions.PatientHighestEducationLevel,personal.HighestEducationLevel.ToFhir()));
             }
 
             if (personal.IsDisabled.HasValue)
             {
-                patient.Extension.Add(new Extension("patient-is-disabled", new FhirBoolean(personal.IsDisabled)));
+                patient.Extension.Add(new Extension(HealthVaultExtensions.PatientIsDisabled, new FhirBoolean(personal.IsDisabled)));
             }
 
             if (personal.IsVeteran.HasValue)
             {
-                patient.Extension.Add(new Extension("patient-is-veteran", new FhirBoolean(personal.IsVeteran)));
+                patient.Extension.Add(new Extension(HealthVaultExtensions.PatientIsVeteran, new FhirBoolean(personal.IsVeteran)));
             }
 
             if (personal.MaritalStatus != null)
             {
-                patient.Extension.Add(new Extension(
-                    "patient-marital-status",
-                    new CodeableConcept
-                    {
-                        Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(personal.MaritalStatus, null)
-                    }));
+                patient.Extension.Add(new Extension(HealthVaultExtensions.PatientMaritalStatus, personal.MaritalStatus.ToFhir()));
             }
 
             if (personal.Name != null)
@@ -130,51 +109,36 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 }
                 humanName.Given = givenNames;
 
-                patient.Name.Add(humanName);
-
                 if (personal.Name.Title != null)
                 {
-                    patient.Extension.Add(new Extension(
-                        "patient-title",
-                        new CodeableConcept
-                        {
-                            Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(personal.Name.Title, null)
-                        }));
+                    humanName.Extension.Add(new Extension(HealthVaultExtensions.PatientTitle,personal.Name.Title.ToFhir()));
                 }
 
                 if (personal.Name.Suffix != null)
                 {
-                    patient.Extension.Add(new Extension(
-                        "patient-suffix",
-                        new CodeableConcept
-                        {
-                            Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(personal.Name.Suffix, null)
-                        }));
+                    humanName.Extension.Add(new Extension(HealthVaultExtensions.PatientSuffix, personal.Name.Suffix.ToFhir()));
                 }
+
+                patient.Name.Add(humanName);
             }
 
             if (!string.IsNullOrEmpty(personal.OrganDonor))
             {
-                patient.Extension.Add(new Extension("patient-organ-donor", new FhirString(personal.OrganDonor)));
+                patient.Extension.Add(new Extension(HealthVaultExtensions.PatientOrganDonor, new FhirString(personal.OrganDonor)));
             }
 
             if (personal.Religion != null)
             {
-                patient.Extension.Add(new Extension(
-                    "patient-religion",
-                    new CodeableConcept
-                    {
-                        Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(personal.Religion, null)
-                    }));
+                patient.Extension.Add(new Extension(HealthVaultExtensions.PatientReligion, personal.Religion.ToFhir()));
             }
 
             if (!string.IsNullOrEmpty(personal.SocialSecurityNumber))
             {
-                patient.Identifier.Add(new Identifier
-                {
-                    Value = personal.SocialSecurityNumber,
-                    System = "http://hl7.org/fhir/sid/us-ssn",
-                });
+                patient.Identifier.Add(new Identifier{
+                        Value = personal.SocialSecurityNumber,
+                        System = FhirExtensions.SSN,
+                    }
+                );
             }
             return patient;
         }

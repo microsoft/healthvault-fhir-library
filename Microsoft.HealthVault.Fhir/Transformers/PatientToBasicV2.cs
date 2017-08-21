@@ -10,6 +10,8 @@ using System;
 using System.Linq;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Support;
+using Microsoft.HealthVault.Fhir.Codings;
+using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
@@ -18,10 +20,12 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     {
         internal static BasicV2 ToBasicV2(this Patient patient)
         {
+            var hasValue = false;
             var basicV2 = patient.ToThingBase<ItemTypes.BasicV2>();
 
             if (patient.Gender.HasValue)
             {
+                hasValue = true;
                 switch (patient.Gender)
                 {
                     case AdministrativeGender.Female:
@@ -36,15 +40,17 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 }
             }
 
-            if (patient.Extension.Any(x => x.Url == "https://healthvault.com/extensions/birth-year"))
+            if (patient.Extension.Any(x => x.Url == HealthVaultExtensions.PatientBirthYear))
             {
-                basicV2.BirthYear = (int?)((FhirDecimal)patient.Extension.First(x => x.Url == "https://healthvault.com/extensions/birth-year").Value).Value;
+                hasValue = true;
+                basicV2.BirthYear = (int?)((FhirDecimal)patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientBirthYear).Value).Value;
             }
 
-            if (patient.Extension.Any(x => x.Url == "https://healthvault.com/extensions/first-day-of-week"))
+            if (patient.Extension.Any(x => x.Url == HealthVaultExtensions.FirstDayOfWeek))
             {
+                hasValue = true;
                 DayOfWeek dayOfWeek;
-                var stringDayOfWeek = ((Coding)patient.Extension.First(x => x.Url == "https://healthvault.com/extensions/first-day-of-week").Value).Display;
+                var stringDayOfWeek = ((Coding)patient.Extension.First(x => x.Url == HealthVaultExtensions.FirstDayOfWeek).Value).Display;
 
                 if (Enum.TryParse(stringDayOfWeek, out dayOfWeek))
                 {
@@ -52,18 +58,20 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 }
             }
 
-            if (patient.Extension.Any(x => x.Url == "https://healthvault.com/extensions/basic-address"))
+            if (patient.Extension.Any(x => x.Url == HealthVaultExtensions.PatientBasicAddress))
             {
-                var basicAddress = patient.Extension.First(x => x.Url == "https://healthvault.com/extensions/basic-address");
-
-
-                // todo: implement this
-                //basicV2.City = ((FhirString)basicAddress.Extension.First(c => c.Url == "basic-address-city")?.Value)?.Value;
-                //basicV2.PostalCode = ((FhirString)basicAddress.Extension.First(c => c.Url == "basic-address-postalCode")?.Value)?.Value;
+                hasValue = true;
+                var basicAddress = patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddress);
+                
+                basicV2.City = ((FhirString)basicAddress.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddressCity)?.Value)?.Value;
+                basicV2.StateOrProvince = ((CodeableConcept)basicAddress.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddressState)?.Value)?.ToCodableValue();
+                basicV2.PostalCode = ((FhirString)basicAddress.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddressPostalCode)?.Value)?.Value;
+                basicV2.Country = ((CodeableConcept)basicAddress.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddressCountry)?.Value)?.ToCodableValue();
             }
 
             if (!patient.Communication.IsNullOrEmpty())
             {
+                hasValue = true;
                 foreach (var communication in patient.Communication)
                 {
                     var language = new Language();
@@ -74,7 +82,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     var vocabCode = value.Length == 2 ? value[1] : null;
 
                     language.SpokenLanguage = new CodableValue(
-                        communication.Language.Text,
+                        code.Display,
                         vocabCode,
                         vocabName,
                         code.System,
@@ -90,7 +98,12 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 }
             }
 
-            return basicV2;
+            if (hasValue)
+            {
+                return basicV2;
+            }
+
+            return null;
         }
     }
 }

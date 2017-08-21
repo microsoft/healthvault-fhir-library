@@ -8,6 +8,8 @@
 
 using System.Linq;
 using Hl7.Fhir.Model;
+using Hl7.Fhir.Support;
+using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
@@ -16,42 +18,56 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     {
         internal static Contact ToContact(this Patient patient)
         {
+            var hasValue = false;
             var contact = patient.ToThingBase<ItemTypes.Contact>();
 
-            foreach (var address in patient.Address)
+            if (!patient.Address.IsNullOrEmpty())
             {
-                var hvAddress = new ItemTypes.Address();
-
-                foreach (var line in address.Line)
+                hasValue = true;
+                foreach (var address in patient.Address)
                 {
-                    hvAddress.Street.Add(line);
-                }
-                hvAddress.City = address.City;
-                hvAddress.State = address.State;
-                hvAddress.County = address.District;
-                hvAddress.PostalCode = address.PostalCode;
-                hvAddress.County = address.Country;
+                    var hvAddress = new ItemTypes.Address();
 
-                hvAddress.Description = address.Text;
-                hvAddress.IsPrimary = address.Extension.Any(x => x.Url == "is-primary");
+                    foreach (var line in address.Line)
+                    {
+                        hvAddress.Street.Add(line);
+                    }
+                    hvAddress.City = address.City;
+                    hvAddress.State = address.State;
+                    hvAddress.County = address.District;
+                    hvAddress.PostalCode = address.PostalCode;
+                    hvAddress.Country = address.Country;
 
-                contact.ContactInformation.Address.Add(hvAddress);
-            }
+                    hvAddress.Description = address.Text;
+                    hvAddress.IsPrimary = address.Extension.Any(x => x.Url == HealthVaultExtensions.IsPrimary);
 
-            foreach (var contactPoint in patient.Telecom)
-            {
-                switch (contactPoint.System)
-                {
-                    case ContactPoint.ContactPointSystem.Email:
-                        contact.ContactInformation.Email.Add(ConvertContactPointToEmail(contactPoint));
-                        break;
-                    case ContactPoint.ContactPointSystem.Phone:
-                        contact.ContactInformation.Phone.Add(ConvertContactPointToPhone(contactPoint));
-                        break;
+                    contact.ContactInformation.Address.Add(hvAddress);
                 }
             }
 
-            return contact;
+            if (!patient.Telecom.IsNullOrEmpty())
+            {
+                hasValue = true;
+                foreach (var contactPoint in patient.Telecom)
+                {
+                    switch (contactPoint.System)
+                    {
+                        case ContactPoint.ContactPointSystem.Email:
+                            contact.ContactInformation.Email.Add(ConvertContactPointToEmail(contactPoint));
+                            break;
+                        case ContactPoint.ContactPointSystem.Phone:
+                            contact.ContactInformation.Phone.Add(ConvertContactPointToPhone(contactPoint));
+                            break;
+                    }
+                }
+            }
+
+            if (hasValue)
+            {
+                return contact;
+            }
+
+            return null;
         }
 
         private static Email ConvertContactPointToEmail(ContactPoint contactPoint)
@@ -60,7 +76,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 Address = contactPoint.Value,
                 IsPrimary = contactPoint.Rank.HasValue ? contactPoint.Rank == 1 : (bool?)null,
-                Description = ((FhirString)contactPoint.Extension.First(x => x.Url == "Description").Value).Value
+                Description = ((FhirString)contactPoint.Extension.FirstOrDefault(x => x.Url == HealthVaultExtensions.Description)?.Value)?.Value
             };
         }
 
@@ -70,7 +86,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 Number = contactPoint.Value,
                 IsPrimary = contactPoint.Rank.HasValue ? contactPoint.Rank == 1 : (bool?)null,
-                Description = ((FhirString)contactPoint.Extension.First(x => x.Url == "Description").Value).Value
+                Description = ((FhirString)contactPoint.Extension.FirstOrDefault(x => x.Url == HealthVaultExtensions.Description)?.Value)?.Value
             };
         }
     }

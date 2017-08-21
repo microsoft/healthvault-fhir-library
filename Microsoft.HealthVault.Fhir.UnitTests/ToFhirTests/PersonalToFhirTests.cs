@@ -6,12 +6,9 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -64,18 +61,18 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.AreEqual("John", patient.Name[0].Given.ToList()[0]);
             Assert.AreEqual("Phillip", patient.Name[0].Given.ToList()[1]);
             Assert.AreEqual("Doe", patient.Name[0].Family);
-            Assert.AreEqual("name-prefixes:Dr", ((CodeableConcept)patient.Extension.First(x => x.Url == "patient-title").Value).Coding[0].Code);
-            Assert.AreEqual("name-suffixes:Jr", ((CodeableConcept)patient.Extension.First(x => x.Url == "patient-suffix").Value).Coding[0].Code);
+            Assert.AreEqual("name-prefixes:Dr", ((CodeableConcept)patient.Name[0].Extension.First(x => x.Url == HealthVaultExtensions.PatientTitle).Value).Coding[0].Code);
+            Assert.AreEqual("name-suffixes:Jr", ((CodeableConcept)patient.Name[0].Extension.First(x => x.Url == HealthVaultExtensions.PatientSuffix).Value).Coding[0].Code);
             Assert.AreEqual("1975-02-05", patient.BirthDate);
             Assert.AreEqual("000-12-3456", patient.Identifier[0].Value);
             Assert.AreEqual("2075-05-07T00:00:00-07:00", ((FhirDateTime)patient.Deceased).Value);
-            Assert.AreEqual("blood-types:A+",((CodeableConcept)patient.Extension.First(x => x.Url == "patient-blood-type").Value).Coding[0].Code);
-            Assert.AreEqual("religion:Agn", ((CodeableConcept)patient.Extension.First(x => x.Url == "patient-religion").Value).Coding[0].Code);
-            Assert.AreEqual("marital-status:NM", ((CodeableConcept)patient.Extension.First(x => x.Url == "patient-marital-status").Value).Coding[0].Code);
-            Assert.AreEqual("ethnicity-types:8", ((CodeableConcept)patient.Extension.First(x => x.Url == "patient-ethnicity").Value).Coding[0].Code);
-            Assert.AreEqual("Education-level:ColG", ((CodeableConcept)patient.Extension.First(x => x.Url == "patient-highest-education-level").Value).Coding[0].Code);
-            Assert.AreEqual("Employed", ((FhirString)patient.Extension.First(x => x.Url == "patient-employment-status").Value).Value);
-            Assert.AreEqual("Organ Donor", ((FhirString)patient.Extension.First(x => x.Url == "patient-organ-donor").Value).Value);
+            Assert.AreEqual("blood-types:A+",((CodeableConcept)patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientBloodType).Value).Coding[0].Code);
+            Assert.AreEqual("religion:Agn", ((CodeableConcept)patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientReligion).Value).Coding[0].Code);
+            Assert.AreEqual("marital-status:NM", ((CodeableConcept)patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientMaritalStatus).Value).Coding[0].Code);
+            Assert.AreEqual("ethnicity-types:8", ((CodeableConcept)patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientEthnicity).Value).Coding[0].Code);
+            Assert.AreEqual("Education-level:ColG", ((CodeableConcept)patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientHighestEducationLevel).Value).Coding[0].Code);
+            Assert.AreEqual("Employed", ((FhirString)patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientEmploymentStatus).Value).Value);
+            Assert.AreEqual("Organ Donor", ((FhirString)patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientOrganDonor).Value).Value);
         }
     }
 }

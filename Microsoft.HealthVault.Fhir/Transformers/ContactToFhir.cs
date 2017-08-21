@@ -83,7 +83,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             if (hvAddress.IsPrimary.HasValue && hvAddress.IsPrimary.Value)
             {
-                address.Extension.Add(new Extension("is-primary", new FhirBoolean(true)));
+                address.Extension.Add(new Extension(HealthVaultExtensions.IsPrimary, new FhirBoolean(true)));
             }
 
             return address;
@@ -100,7 +100,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             if (!string.IsNullOrEmpty(email.Description))
             {
-                contactPoint.Extension.Add(new Extension("description", new FhirString(email.Description)));
+                contactPoint.Extension.Add(new Extension(HealthVaultExtensions.Description, new FhirString(email.Description)));
             }
 
             return contactPoint;
@@ -117,7 +117,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             if (!string.IsNullOrEmpty(phone.Description))
             {
-                contactPoint.Extension.Add(new Extension("description", new FhirString(phone.Description)));
+                contactPoint.Extension.Add(new Extension(HealthVaultExtensions.Description, new FhirString(phone.Description)));
             }
 
             return contactPoint;

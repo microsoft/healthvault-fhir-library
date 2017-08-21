@@ -1,0 +1,315 @@
+﻿{
+    "resourceType": "Patient",
+    "extension": [
+        {
+            "url": "http://healthvault.com/fhir-extensions/thing-flags",
+            "valueString": "None"
+        },
+        {
+            "url": "http://healthvault.com/fhir-extensions/thing-state",
+            "valueString": "Active"
+        },
+        {
+            "url": "http://healthvault.com/extensions/patient-birth-year",
+            "valueDecimal": 1975
+        },
+        {
+            "url": "http://healthvault.com/extensions/first-day-of-week",
+            "valueCoding": {
+                "code": "0",
+                "display": "Sunday"
+            }
+        },
+        {
+            "url": "http://healthvault.com/extensions/patient-basic-address",
+            "extension": [
+                {
+                    "url": "city",
+                    "valueString": "Redmond"
+                },
+                {
+                    "url": "state",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "system": "http://healthvault.com/vocabularies/",
+                                "version": "1",
+                                "code": "states:WA",
+                                "display": "Washington"
+                            }
+                        ],
+                        "text": "Washington"
+                    }
+                },
+                {
+                    "url": "postal-code",
+                    "valueString": "98052"
+                },
+                {
+                    "url": "country",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "system": "iso",
+                                "version": "1",
+                                "code": "iso3166:US",
+                                "display": "United States of America"
+                            }
+                        ],
+                        "text": "United States of America"
+                    }
+                }
+            ]
+        },
+        {
+            "url": "http://healthvault.com/extensions/patient-blood-type",
+            "valueCodeableConcept": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "version": "1",
+                        "code": "blood-types:A+",
+                        "display": "A+"
+                    }
+                ],
+                "text": "A+"
+            }
+        },
+        {
+            "url": "http://healthvault.com/extensions/patient-employment-status",
+            "valueString": "Employed"
+        },
+        {
+            "url": "http://healthvault.com/extensions/patient-ethnicity",
+            "valueCodeableConcept": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "version": "1",
+                        "code": "ethnicity-types:8",
+                        "display": "Other Race"
+                    }
+                ],
+                "text": "Other Race"
+            }
+        },
+        {
+            "url": "http://healthvault.com/extensions/patient-highest-education-level",
+            "valueCodeableConcept": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "version": "1",
+                        "code": "Education-level:ColG",
+                        "display": "College Graduate"
+                    }
+                ],
+                "text": "College Graduate"
+            }
+        },
+        {
+            "url": "http://healthvault.com/extensions/patient-is-disabled",
+            "valueBoolean": false
+        },
+        {
+            "url": "http://healthvault.com/extensions/patient-is-veteran",
+            "valueBoolean": true
+        },
+        {
+            "url": "http://healthvault.com/extensions/patient-marital-status",
+            "valueCodeableConcept": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "version": "1",
+                        "code": "marital-status:NM",
+                        "display": "Never Married"
+                    }
+                ],
+                "text": "Never Married"
+            }
+        },
+        {
+            "url": "http://healthvault.com/extensions/patient-organ-donor",
+            "valueString": "Organ Donor"
+        },
+        {
+            "url": "http://healthvault.com/extensions/patient-religion",
+            "valueCodeableConcept": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "version": "1",
+                        "code": "religion:Agn",
+                        "display": "Agnostic"
+                    }
+                ],
+                "text": "Agnostic"
+            }
+        }
+    ],
+    "identifier": [
+        {
+            "system": "http://hl7.org/fhir/sid/us-ssn",
+            "value": "000-12-3456"
+        }
+    ],
+    "name": [
+        {
+            "extension": [
+                {
+                    "url": "patient-title",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "system": "http://healthvault.com/vocabularies/",
+                                "version": "1",
+                                "code": "name-prefixes:Dr",
+                                "display": "Dr."
+                            }
+                        ],
+                        "text": "Dr."
+                    }
+                },
+                {
+                    "url": "patient-suffix",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "system": "http://healthvault.com/vocabularies/",
+                                "version": "1",
+                                "code": "name-suffixes:Jr",
+                                "display": "Junior"
+                            }
+                        ],
+                        "text": "Junior"
+                    }
+                }
+            ],
+            "text": "Dr. John Phillip Doe, Jr.",
+            "family": "Doe",
+            "given": [
+                "John",
+                "Phillip"
+            ]
+        }
+    ],
+    "telecom": [
+        {
+            "extension": [
+                {
+                    "url": "description",
+                    "valueString": "Address 1"
+                }
+            ],
+            "system": "email",
+            "value": "person1@example.com",
+            "rank": 1
+        },
+        {
+            "extension": [
+                {
+                    "url": "description",
+                    "valueString": "Address 2"
+                }
+            ],
+            "system": "email",
+            "value": "person2@example.com"
+        },
+        {
+            "extension": [
+                {
+                    "url": "description",
+                    "valueString": "Phone 1"
+                }
+            ],
+            "system": "phone",
+            "value": "1-425-555-0100",
+            "rank": 1
+        },
+        {
+            "extension": [
+                {
+                    "url": "description",
+                    "valueString": "Phone 2"
+                }
+            ],
+            "system": "phone",
+            "value": "0491 570 156"
+        }
+    ],
+    "gender": "female",
+    "birthDate": "1975-02-05",
+    "_birthDate": {
+        "extension": [
+            {
+                "url": "patient-birth-time",
+                "valueTime": "01:30:34.015"
+            }
+        ]
+    },
+    "deceasedDateTime": "2075-05-07T00:00:00-07:00",
+    "address": [
+        {
+            "extension": [
+                {
+                    "url": "is-primary",
+                    "valueBoolean": true
+                }
+            ],
+            "text": "Home address",
+            "line": [
+                "123 Main St.",
+                "Apt. 3B"
+            ],
+            "city": "Redmond",
+            "district": "King",
+            "state": "WA",
+            "postalCode": "98052",
+            "country": "USA"
+        },
+        {
+            "text": "business address",
+            "line": [
+                "1 Back Lane"
+            ],
+            "city": "Holmfirth",
+            "district": "HUDDERSFIELD",
+            "postalCode": "HD7 1HQ",
+            "country": "UK"
+        }
+    ],
+    "photo": [
+        {
+            "data": "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"
+        }
+    ],
+    "communication": [
+        {
+            "language": {
+                "coding": [
+                    {
+                        "system": "iso",
+                        "version": "1",
+                        "code": "iso639-1:en",
+                        "display": "English"
+                    }
+                ]
+            },
+            "preferred": true
+        },
+        {
+            "language": {
+                "coding": [
+                    {
+                        "system": "iso",
+                        "version": "1",
+                        "code": "iso639-1:fr",
+                        "display": "French"
+                    }
+                ]
+            },
+            "preferred": false
+        }
+    ]
+}

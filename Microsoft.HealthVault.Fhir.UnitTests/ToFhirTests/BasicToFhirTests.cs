@@ -9,6 +9,7 @@
 using System;
 using System.Linq;
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -41,15 +42,15 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
 
             Assert.IsNotNull(patient);
             Assert.AreEqual(AdministrativeGender.Female, patient.Gender.Value);
-            Assert.AreEqual(1975, ((FhirDecimal)patient.Extension.First(x => x.Url == "https://healthvault.com/extensions/birth-year").Value).Value);
-            Assert.AreEqual("0", ((Coding)patient.Extension.First(x => x.Url == "https://healthvault.com/extensions/first-day-of-week").Value).Code);
-            Assert.AreEqual("Sunday", ((Coding)patient.Extension.First(x => x.Url == "https://healthvault.com/extensions/first-day-of-week").Value).Display);
+            Assert.AreEqual(1975, ((FhirDecimal)patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientBirthYear).Value).Value);
+            Assert.AreEqual("0", ((Coding)patient.Extension.First(x => x.Url == HealthVaultExtensions.FirstDayOfWeek).Value).Code);
+            Assert.AreEqual("Sunday", ((Coding)patient.Extension.First(x => x.Url == HealthVaultExtensions.FirstDayOfWeek).Value).Display);
 
-            //Assert.AreEqual(1, patient.Address.Count);
-            //Assert.AreEqual("Redmond", patient.Address[0].City);
-            //Assert.AreEqual("WA", patient.Address[0].State);
-            //Assert.AreEqual("98052", patient.Address[0].PostalCode);
-            //Assert.AreEqual("USA", patient.Address[0].Country);
+            var basicAddress = patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddress);
+            Assert.AreEqual("Redmond", ((FhirString)basicAddress.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddressCity).Value).Value);
+            Assert.AreEqual("states:WA", ((CodeableConcept)basicAddress.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddressState).Value).Coding[0].Code);
+            Assert.AreEqual("98052", ((FhirString)basicAddress.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddressPostalCode).Value).Value);
+            Assert.AreEqual("iso3166:US", ((CodeableConcept)basicAddress.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddressCountry).Value).Coding[0].Code);
 
             Assert.AreEqual(2, patient.Communication.Count);
             Assert.AreEqual("English", patient.Communication[0].Language.Coding[0].Display);

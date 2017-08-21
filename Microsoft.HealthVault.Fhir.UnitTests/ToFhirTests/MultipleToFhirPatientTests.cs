@@ -1,11 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+// MIT License
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Hl7.Fhir.Model;
+using Hl7.Fhir.Serialization;
+using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -139,17 +146,20 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 
             personal.ToFhir(patient);
 
+            var json = FhirSerializer.SerializeToJson(patient);
+
             Assert.IsNotNull(patient);
             // Basic Portion
             Assert.AreEqual(AdministrativeGender.Female, patient.Gender.Value);
-            Assert.AreEqual(1975, ((FhirDecimal)patient.Extension.First(x => x.Url == "https://healthvault.com/extensions/birth-year").Value).Value);
-            Assert.AreEqual("0", ((Coding)patient.Extension.First(x => x.Url == "https://healthvault.com/extensions/first-day-of-week").Value).Code);
-            Assert.AreEqual("Sunday", ((Coding)patient.Extension.First(x => x.Url == "https://healthvault.com/extensions/first-day-of-week").Value).Display);
+            Assert.AreEqual(1975, ((FhirDecimal)patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientBirthYear).Value).Value);
+            Assert.AreEqual("0", ((Coding)patient.Extension.First(x => x.Url == HealthVaultExtensions.FirstDayOfWeek).Value).Code);
+            Assert.AreEqual("Sunday", ((Coding)patient.Extension.First(x => x.Url == HealthVaultExtensions.FirstDayOfWeek).Value).Display);
 
-            //Assert.AreEqual(3, patient.Address.Count);
-            //Assert.AreEqual("Redmond", patient.Address[0].City);
-            //Assert.AreEqual("WA", patient.Address[0].State);
-            //Assert.AreEqual("98052", patient.Address[0].PostalCode);Assert.AreEqual("USA", patient.Address[0].Country);
+            var basicAddress = patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddress);
+            Assert.AreEqual("Redmond", ((FhirString)basicAddress.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddressCity).Value).Value);
+            Assert.AreEqual("states:WA", ((CodeableConcept)basicAddress.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddressState).Value).Coding[0].Code);
+            Assert.AreEqual("98052", ((FhirString)basicAddress.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddressPostalCode).Value).Value);
+            Assert.AreEqual("iso3166:US", ((CodeableConcept)basicAddress.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddressCountry).Value).Coding[0].Code);
 
             Assert.AreEqual(2, patient.Communication.Count);
             Assert.AreEqual("English", patient.Communication[0].Language.Coding[0].Display);
@@ -166,17 +176,17 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.AreEqual("98052", address1.PostalCode);
             Assert.AreEqual("USA", address1.Country);
             Assert.AreEqual("Home address", address1.Text);
-            Assert.AreEqual(true, ((FhirBoolean)address1.Extension.First(x => x.Url == "is-primary").Value).Value);
+            Assert.AreEqual(true, ((FhirBoolean)address1.Extension.First(x => x.Url == HealthVaultExtensions.IsPrimary).Value).Value);
 
             Assert.AreEqual(4, patient.Telecom.Count);
             var email1 = patient.Telecom[0];
             Assert.AreEqual("person1@example.com", email1.Value);
-            Assert.AreEqual("Address 1", ((FhirString)email1.Extension.First(x => x.Url == "description").Value).Value);
+            Assert.AreEqual("Address 1", ((FhirString)email1.Extension.First(x => x.Url == HealthVaultExtensions.Description).Value).Value);
             Assert.AreEqual(1, email1.Rank);
 
             var phone1 = patient.Telecom[2];
             Assert.AreEqual("1-425-555-0100", phone1.Value);
-            Assert.AreEqual("Phone 1", ((FhirString)phone1.Extension.First(x => x.Url == "description").Value).Value);
+            Assert.AreEqual("Phone 1", ((FhirString)phone1.Extension.First(x => x.Url == HealthVaultExtensions.Description).Value).Value);
             Assert.AreEqual(1, phone1.Rank);
 
             // Personal Image portion
@@ -189,18 +199,18 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.AreEqual("John", patient.Name[0].Given.ToList()[0]);
             Assert.AreEqual("Phillip", patient.Name[0].Given.ToList()[1]);
             Assert.AreEqual("Doe", patient.Name[0].Family);
-            Assert.AreEqual("name-prefixes:Dr", ((CodeableConcept)patient.Extension.First(x => x.Url == "patient-title").Value).Coding[0].Code);
-            Assert.AreEqual("name-suffixes:Jr", ((CodeableConcept)patient.Extension.First(x => x.Url == "patient-suffix").Value).Coding[0].Code);
+            Assert.AreEqual("name-prefixes:Dr", ((CodeableConcept)patient.Name[0].Extension.First(x => x.Url == HealthVaultExtensions.PatientTitle).Value).Coding[0].Code);
+            Assert.AreEqual("name-suffixes:Jr", ((CodeableConcept)patient.Name[0].Extension.First(x => x.Url == HealthVaultExtensions.PatientSuffix).Value).Coding[0].Code);
             Assert.AreEqual("1975-02-05", patient.BirthDate);
             Assert.AreEqual("000-12-3456", patient.Identifier[0].Value);
             Assert.AreEqual("2075-05-07T00:00:00-07:00", ((FhirDateTime)patient.Deceased).Value);
-            Assert.AreEqual("blood-types:A+", ((CodeableConcept)patient.Extension.First(x => x.Url == "patient-blood-type").Value).Coding[0].Code);
-            Assert.AreEqual("religion:Agn", ((CodeableConcept)patient.Extension.First(x => x.Url == "patient-religion").Value).Coding[0].Code);
-            Assert.AreEqual("marital-status:NM", ((CodeableConcept)patient.Extension.First(x => x.Url == "patient-marital-status").Value).Coding[0].Code);
-            Assert.AreEqual("ethnicity-types:8", ((CodeableConcept)patient.Extension.First(x => x.Url == "patient-ethnicity").Value).Coding[0].Code);
-            Assert.AreEqual("Education-level:ColG", ((CodeableConcept)patient.Extension.First(x => x.Url == "patient-highest-education-level").Value).Coding[0].Code);
-            Assert.AreEqual("Employed", ((FhirString)patient.Extension.First(x => x.Url == "patient-employment-status").Value).Value);
-            Assert.AreEqual("Organ Donor", ((FhirString)patient.Extension.First(x => x.Url == "patient-organ-donor").Value).Value);
+            Assert.AreEqual("blood-types:A+", ((CodeableConcept)patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientBloodType).Value).Coding[0].Code);
+            Assert.AreEqual("religion:Agn", ((CodeableConcept)patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientReligion).Value).Coding[0].Code);
+            Assert.AreEqual("marital-status:NM", ((CodeableConcept)patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientMaritalStatus).Value).Coding[0].Code);
+            Assert.AreEqual("ethnicity-types:8", ((CodeableConcept)patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientEthnicity).Value).Coding[0].Code);
+            Assert.AreEqual("Education-level:ColG", ((CodeableConcept)patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientHighestEducationLevel).Value).Coding[0].Code);
+            Assert.AreEqual("Employed", ((FhirString)patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientEmploymentStatus).Value).Value);
+            Assert.AreEqual("Organ Donor", ((FhirString)patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientOrganDonor).Value).Value);
         }
     }
 }
