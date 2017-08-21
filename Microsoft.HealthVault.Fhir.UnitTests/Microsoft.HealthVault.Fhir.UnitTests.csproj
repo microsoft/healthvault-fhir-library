@@ -166,6 +166,7 @@
     <Compile Include="ToFhirTests\BasicToFhirTests.cs" />
     <Compile Include="ToFhirTests\BloodPressureToFhirTests.cs" />
     <Compile Include="ToFhirTests\BodyCompositionToFhirTests.cs" />
+    <Compile Include="ToFhirTests\BodyDimensionToFhirTests.cs" />
     <Compile Include="ToFhirTests\ContactToFhirTests.cs" />
     <Compile Include="ToFhirTests\HeartRateToFhirTests.cs" />
     <Compile Include="ToFhirTests\HeightToFhirTests.cs" />
@@ -175,6 +176,7 @@
     <Compile Include="ToFhirTests\WeightToFhirTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBloodPressure.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyCompositionTests.cs" />
+    <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyDimensionTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultHeartRateTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -195,6 +197,7 @@
     <EmbeddedResource Include="Samples\FhirWeightPounds.json" />
     <EmbeddedResource Include="Samples\FhirWeightGrams.json" />
     <EmbeddedResource Include="Samples\FhirBodyComposition.json" />
+    <EmbeddedResource Include="Samples\FhirBodyDimension.json" />
     <EmbeddedResource Include="Samples\FhirPatientFull.json" />
   </ItemGroup>
   <ItemGroup>

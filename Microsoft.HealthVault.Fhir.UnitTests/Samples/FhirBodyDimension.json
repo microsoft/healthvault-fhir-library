@@ -1,0 +1,43 @@
+﻿{
+    "resourceType": "Observation",
+    "extension": [
+        {
+            "url": "http://healthvault.com/fhir-extensions/thing-flags",
+            "valueString": "None"
+        },
+        {
+            "url": "http://healthvault.com/fhir-extensions/thing-state",
+            "valueString": "Active"
+        }
+    ],
+    "status": "final",
+    "category": [
+        {
+            "coding": [
+                {
+                    "system": "http://hl7.org/fhir/observation-category",
+                    "code": "vital-signs",
+                    "display": "Vital Signs"
+                }
+            ],
+            "text": "Vital Signs"
+        }
+    ],
+    "code": {
+        "coding": [
+            {
+                "system": "http://healthvault.com/vocabularies/",
+                "version": "1",
+                "code": "body-dimension-measurement-names:BicepCircumferenceLeft",
+                "display": "Left bicep size"
+            }
+        ]
+    },
+    "effectiveDateTime": "2017-08-02T11:13:14-07:00",
+    "valueQuantity": {
+        "value": 0.15,
+        "unit": "m",
+        "system": "http://unitsofmeasure.org",
+        "code": "m"
+    }
+}
