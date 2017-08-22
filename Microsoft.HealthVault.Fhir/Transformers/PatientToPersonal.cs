@@ -32,7 +32,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             personal.OrganDonor = ((FhirString)patient.Extension.FirstOrDefault(x => x.Url == HealthVaultExtensions.PatientOrganDonor)?.Value)?.Value;
             personal.EmploymentStatus = ((FhirString)patient.Extension.FirstOrDefault(x => x.Url == HealthVaultExtensions.PatientEmploymentStatus)?.Value)?.Value;
             personal.Religion = ((CodeableConcept)patient.Extension.FirstOrDefault(x => x.Url == HealthVaultExtensions.PatientReligion)?.Value)?.ToCodableValue();
-            personal.SocialSecurityNumber = patient.Identifier.FirstOrDefault(x => x.System == FhirExtensions.SSN)?.Value;
+            personal.SocialSecurityNumber = patient.Identifier.FirstOrDefault(x => x.System == Constants.FhirExtensions.SSN)?.Value;
 
             if (personal.BloodType != null ||
                 personal.Ethnicity != null ||

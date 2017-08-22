@@ -38,7 +38,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
                 }
             };
             
-            var patient = basic.ToFhir<Patient>();
+            var patient = basic.ToFhir();
 
             Assert.IsNotNull(patient);
             Assert.AreEqual(AdministrativeGender.Female, patient.Gender.Value);

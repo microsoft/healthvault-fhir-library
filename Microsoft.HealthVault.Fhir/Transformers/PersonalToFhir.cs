@@ -136,7 +136,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 patient.Identifier.Add(new Identifier{
                         Value = personal.SocialSecurityNumber,
-                        System = FhirExtensions.SSN,
+                        System = Constants.FhirExtensions.SSN,
                     }
                 );
             }
