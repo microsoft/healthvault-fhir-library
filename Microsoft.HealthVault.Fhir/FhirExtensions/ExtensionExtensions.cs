@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿// Copyright (c) Get Real Health.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 //
@@ -8,34 +8,25 @@
 
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
-using Microsoft.HealthVault.ItemTypes;
+using Microsoft.HealthVault.Thing;
 
-namespace Microsoft.HealthVault.Fhir.Transformers
+namespace Microsoft.HealthVault.Fhir.FhirExtensions
 {
-    public static partial class ThingBaseToFhir
+    public static class ExtensionExtensions
     {
-        // Register the type on the generic ThingToFhir partial class
-        public static Observation ToFhir(this Weight weight)
+        public static Extension AddStringAsExtension(this IExtendable extendable, string uri, string value, bool isModifier = false)
         {
-            return WeightToFhir.ToFhirInternal(weight, ToFhirInternal<Observation>(weight));
+            return extendable.AddExtension(uri, new FhirString(value), isModifier);
         }
-    }
 
-    /// <summary>
-    /// An extension class that transforms HealthVault weight data types into FHIR Observations
-    /// </summary>
-    internal static class WeightToFhir
-    {
-        internal static Observation ToFhirInternal(Weight weight, Observation observation)
+        public static Extension AddFlagsAsExtension(this IExtendable extendable, ThingFlags flags)
         {
-            observation.Category = new System.Collections.Generic.List<CodeableConcept> { FhirCategories.VitalSigns };
-            observation.Code = HealthVaultVocabularies.BodyWeight;
+            return extendable.AddStringAsExtension(HealthVaultVocabularies.FlagsFhirExtensionName, flags.ToString());
+        }
 
-            var quantity = new Quantity((decimal)weight.Value.Kilograms, UnitAbbreviations.Kilogram);
-            observation.Value = quantity;
-            observation.Effective = new FhirDateTime(weight.When.ToLocalDateTime().ToDateTimeUnspecified());
-
-            return observation;
+        public static Extension AddStateAsExtension(this IExtendable extendable, ThingState state)
+        {
+            return extendable.AddStringAsExtension(HealthVaultVocabularies.StateFhirExtensionName, state.ToString());
         }
     }
 }

@@ -160,6 +160,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ToFhirTests\ToFhirResourceTests.cs" />
     <Compile Include="Samples\SampleUtil.cs" />
     <Compile Include="ToFhirTests\ApproximateDateTimeToFhirTests.cs" />
     <Compile Include="ToFhirTests\ApproximateTimeToFhirTimeTests.cs" />
@@ -170,6 +171,8 @@
     <Compile Include="ToFhirTests\ContactToFhirTests.cs" />
     <Compile Include="ToFhirTests\HeartRateToFhirTests.cs" />
     <Compile Include="ToFhirTests\HeightToFhirTests.cs" />
+    <Compile Include="ToFhirTests\ToFhirDomainResourceTests.cs" />
+    <Compile Include="ToFhirTests\ToFhirObservationTests.cs" />
     <Compile Include="ToFhirTests\MultipleToFhirPatientTests.cs" />
     <Compile Include="ToFhirTests\PersonalImageToFhirTests.cs" />
     <Compile Include="ToFhirTests\PersonalToFhirTests.cs" />
