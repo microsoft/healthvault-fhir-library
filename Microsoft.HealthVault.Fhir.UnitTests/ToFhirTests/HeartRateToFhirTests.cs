@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
 
             ThingBase heartRate = new HeartRate(new HealthServiceDateTime(), 65);
 
-            var observation = heartRate.ToFhir();
+            var observation = heartRate.ToFhir() as Observation;
             Assert.IsNotNull(observation);
             Assert.AreEqual(HealthVaultVocabularies.HeartRate, observation.Code);
 
