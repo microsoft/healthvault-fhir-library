@@ -30,6 +30,8 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string ConditionOccurrence = "condition-occurrence";
 
 
+        public const string BodyDimensionMeasurementNames = "body-dimension-measurement-names";
+
         public const string Fhir = "fhir";
         public const string Wc = "wc";
 
