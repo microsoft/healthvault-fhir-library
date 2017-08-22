@@ -43,6 +43,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                         {
                             sleepJournalAm.SleepMinutes = (int)sleepMinutes.Value.Value;
                         }
+
                         break;
                     case HealthVaultVocabularies.SleepJournalAMSettlingMinutes:
                         var settlingMinutes = (Quantity)component.Value;
@@ -50,6 +51,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                         {
                             sleepJournalAm.SettlingMinutes = (int)settlingMinutes.Value.Value;
                         }
+
                         break;
                     case HealthVaultVocabularies.SleepJournalAMWakeState:
                         WakeState wakeState;
@@ -64,6 +66,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                         {
                             sleepJournalAm.WakeState = wakeState;
                         }
+
                         break;
                     case HealthVaultVocabularies.SleepJournalAMMedication:
                         var medicationValue = (CodeableConcept)component.Value;
