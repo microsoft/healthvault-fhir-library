@@ -19,7 +19,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
     public class ToFhirObservationTests
     {
         [TestMethod]
-        public void WhenHealthvaultThingIsTransformedToFhirObservation_thenCreatedTimeStampIsStoredAsIssued()
+        public void WhenHealthvaultThingIsTransformedToFhirObservation_ThenCreatedTimeStampIsStoredAsIssued()
         {
             throw new AssertInconclusiveException("Need thing created using xml deserializer to set created audit info");
             var created = DateTimeOffset.Now;
