@@ -32,89 +32,114 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 switch (component.Code.Coding[0].Code)
                 {
                     case HealthVaultVocabularies.SleepJournalAMBedtime:
-                        sleepJournalAm.Bedtime = ((Time)component.Value).ToAppoximateTime();
+                        if(component.Value.GetType() == typeof(Time))
+                        { 
+                            sleepJournalAm.Bedtime = ((Time)component.Value).ToAppoximateTime();
+                        }
+
                         break;
                     case HealthVaultVocabularies.SleepJournalAMWaketime:
-                        sleepJournalAm.WakeTime = ((Time)component.Value).ToAppoximateTime();
+                        if (component.Value.GetType() == typeof(Time))
+                        {
+                            sleepJournalAm.WakeTime = ((Time)component.Value).ToAppoximateTime();
+                        }
+
                         break;
                     case HealthVaultVocabularies.SleepJournalAMSleepMinutes:
-                        var sleepMinutes = (Quantity)component.Value;
-                        if (sleepMinutes.Value.HasValue)
+                        if (component.Value.GetType() == typeof(SimpleQuantity))
                         {
-                            sleepJournalAm.SleepMinutes = (int)sleepMinutes.Value.Value;
+                            var sleepMinutes = (Quantity)component.Value;
+                            if (sleepMinutes.Value.HasValue)
+                            {
+                                sleepJournalAm.SleepMinutes = (int)sleepMinutes.Value.Value;
+                            }
                         }
 
                         break;
                     case HealthVaultVocabularies.SleepJournalAMSettlingMinutes:
-                        var settlingMinutes = (Quantity)component.Value;
-                        if (settlingMinutes.Value.HasValue)
+                        if (component.Value.GetType() == typeof(SimpleQuantity))
                         {
-                            sleepJournalAm.SettlingMinutes = (int)settlingMinutes.Value.Value;
+                            var settlingMinutes = (Quantity)component.Value;
+                            if (settlingMinutes.Value.HasValue)
+                            {
+                                sleepJournalAm.SettlingMinutes = (int)settlingMinutes.Value.Value;
+                            }
                         }
 
                         break;
                     case HealthVaultVocabularies.SleepJournalAMWakeState:
-                        WakeState wakeState;
-                        var wakeStateValue = (CodeableConcept)component.Value;
-
-                        if (wakeStateValue.Coding.IsNullOrEmpty())
+                        if (component.Value.GetType() == typeof(CodeableConcept))
                         {
-                            break;
-                        }
+                            WakeState wakeState;
+                            var wakeStateValue = (CodeableConcept)component.Value;
 
-                        if (Enum.TryParse(wakeStateValue.Coding[0].Code, out wakeState))
-                        {
-                            sleepJournalAm.WakeState = wakeState;
+                            if (wakeStateValue.Coding.IsNullOrEmpty())
+                            {
+                                break;
+                            }
+
+                            if (Enum.TryParse(wakeStateValue.Coding[0].Code, out wakeState))
+                            {
+                                sleepJournalAm.WakeState = wakeState;
+                            }
                         }
 
                         break;
                     case HealthVaultVocabularies.SleepJournalAMMedication:
-                        var medicationValue = (CodeableConcept)component.Value;
-                        if (medicationValue.Coding.IsNullOrEmpty())
+                        if (component.Value.GetType() == typeof(CodeableConcept))
                         {
-                            break;
+                            var medicationValue = (CodeableConcept)component.Value;
+                            if (medicationValue.Coding.IsNullOrEmpty())
+                            {
+                                break;
+                            }
+
+                            var coding = medicationValue.Coding[0];
+
+                            var value = coding.Code.Split(':');
+                            var vocabName = value[0];
+                            var vocabCode = value.Length == 2 ? value[1] : null;
+
+                            var codedValue = new CodedValue
+                            {
+                                VocabularyName = vocabName,
+                                Value = vocabCode,
+                                Family = coding.System.Replace(VocabularyUris.HealthVaultVocabulariesUri, ""),
+                                Version = coding.Version
+                            };
+
+                            if (sleepJournalAm.Medications == null)
+                            {
+                                sleepJournalAm.Medications = new CodableValue(coding.Display);
+                            }
+
+                            sleepJournalAm.Medications.Add(codedValue);
                         }
 
-                        var coding = medicationValue.Coding[0];
-
-                        var value = coding.Code.Split(':');
-                        var vocabName = value[0];
-                        var vocabCode = value.Length == 2 ? value[1] : null;
-
-                        var codedValue = new CodedValue
-                        {
-                            VocabularyName = vocabName,
-                            Value = vocabCode,
-                            Family = coding.System.Replace(VocabularyUris.HealthVaultVocabulariesUri, ""),
-                            Version = coding.Version
-                        };
-
-                        if (sleepJournalAm.Medications == null)
-                        {
-                            sleepJournalAm.Medications = new CodableValue(coding.Display);
-                        }
-
-                        sleepJournalAm.Medications.Add(codedValue);
                         break;
                     case HealthVaultVocabularies.SleepJournalAMAwakening:
-                        var startTime = ((Period)component.Value).StartElement.ToDateTimeOffset();
-                        var endTime = ((Period)component.Value).EndElement.ToDateTimeOffset();
-
-                        var approximateTime = new ApproximateTime
+                        if (component.Value.GetType() == typeof(Period))
                         {
-                            Hour = startTime.Hour,
-                            Minute = startTime.Minute,
-                            Second = startTime.Second,
-                            Millisecond = startTime.Millisecond
-                        };
+                            var startTime = ((Period)component.Value).StartElement.ToDateTimeOffset();
+                            var endTime = ((Period)component.Value).EndElement.ToDateTimeOffset();
 
-                        var occurrence = new Occurrence
-                        {
-                            When = approximateTime,
-                            Minutes = (endTime - startTime).Minutes
-                        };
+                            var approximateTime = new ApproximateTime
+                            {
+                                Hour = startTime.Hour,
+                                Minute = startTime.Minute,
+                                Second = startTime.Second,
+                                Millisecond = startTime.Millisecond
+                            };
 
-                        sleepJournalAm.Awakenings.Add(occurrence);
+                            var occurrence = new Occurrence
+                            {
+                                When = approximateTime,
+                                Minutes = (endTime - startTime).Minutes
+                            };
+
+                            sleepJournalAm.Awakenings.Add(occurrence);
+                        }
+
                         break;
                 }
             }

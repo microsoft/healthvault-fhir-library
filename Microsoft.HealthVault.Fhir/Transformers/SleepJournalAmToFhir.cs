@@ -31,8 +31,6 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     {
         internal static Observation ToFhirInternal(SleepJournalAM sleepJournalAM, Observation observation)
         {
-            observation.Category = new List<CodeableConcept>() { FhirCategories.VitalSigns };
-
             observation.Code = new CodeableConcept(VocabularyUris.HealthVaultVocabulariesUri, HealthVaultVocabularies.SleepJournalAM);
             
             observation.Effective = new FhirDateTime(sleepJournalAM.When.ToLocalDateTime().ToDateTimeUnspecified());
@@ -71,7 +69,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 foreach(var awakening in sleepJournalAM.Awakenings)
                 {
-                    var dummyDateTimeStart = new DateTime(1900,01,01);
+                    var dummyDateTimeStart = new DateTime(sleepJournalAM.When.Date.Year, sleepJournalAM.When.Date.Month, sleepJournalAM.When.Date.Day);
                     dummyDateTimeStart = dummyDateTimeStart.AddHours(awakening.When.Hour);
                     dummyDateTimeStart = dummyDateTimeStart.AddMinutes(awakening.When.Minute);
                     if (awakening.When.Second.HasValue)

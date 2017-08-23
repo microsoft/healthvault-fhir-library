@@ -13,7 +13,6 @@ using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NodaTime;
 using NodaTime.Extensions;
-using Period = Hl7.Fhir.Model.Period;
 
 namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
 {
@@ -23,8 +22,9 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
         [TestMethod]
         public void WhenHeathVaultSleepJournalAMTransformedToFhir_ThenCodeAndValuesEqual()
         {
+            var when = SystemClock.Instance.InUtc().GetCurrentLocalDateTime();
             var sleepJournalAm = new SleepJournalAM(
-                new HealthServiceDateTime(SystemClock.Instance.InUtc().GetCurrentLocalDateTime()),
+                new HealthServiceDateTime(when),
                 new ApproximateTime(22, 30),
                 new ApproximateTime(6,28),
                 100,
@@ -47,11 +47,11 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             Assert.AreEqual(110, ((Quantity)observation.Component[3].Value).Value);
             Assert.AreEqual(UnitAbbreviations.Minute, ((Quantity)observation.Component[3].Value).Unit);
 
-            Assert.AreEqual(new FhirDateTime(1900, 01, 01, 23, 30), ((Period)observation.Component[4].Value).StartElement);
-            Assert.AreEqual(new FhirDateTime(1900, 01, 02, 0, 10), ((Period)observation.Component[4].Value).EndElement);
+            Assert.AreEqual(new FhirDateTime(when.Year, when.Month, when.Day, 23, 30), ((Hl7.Fhir.Model.Period)observation.Component[4].Value).StartElement);
+            Assert.AreEqual(new FhirDateTime(when.Year, when.Month, when.Day+1, 0, 10), ((Hl7.Fhir.Model.Period)observation.Component[4].Value).EndElement);
 
-            Assert.AreEqual(new FhirDateTime(1900, 01, 01, 0, 30), ((Period)observation.Component[5].Value).StartElement);
-            Assert.AreEqual(new FhirDateTime(1900, 01, 01, 0, 40), ((Period)observation.Component[5].Value).EndElement);
+            Assert.AreEqual(new FhirDateTime(when.Year, when.Month, when.Day, 0, 30), ((Hl7.Fhir.Model.Period)observation.Component[5].Value).StartElement);
+            Assert.AreEqual(new FhirDateTime(when.Year, when.Month, when.Day, 0, 40), ((Hl7.Fhir.Model.Period)observation.Component[5].Value).EndElement);
 
             Assert.AreEqual("Tired", ((CodeableConcept)observation.Component[6].Value).Coding[0].Code);
 
