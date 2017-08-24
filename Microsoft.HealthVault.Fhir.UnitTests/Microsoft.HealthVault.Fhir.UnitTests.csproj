@@ -161,8 +161,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ToFhirTests\ToFhirResourceTests.cs" />
+    <EmbeddedResource Include="Samples\FhirSleepJournalAM.json" />
     <Compile Include="Samples\SampleUtil.cs" />
     <Compile Include="ToFhirTests\ApproximateDateTimeToFhirTests.cs" />
+    <Compile Include="ToFhirTests\ApproximateTimeToFhirTests.cs" />
     <Compile Include="ToFhirTests\BloodPressureToFhirTests.cs" />
     <Compile Include="ToFhirTests\BodyCompositionToFhirTests.cs" />
     <Compile Include="ToFhirTests\BodyDimensionToFhirTests.cs" />
@@ -170,11 +172,13 @@
     <Compile Include="ToFhirTests\HeightToFhirTests.cs" />
     <Compile Include="ToFhirTests\ToFhirDomainResourceTests.cs" />
     <Compile Include="ToFhirTests\ToFhirObservationTests.cs" />
+    <Compile Include="ToFhirTests\SleepJournalAMToFhirTests.cs" />
     <Compile Include="ToFhirTests\WeightToFhirTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBloodPressure.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyCompositionTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyDimensionTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultHeartRateTests.cs" />
+    <Compile Include="ToHealthVaultTests\ObservationToHealthVaultSleepJournalAMTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

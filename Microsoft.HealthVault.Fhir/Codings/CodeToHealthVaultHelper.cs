@@ -96,6 +96,14 @@ namespace Microsoft.HealthVault.Fhir.Codings
                         return typeof(BodyDimension);
                 }
             }
+            else
+            {
+                switch (code)
+                {
+                    case HealthVaultVocabularies.SleepJournalAM:
+                        return typeof(SleepJournalAM);
+                }
+            }
 
             throw new NotSupportedException("The provided code is not supported");
         }
