@@ -220,6 +220,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 return observation.ToBodyDimension();
             }
 
+            if(type == typeof(SleepJournalAM))
+            {
+                return observation.ToSleepJournalAM();
+            }
+
             return null;
         }
     }

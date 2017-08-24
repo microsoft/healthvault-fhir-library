@@ -161,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ToFhirTests\ToFhirResourceTests.cs" />
+    <EmbeddedResource Include="Samples\FhirSleepJournalAM.json" />
     <Compile Include="Samples\SampleUtil.cs" />
     <Compile Include="ToFhirTests\ApproximateDateTimeToFhirTests.cs" />
     <Compile Include="ToFhirTests\ApproximateTimeToFhirTimeTests.cs" />
@@ -176,11 +177,13 @@
     <Compile Include="ToFhirTests\MultipleToFhirPatientTests.cs" />
     <Compile Include="ToFhirTests\PersonalImageToFhirTests.cs" />
     <Compile Include="ToFhirTests\PersonalToFhirTests.cs" />
+    <Compile Include="ToFhirTests\SleepJournalAMToFhirTests.cs" />
     <Compile Include="ToFhirTests\WeightToFhirTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBloodPressure.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyCompositionTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyDimensionTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultHeartRateTests.cs" />
+    <Compile Include="ToHealthVaultTests\ObservationToHealthVaultSleepJournalAMTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToHealthVaultTests\PatientToHealthVaultTests.cs" />
