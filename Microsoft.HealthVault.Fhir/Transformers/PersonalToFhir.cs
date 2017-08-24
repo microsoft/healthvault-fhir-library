@@ -78,12 +78,12 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
                 if (personal.Name.Title != null)
                 {
-                    humanName.AddExtension(HealthVaultExtensions.PatientTitle, personal.Name.Title.ToFhir());
+                    humanName.Prefix = new List<string>{ personal.Name.Title.Text };
                 }
 
                 if (personal.Name.Suffix != null)
                 {
-                    humanName.AddExtension(HealthVaultExtensions.PatientSuffix, personal.Name.Suffix.ToFhir());
+                    humanName.Suffix = new List<string>{ personal.Name.Suffix.Text };
                 }
 
                 patient.Name.Add(humanName);

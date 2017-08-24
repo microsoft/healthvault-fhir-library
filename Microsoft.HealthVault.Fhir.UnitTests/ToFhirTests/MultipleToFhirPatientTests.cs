@@ -196,8 +196,8 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.AreEqual("John", patient.Name[0].Given.ToList()[0]);
             Assert.AreEqual("Phillip", patient.Name[0].Given.ToList()[1]);
             Assert.AreEqual("Doe", patient.Name[0].Family);
-            Assert.AreEqual("name-prefixes:Dr", patient.Name[0].GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientTitle).Coding[0].Code);
-            Assert.AreEqual("name-suffixes:Jr", patient.Name[0].GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientSuffix).Coding[0].Code);
+            Assert.AreEqual("Dr.", patient.Name[0].Prefix.ToList()[0]);
+            Assert.AreEqual("Junior", patient.Name[0].Suffix.ToList()[0]);
             Assert.AreEqual("1975-02-05", patient.BirthDate);
             Assert.AreEqual("000-12-3456", patient.Identifier[0].Value);
             Assert.AreEqual("2075-05-07T00:00:00-07:00", ((FhirDateTime)patient.Deceased).Value);

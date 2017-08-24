@@ -10,7 +10,7 @@ namespace Microsoft.HealthVault.Fhir.Constants
 {
     public static class HealthVaultExtensions
     {
-        public const string HealthVaultExtensionsUri = "http://healthvault.com/fhir/stu3/StructuedDefinition/";
+        public const string HealthVaultExtensionsUri = "http://healthvault.com/fhir/stu3/StructuredDefinition/";
 
         public const string StateFhirExtensionName = HealthVaultExtensionsUri + "thing-state";
         public const string FlagsFhirExtensionName = HealthVaultExtensionsUri + "thing-flags";

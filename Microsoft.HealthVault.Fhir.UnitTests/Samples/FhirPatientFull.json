@@ -2,15 +2,15 @@
     "resourceType": "Patient",
     "extension": [
         {
-            "url": "http://healthvault.com/fhir/stu3/StructuedDefinition/thing-flags",
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/thing-flags",
             "valueString": "None"
         },
         {
-            "url": "http://healthvault.com/fhir/stu3/StructuedDefinition/thing-state",
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/thing-state",
             "valueString": "Active"
         },
         {
-            "url": "http://healthvault.com/fhir/stu3/StructuedDefinition/basic-v2",
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/basic-v2",
             "extension": [
                 {
                     "url": "birth-year",
@@ -67,7 +67,7 @@
             ]
         },
         {
-            "url": "http://healthvault.com/fhir/stu3/StructuedDefinition/personal",
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/personal",
             "extension": [
                 {
                     "url": "blood-type",
@@ -166,41 +166,17 @@
     ],
     "name": [
         {
-            "extension": [
-                {
-                    "url": "codable-title",
-                    "valueCodeableConcept": {
-                        "coding": [
-                            {
-                                "system": "http://healthvault.com/vocabularies/",
-                                "version": "1",
-                                "code": "name-prefixes:Dr",
-                                "display": "Dr."
-                            }
-                        ],
-                        "text": "Dr."
-                    }
-                },
-                {
-                    "url": "codable-suffix",
-                    "valueCodeableConcept": {
-                        "coding": [
-                            {
-                                "system": "http://healthvault.com/vocabularies/",
-                                "version": "1",
-                                "code": "name-suffixes:Jr",
-                                "display": "Junior"
-                            }
-                        ],
-                        "text": "Junior"
-                    }
-                }
-            ],
             "text": "Dr. John Phillip Doe, Jr.",
             "family": "Doe",
             "given": [
                 "John",
                 "Phillip"
+            ],
+            "prefix": [
+                "Dr."
+            ],
+            "suffix": [
+                "Junior"
             ]
         }
     ],
@@ -208,7 +184,7 @@
         {
             "extension": [
                 {
-                    "url": "http://healthvault.com/fhir/stu3/StructuedDefinition/description",
+                    "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/description",
                     "valueString": "Address 1"
                 }
             ],
@@ -219,7 +195,7 @@
         {
             "extension": [
                 {
-                    "url": "http://healthvault.com/fhir/stu3/StructuedDefinition/description",
+                    "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/description",
                     "valueString": "Address 2"
                 }
             ],
@@ -229,7 +205,7 @@
         {
             "extension": [
                 {
-                    "url": "http://healthvault.com/fhir/stu3/StructuedDefinition/description",
+                    "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/description",
                     "valueString": "Phone 1"
                 }
             ],
@@ -240,7 +216,7 @@
         {
             "extension": [
                 {
-                    "url": "http://healthvault.com/fhir/stu3/StructuedDefinition/description",
+                    "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/description",
                     "valueString": "Phone 2"
                 }
             ],
@@ -253,7 +229,7 @@
     "_birthDate": {
         "extension": [
             {
-                "url": "http://healthvault.com/fhir/stu3/StructuedDefinition/birth-time",
+                "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/birth-time",
                 "valueTime": "01:30:34.015"
             }
         ]
@@ -263,7 +239,7 @@
         {
             "extension": [
                 {
-                    "url": "http://healthvault.com/fhir/stu3/StructuedDefinition/is-primary",
+                    "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/is-primary",
                     "valueBoolean": true
                 }
             ],

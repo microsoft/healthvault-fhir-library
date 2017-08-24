@@ -82,14 +82,16 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             if (!patient.Name.IsNullOrEmpty())
             {
                 hasValue = true;
-                var patientName = patient.Name.First();
+                var patientName = patient.Name.First(); // Take the first name available
                 var name = new Name
                 {
                     Full = patientName.Text,
                     Last = patientName.Family,
-                    Suffix = patientName.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientSuffix)?.ToCodableValue(),
-                    Title = patientName.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientTitle)?.ToCodableValue(),
+                    Suffix = patientName.Suffix.Any() ? new CodableValue(patientName.Suffix.First()) : null, // Take the first suffix if there are any
+                    Title = patientName.Prefix.Any() ? new CodableValue(patientName.Prefix.First()) : null, // Take the first prefix if there are any
                 };
+
+                name.Suffix = new CodableValue();
 
                 //todo: figure out how to extend the names so we can be sure to map first and middle correctly
                 if (patientName.Given.Any())
