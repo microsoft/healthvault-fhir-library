@@ -8,7 +8,7 @@
 
 using System.Collections.Generic;
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Codings;
+using Hl7.Fhir.Support;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 
@@ -17,35 +17,40 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     public static partial class ThingBaseToFhir
     {
         // Register the type on the generic ThingToFhir partial class
-        public static Observation ToFhir(this BodyDimension bodyDimension)
+        public static Patient ToFhir(this PersonalImage personalImage)
         {
-            return BodyDimensionToFhir.ToFhirInternal(bodyDimension, ToFhirInternal<Observation>(bodyDimension));
+            return PersonalImageToFhir.ToFhirInternal(personalImage, ThingBaseToFhir.ToFhirInternal<Patient>(personalImage));
+        }
+
+        // Register the type on the generic ThingToFhir partial class
+        public static Patient ToFhir(this PersonalImage personalImage, Patient patient)
+        {
+            return PersonalImageToFhir.ToFhirInternal(personalImage, patient);
         }
     }
 
     /// <summary>
-    /// An extension class that transforms HealthVault body dimension data types into FHIR Observations
+    /// An extension class that transforms HealthVault personal image data types into FHIR Patient
     /// </summary>
-    internal static class BodyDimensionToFhir
+    internal static class PersonalImageToFhir
     {
-        internal static Observation ToFhirInternal(BodyDimension bodyDimension, Observation observation)
+        internal static Patient ToFhirInternal(PersonalImage personalImage, Patient patient)
         {
-            observation.Category = new List<CodeableConcept> { FhirCategories.VitalSigns };
-            
-            if (bodyDimension.MeasurementName != null)
+            using (var stream = personalImage.ReadImage())
             {
-                observation.Code = new CodeableConcept
+                var bytes = new byte[stream.Length];
+                stream.Read(bytes, 0, (int)stream.Length);
+
+                if (!bytes.IsNullOrEmpty())
                 {
-                    Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(bodyDimension.MeasurementName, new List<Coding>())
-                };
-            }
+                    patient.Photo.Add(new Attachment
+                    {
+                        Data = bytes
+                    });
+                }
+            }   
 
-            var quantity = new Quantity((decimal)bodyDimension.Value.Meters, UnitAbbreviations.Meter);
-            observation.Value = quantity;
-
-            observation.Effective = bodyDimension.When.ToFhir();
-
-            return observation;
+            return patient;
         }
     }
 }

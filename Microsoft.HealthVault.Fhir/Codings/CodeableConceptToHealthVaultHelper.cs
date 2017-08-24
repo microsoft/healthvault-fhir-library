@@ -7,30 +7,26 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Constants;
-using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
+namespace Microsoft.HealthVault.Fhir.Codings
 {
-    [TestClass]
-    public class HeightToFhirTests
+    public static class CodeableConceptToHealthVaultHelper
     {
-        [TestMethod]
-        public void WhenHeathVaultHeightTransformedToFhir_ThenCodeAndValuesEqual()
+        internal static CodableValue ToCodableValue(this CodeableConcept codeableConcept)
         {
-            // ToDo, once deserialization is fixed on SDK, use Deserialize
-            var height = new Height(new HealthServiceDateTime(), new Length(1.6));
+            var code = codeableConcept.Coding[0];
+            var value = code.Code.Split(':');
+            var vocabName = value[0];
+            var vocabCode = value.Length == 2 ? value[1] : null;
 
-            var observation = height.ToFhir() as Observation;
-            Assert.IsNotNull(observation);
-            Assert.AreEqual(HealthVaultVocabularies.BodyHeight, observation.Code);
-
-            var observationValue = observation.Value as Quantity;
-            Assert.IsNotNull(observationValue);
-            Assert.AreEqual((decimal)1.6, observationValue.Value);
-            Assert.AreEqual(UnitAbbreviations.Meter, observationValue.Unit);
+            return new CodableValue(
+                code.Display,
+                vocabCode,
+                vocabName,
+                code.System,
+                code.Version
+            );
         }
     }
 }

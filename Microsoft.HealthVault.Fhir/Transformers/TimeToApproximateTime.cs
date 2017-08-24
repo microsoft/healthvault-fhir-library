@@ -24,10 +24,10 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             approximateTime.Minute = int.Parse(timePortions[1]);
             approximateTime.Second = int.Parse(timePortions[2].Substring(0, 2));
 
-            if(timePortions[2].Contains("."))
-            { 
+            if (timePortions[2].Contains("."))
+            {
                 // milliseconds will always start at position 3, but we aren't guaranteed to have 3 digits after. 
-                approximateTime.Millisecond = int.Parse(timePortions[2].Substring(3, Math.Min(timePortions[2].Length - 3, 3)).PadRight(3,'0'));
+                approximateTime.Millisecond = int.Parse(timePortions[2].Substring(3, Math.Min(timePortions[2].Length - 3, 3)).PadRight(3, '0'));
             }
 
             return approximateTime;

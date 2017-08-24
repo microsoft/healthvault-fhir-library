@@ -6,31 +6,36 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Constants;
-using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
+namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    [TestClass]
-    public class HeightToFhirTests
+    public static partial class ItemBaseToFhir
     {
-        [TestMethod]
-        public void WhenHeathVaultHeightTransformedToFhir_ThenCodeAndValuesEqual()
+        // Register the type on the generic ItemBaseToFhir partial class
+        public static Time ToFhir(this ApproximateTime approximateTime)
         {
-            // ToDo, once deserialization is fixed on SDK, use Deserialize
-            var height = new Height(new HealthServiceDateTime(), new Length(1.6));
+            return ApproximateTimeToFhir.ToFhirInternal(approximateTime);
+        }
+    }
 
-            var observation = height.ToFhir() as Observation;
-            Assert.IsNotNull(observation);
-            Assert.AreEqual(HealthVaultVocabularies.BodyHeight, observation.Code);
+    /// <summary>
+    /// An extension class that transforms HealthVault approximate times into FHIR times
+    /// </summary>
+    public class ApproximateTimeToFhir
+    {
+        internal static Time ToFhirInternal(ApproximateTime approximateTime)
+        {
+            var timeSpan = new TimeSpan(
+                0,
+                approximateTime?.Hour ?? 0,
+                approximateTime?.Minute ?? 0,
+                approximateTime?.Second ?? 0,
+                approximateTime?.Millisecond ?? 0);
 
-            var observationValue = observation.Value as Quantity;
-            Assert.IsNotNull(observationValue);
-            Assert.AreEqual((decimal)1.6, observationValue.Value);
-            Assert.AreEqual(UnitAbbreviations.Meter, observationValue.Unit);
+            return new Time(timeSpan.ToString(@"hh\:mm\:ss\.fff"));
         }
     }
 }
