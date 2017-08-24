@@ -21,7 +21,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         // Register the type on the generic ThingBaseToFhir partial class
         public static Observation ToFhir(this BodyComposition bodyComposition)
         {
-            return BodyCompositionToFhir.ToFhirInternal(bodyComposition, ToFhirInternal(bodyComposition));
+            return BodyCompositionToFhir.ToFhirInternal(bodyComposition, ToFhirInternal<Observation>(bodyComposition));
         }
     }
 

@@ -160,22 +160,35 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ToFhirTests\ToFhirResourceTests.cs" />
+    <EmbeddedResource Include="Samples\FhirSleepJournalAM.json" />
     <Compile Include="Samples\SampleUtil.cs" />
     <Compile Include="ToFhirTests\ApproximateDateTimeToFhirTests.cs" />
+    <Compile Include="ToFhirTests\ApproximateTimeToFhirTimeTests.cs" />
+    <Compile Include="ToFhirTests\BasicV2ToFhirTests.cs" />
     <Compile Include="ToFhirTests\BloodPressureToFhirTests.cs" />
     <Compile Include="ToFhirTests\BodyCompositionToFhirTests.cs" />
     <Compile Include="ToFhirTests\BodyDimensionToFhirTests.cs" />
+    <Compile Include="ToFhirTests\ContactToFhirTests.cs" />
     <Compile Include="ToFhirTests\ExerciseToFhirTests.cs" />
     <Compile Include="ToFhirTests\HeartRateToFhirTests.cs" />
     <Compile Include="ToFhirTests\HeightToFhirTests.cs" />
+    <Compile Include="ToFhirTests\ToFhirDomainResourceTests.cs" />
+    <Compile Include="ToFhirTests\ToFhirObservationTests.cs" />
+    <Compile Include="ToFhirTests\MultipleToFhirPatientTests.cs" />
+    <Compile Include="ToFhirTests\PersonalImageToFhirTests.cs" />
+    <Compile Include="ToFhirTests\PersonalToFhirTests.cs" />
+    <Compile Include="ToFhirTests\SleepJournalAMToFhirTests.cs" />
     <Compile Include="ToFhirTests\WeightToFhirTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBloodPressure.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyCompositionTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyDimensionTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultExerciseTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultHeartRateTests.cs" />
+    <Compile Include="ToHealthVaultTests\ObservationToHealthVaultSleepJournalAMTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ToHealthVaultTests\PatientToHealthVaultTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -194,12 +207,16 @@
     <EmbeddedResource Include="Samples\FhirBodyComposition.json" />
     <EmbeddedResource Include="Samples\FhirBodyDimension.json" />
     <EmbeddedResource Include="Samples\FhirExercise.json" />
+    <EmbeddedResource Include="Samples\FhirPatientFull.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.HealthVault.Fhir\Microsoft.HealthVault.Fhir.csproj">
       <Project>{a1d4d196-c91c-4b70-a413-e715a8143bf9}</Project>
       <Name>Microsoft.HealthVault.Fhir</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Samples\HealthVaultIcon.png" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

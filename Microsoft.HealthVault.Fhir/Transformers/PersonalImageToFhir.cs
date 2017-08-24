@@ -6,7 +6,9 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System.Collections.Generic;
 using Hl7.Fhir.Model;
+using Hl7.Fhir.Support;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 
@@ -15,27 +17,40 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     public static partial class ThingBaseToFhir
     {
         // Register the type on the generic ThingToFhir partial class
-        public static Observation ToFhir(this Weight weight)
+        public static Patient ToFhir(this PersonalImage personalImage)
         {
-            return WeightToFhir.ToFhirInternal(weight, ToFhirInternal<Observation>(weight));
+            return PersonalImageToFhir.ToFhirInternal(personalImage, ThingBaseToFhir.ToFhirInternal<Patient>(personalImage));
+        }
+
+        // Register the type on the generic ThingToFhir partial class
+        public static Patient ToFhir(this PersonalImage personalImage, Patient patient)
+        {
+            return PersonalImageToFhir.ToFhirInternal(personalImage, patient);
         }
     }
 
     /// <summary>
-    /// An extension class that transforms HealthVault weight data types into FHIR Observations
+    /// An extension class that transforms HealthVault personal image data types into FHIR Patient
     /// </summary>
-    internal static class WeightToFhir
+    internal static class PersonalImageToFhir
     {
-        internal static Observation ToFhirInternal(Weight weight, Observation observation)
+        internal static Patient ToFhirInternal(PersonalImage personalImage, Patient patient)
         {
-            observation.Category = new System.Collections.Generic.List<CodeableConcept> { FhirCategories.VitalSigns };
-            observation.Code = HealthVaultVocabularies.BodyWeight;
+            using (var stream = personalImage.ReadImage())
+            {
+                var bytes = new byte[stream.Length];
+                stream.Read(bytes, 0, (int)stream.Length);
 
-            var quantity = new Quantity((decimal)weight.Value.Kilograms, UnitAbbreviations.Kilogram);
-            observation.Value = quantity;
-            observation.Effective = new FhirDateTime(weight.When.ToLocalDateTime().ToDateTimeUnspecified());
+                if (!bytes.IsNullOrEmpty())
+                {
+                    patient.Photo.Add(new Attachment
+                    {
+                        Data = bytes
+                    });
+                }
+            }   
 
-            return observation;
+            return patient;
         }
     }
 }

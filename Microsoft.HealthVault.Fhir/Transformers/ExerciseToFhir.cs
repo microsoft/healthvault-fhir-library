@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         // Register the type on the generic ThingToFhir partial class
         public static Observation ToFhir(this Exercise exercise)
         {
-            return ExerciseToFhir.ToFhirInternal(exercise, ToFhirInternal(exercise));
+            return ExerciseToFhir.ToFhirInternal(exercise, ToFhirInternal<Observation>(exercise));
         }
     }
 

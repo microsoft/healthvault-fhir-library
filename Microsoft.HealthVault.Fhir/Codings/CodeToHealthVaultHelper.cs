@@ -112,6 +112,8 @@ namespace Microsoft.HealthVault.Fhir.Codings
                 {
                     case HealthVaultVocabularies.Exercise:
                         return typeof(Exercise);
+                    case HealthVaultVocabularies.SleepJournalAM:
+                        return typeof(SleepJournalAM);
                 }
             }
 

@@ -7,35 +7,26 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 
-namespace Microsoft.HealthVault.Fhir.Transformers
+namespace Microsoft.HealthVault.Fhir.Codings
 {
-    public static partial class ThingBaseToFhir
+    public static class CodeableConceptToHealthVaultHelper
     {
-        // Register the type on the generic ThingToFhir partial class
-        public static Observation ToFhir(this Weight weight)
+        internal static CodableValue ToCodableValue(this CodeableConcept codeableConcept)
         {
-            return WeightToFhir.ToFhirInternal(weight, ToFhirInternal<Observation>(weight));
-        }
-    }
+            var code = codeableConcept.Coding[0];
+            var value = code.Code.Split(':');
+            var vocabName = value[0];
+            var vocabCode = value.Length == 2 ? value[1] : null;
 
-    /// <summary>
-    /// An extension class that transforms HealthVault weight data types into FHIR Observations
-    /// </summary>
-    internal static class WeightToFhir
-    {
-        internal static Observation ToFhirInternal(Weight weight, Observation observation)
-        {
-            observation.Category = new System.Collections.Generic.List<CodeableConcept> { FhirCategories.VitalSigns };
-            observation.Code = HealthVaultVocabularies.BodyWeight;
-
-            var quantity = new Quantity((decimal)weight.Value.Kilograms, UnitAbbreviations.Kilogram);
-            observation.Value = quantity;
-            observation.Effective = new FhirDateTime(weight.When.ToLocalDateTime().ToDateTimeUnspecified());
-
-            return observation;
+            return new CodableValue(
+                code.Display,
+                vocabCode,
+                vocabName,
+                code.System,
+                code.Version
+            );
         }
     }
 }

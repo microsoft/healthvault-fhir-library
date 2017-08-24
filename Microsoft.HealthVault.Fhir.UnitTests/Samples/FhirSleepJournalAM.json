@@ -1,0 +1,145 @@
+﻿{
+    "resourceType": "Observation",
+    "extension": [
+        {
+            "url": "http://healthvault.com/fhir-extensions/thing-flags",
+            "valueString": "None"
+        },
+        {
+            "url": "http://healthvault.com/fhir-extensions/thing-state",
+            "valueString": "Active"
+        }
+    ],
+    "status": "final",
+    "code": {
+        "coding": [
+            {
+                "system": "http://healthvault.com/vocabularies/",
+                "code": "sleep-journal-am"
+            }
+        ]
+    },
+    "effectiveDateTime": "2017-08-23T21:34:13.14-07:00",
+    "component": [
+        {
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "code": "sleep-journal-bed-time"
+                    }
+                ]
+            },
+            "valueTime": "22:30:00.9"
+        },
+        {
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "code": "sleep-journal-wake-time"
+                    }
+                ]
+            },
+            "valueTime": "06:28:59.1823"
+        },
+        {
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "code": "sleep-journal-sleep-minutes"
+                    }
+                ]
+            },
+            "valueQuantity": {
+                "value": 100,
+                "unit": "min",
+                "system": "http://unitsofmeasure.org",
+                "code": "min"
+            }
+        },
+        {
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "code": "sleep-journal-settling-minutes"
+                    }
+                ]
+            },
+            "valueQuantity": {
+                "value": 110,
+                "unit": "min",
+                "system": "http://unitsofmeasure.org",
+                "code": "min"
+            }
+        },
+        {
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "code": "sleep-journal-awakening"
+                    }
+                ]
+            },
+            "valuePeriod": {
+                "start": "2017-08-23T23:30:00-07:00",
+                "end": "2017-08-24T00:10:00-07:00"
+            }
+        },
+        {
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "code": "sleep-journal-awakening"
+                    }
+                ]
+            },
+            "valuePeriod": {
+                "start": "2017-08-23T00:30:00-07:00",
+                "end": "2017-08-23T00:40:00-07:00"
+            }
+        },
+        {
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "code": "sleep-journal-wake-state"
+                    }
+                ]
+            },
+            "valueCodeableConcept": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "code": "Tired"
+                    }
+                ]
+            }
+        },
+        {
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/",
+                        "code": "sleep-journal-medication"
+                    }
+                ]
+            },
+            "valueCodeableConcept": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/vocabularies/RxNorm",
+                        "version": "2",
+                        "code": "Mayo:ccabbac8-58f0-4e88-a1eb-538e21e7524d",
+                        "display": "Benzaclin"
+                    }
+                ]
+            }
+        }
+    ]
+}

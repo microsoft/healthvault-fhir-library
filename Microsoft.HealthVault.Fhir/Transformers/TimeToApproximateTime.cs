@@ -6,36 +6,31 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    public static partial class ThingBaseToFhir
+    internal static class TimeToApproximateTime
     {
-        // Register the type on the generic ThingToFhir partial class
-        public static Observation ToFhir(this Weight weight)
+        internal static ApproximateTime ToAppoximateTime(this Time time)
         {
-            return WeightToFhir.ToFhirInternal(weight, ToFhirInternal<Observation>(weight));
-        }
-    }
+            // Accepted formats for time are found here: https://www.hl7.org/fhir/datatypes.html#time
+            var approximateTime = new ApproximateTime();
+            var timePortions = time.ToString().Split(':');
 
-    /// <summary>
-    /// An extension class that transforms HealthVault weight data types into FHIR Observations
-    /// </summary>
-    internal static class WeightToFhir
-    {
-        internal static Observation ToFhirInternal(Weight weight, Observation observation)
-        {
-            observation.Category = new System.Collections.Generic.List<CodeableConcept> { FhirCategories.VitalSigns };
-            observation.Code = HealthVaultVocabularies.BodyWeight;
+            approximateTime.Hour = int.Parse(timePortions[0]);
+            approximateTime.Minute = int.Parse(timePortions[1]);
+            approximateTime.Second = int.Parse(timePortions[2].Substring(0, 2));
 
-            var quantity = new Quantity((decimal)weight.Value.Kilograms, UnitAbbreviations.Kilogram);
-            observation.Value = quantity;
-            observation.Effective = new FhirDateTime(weight.When.ToLocalDateTime().ToDateTimeUnspecified());
+            if (timePortions[2].Contains("."))
+            {
+                // milliseconds will always start at position 3, but we aren't guaranteed to have 3 digits after. 
+                approximateTime.Millisecond = int.Parse(timePortions[2].Substring(3, Math.Min(timePortions[2].Length - 3, 3)).PadRight(3, '0'));
+            }
 
-            return observation;
+            return approximateTime;
         }
     }
 }

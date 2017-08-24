@@ -6,36 +6,36 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System.Collections.Generic;
+using System.IO;
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Constants;
+using Hl7.Fhir.Support;
 using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    public static partial class ThingBaseToFhir
+    internal static class PatientToPersonalImage
     {
-        // Register the type on the generic ThingToFhir partial class
-        public static Observation ToFhir(this Weight weight)
+        internal static List<PersonalImage> ToPersonalImage(this Patient patient)
         {
-            return WeightToFhir.ToFhirInternal(weight, ToFhirInternal<Observation>(weight));
-        }
-    }
+            var personalImages = new List<PersonalImage>();
+            if (patient.Photo.IsNullOrEmpty())
+            {
+                return personalImages;
+            }
 
-    /// <summary>
-    /// An extension class that transforms HealthVault weight data types into FHIR Observations
-    /// </summary>
-    internal static class WeightToFhir
-    {
-        internal static Observation ToFhirInternal(Weight weight, Observation observation)
-        {
-            observation.Category = new System.Collections.Generic.List<CodeableConcept> { FhirCategories.VitalSigns };
-            observation.Code = HealthVaultVocabularies.BodyWeight;
+            foreach (var attachment in patient.Photo)
+            {
+                var personalImage = patient.ToThingBase<ItemTypes.PersonalImage>();
 
-            var quantity = new Quantity((decimal)weight.Value.Kilograms, UnitAbbreviations.Kilogram);
-            observation.Value = quantity;
-            observation.Effective = new FhirDateTime(weight.When.ToLocalDateTime().ToDateTimeUnspecified());
+                using (var stream = new MemoryStream(attachment.Data))
+                { 
+                    personalImage.WriteImage(stream, "application/octet-stream");
+                }
+                personalImages.Add(personalImage);
+            }
 
-            return observation;
+            return personalImages;
         }
     }
 }

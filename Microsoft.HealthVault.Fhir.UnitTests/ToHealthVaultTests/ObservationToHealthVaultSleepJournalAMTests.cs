@@ -11,42 +11,37 @@ using Hl7.Fhir.Serialization;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.Fhir.UnitTests.Samples;
 using Microsoft.HealthVault.ItemTypes;
-using Microsoft.HealthVault.Thing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
 {
     [TestClass]
-    public class ObservationToHealthVaultBloodPressureTests
+    public class ObservationToHealthVaultSleepJournalAMTests
     {
         [TestMethod]
-        public void WhenBloodPressureToHealthVault_ThenValuesEqual()
+        public void WhenFhirSleepJournalAMTransformedToHealthVault_ThenValuesEqual()
         {
-            var json = SampleUtil.GetSampleContent("FhirBloodPressure.json");
+            var json = SampleUtil.GetSampleContent("FhirSleepJournalAM.json");
 
             var fhirParser = new FhirJsonParser();
             var observation = fhirParser.Parse<Observation>(json);
 
-            var bp = observation.ToHealthVault() as BloodPressure;
-            Assert.IsNotNull(bp);
-            Assert.AreEqual(107, bp.Systolic);
-            Assert.AreEqual(60, bp.Diastolic);
-            Assert.IsNull(bp.Pulse);
+            var sleepJournalAm = observation.ToHealthVault() as SleepJournalAM;
+            Assert.IsNotNull(sleepJournalAm);
+
+            Assert.AreEqual(new ApproximateTime(22, 30, 0, 900), sleepJournalAm.Bedtime);
+            Assert.AreEqual(new ApproximateTime(6, 28, 59, 182), sleepJournalAm.WakeTime);
+            Assert.AreEqual(100, sleepJournalAm.SleepMinutes);
+            Assert.AreEqual(110, sleepJournalAm.SettlingMinutes);
+            Assert.AreEqual(WakeState.Tired, sleepJournalAm.WakeState);
+            Assert.AreEqual(1, sleepJournalAm.Medications.Count);
+            Assert.AreEqual("ccabbac8-58f0-4e88-a1eb-538e21e7524d", sleepJournalAm.Medications[0].Value);
+            Assert.AreEqual("Mayo", sleepJournalAm.Medications[0].VocabularyName);
+            Assert.AreEqual(2, sleepJournalAm.Awakenings.Count);
+            Assert.AreEqual(new ApproximateTime(23, 30, 0, 0), sleepJournalAm.Awakenings[0].When);
+            Assert.AreEqual(40, sleepJournalAm.Awakenings[0].Minutes);
+            Assert.AreEqual(new ApproximateTime(0, 30, 0, 0), sleepJournalAm.Awakenings[1].When);
+            Assert.AreEqual(10, sleepJournalAm.Awakenings[1].Minutes);
         }
-        
-        [TestMethod]
-        public void WhenBloodPressureToObservationToHealthVault_ThenValuesEqual()
-        {
-            var hvBloodPressure = new BloodPressure(new HealthServiceDateTime(), 120, 60);
-
-            var observation = hvBloodPressure.ToFhir() as Observation;
-
-            var bp = observation.ToHealthVault() as BloodPressure;
-            Assert.IsNotNull(bp);
-            Assert.IsNotNull(bp);
-            Assert.AreEqual(120, bp.Systolic);
-            Assert.AreEqual(60, bp.Diastolic);
-            Assert.IsNull(bp.Pulse);
-        }        
     }
 }

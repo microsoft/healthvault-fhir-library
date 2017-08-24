@@ -12,6 +12,7 @@ using System.Linq;
 using System.Reflection;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.Fhir.FhirExtensions;
 using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
@@ -22,88 +23,65 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     public static partial class ThingBaseToFhir
     {
         /// <summary>
-        /// Transforms a HealthVault thing into a FHIR Observation
+        /// Transforms a HealthVault thing into a FHIR Resource
         /// </summary>
         /// <param name="thing">The HealthVault thing to transform</param>
-        /// <returns>A FHIR observation based on the HealthVault thing</returns>
-        public static Observation ToFhir(this ThingBase thing)
+        /// <returns>A FHIR resource based on the HealthVault thing</returns>
+        public static Resource ToFhir(this ThingBase thing)
         {
-            // Find registered specific ToFhir method
             var transformerType = typeof(ThingBaseToFhir);
-            var method = transformerType.GetRuntimeMethod("ToFhir", new Type[] { thing.GetType() });
+            var thingType = thing.GetType();
+            var method = transformerType.GetRuntimeMethod("ToFhir", new Type[] { thingType });
 
             if (method != null && method.GetParameters()[0].ParameterType != typeof(ThingBase))
             {
-                return (Observation)method.Invoke(null, new object[] { thing });
+                return (Resource)method.Invoke(null, new object[] { thing });
             }
             else
             {
-                return thing.ToFhirInternal();
+                throw new NotImplementedException($"Unable to find tranformer for '{thingType}'");
             }
         }
 
-        internal static Observation ToFhirInternal(this ThingBase thing)
+        internal static T ToFhirInternal<T>(this ThingBase thing) where T : Resource, IExtendable, new()
         {
-            var observation = new Observation();
-            observation.Meta = new Meta();
+            var resource = new T();
 
-            observation.AddExtension(HealthVaultVocabularies.FlagsFhirExtensionName, new FhirString(thing.Flags.ToString()));
-            observation.AddExtension(HealthVaultVocabularies.StateFhirExtensionName, new FhirString(thing.State.ToString()));
+            resource.SetIdentity(thing.Key);
+            resource.CopyLastUpdatedFromAudit(thing.LastUpdated);
 
-            observation.Status = ObservationStatus.Final;
+            //Extensions
+            resource.AddFlagsAsExtension(thing.Flags);
+            resource.AddStateAsExtension(thing.State);
 
-            if (thing.Key != null)
+            resource.DoTransforms(thing);
+
+            return resource;
+        }
+
+        /// <summary>
+        /// Do transforms from thing to existing resource
+        /// </summary>
+        /// <param name="resource">A Fhir resource to add transforms to</param>
+        /// <param name="thing">The healthvault thing to get tranforms from</param>
+        public static void DoTransforms(this Resource resource, ThingBase thing)
+        {
+            var transformerType = typeof(ThingBaseToFhir);
+            var method = transformerType.GetRuntimeMethod("DoTransforms", new Type[] { resource.GetType(), thing.GetType() });
+
+            if (method != null && method.GetParameters()[0].ParameterType != typeof(Resource))
             {
-                if (thing.Key.Id != null)
-                {
-                    observation.Id = thing.Key.Id.ToString();
-                }
-
-                if (thing.Key.VersionStamp != null)
-                {
-                    observation.Meta.VersionId = thing.Key.VersionStamp.ToString();
-                }
+                method.Invoke(null, new object[] { resource, thing });
             }
-
-            if (thing.Created != null)
+            else
             {
-                if (thing.Created.Timestamp != null)
-                {
-                    observation.Issued = thing.Created.Timestamp.ToDateTimeOffset();
-                }
+                resource.DoTransformInternal(thing);
             }
+        }
 
-            if (thing.LastUpdated != null)
-            {
-                observation.Meta.LastUpdated = thing.LastUpdated.Timestamp.ToDateTimeOffset();
-            }
-
-            if (thing.CommonData != null)
-            {
-                if (!string.IsNullOrEmpty(thing.CommonData.Note))
-                {
-                    observation.Text = new Narrative() { Div = thing.CommonData.Note };
-                }
-
-                if (!string.IsNullOrEmpty(thing.CommonData.Source))
-                {
-                    observation.Device = new ResourceReference(thing.CommonData.Source);
-                }
-
-                if (thing.CommonData.RelatedItems != null && thing.CommonData.RelatedItems.Any())
-                {
-                    observation.Related = new List<Observation.RelatedComponent>();
-                    foreach (var item in thing.CommonData.RelatedItems)
-                    {
-                        if (item.ItemKey != null)
-                        {
-                            observation.Related.Add(new Observation.RelatedComponent() { Target = new ResourceReference($"observation/{item.ItemKey.Id}") });
-                        }
-                    }
-                }
-            }
-            
-            return observation;
-        }        
+        public static void DoTransformInternal(this Resource observation, ThingBase thing)
+        {
+            //NOP
+        }
     }
 }

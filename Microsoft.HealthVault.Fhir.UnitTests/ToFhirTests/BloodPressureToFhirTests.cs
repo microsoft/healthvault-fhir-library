@@ -17,7 +17,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
 {
-    [TestClass]
     public class BloodPressureToTests
     {
         [TestMethod]
@@ -25,9 +24,9 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
         {
             // ToDo, once deserialization is fixed on SDK, use Deserialize
 
-            ThingBase bloodPressure = new BloodPressure(new HealthServiceDateTime(), 120, 60);
+            var bloodPressure = new BloodPressure(new HealthServiceDateTime(), 120, 60);
 
-            var observation = bloodPressure.ToFhir();
+            var observation = bloodPressure.ToFhir() as Observation;
             Assert.IsNotNull(observation);
             Assert.IsNotNull(observation.Code);
             Assert.IsNotNull(observation.Code.Coding);
@@ -59,18 +58,18 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
         {
             // ToDo, once deserialization is fixed on SDK, use Deserialize
 
-            ThingBase bloodPressure = new BloodPressure(new HealthServiceDateTime(), 120, 60)
+            var bloodPressure = new BloodPressure(new HealthServiceDateTime(), 120, 60)
             {
                 Pulse = 55
             };
 
-            var observation = bloodPressure.ToFhir();
+            var observation = bloodPressure.ToFhir() as Observation;
             Assert.IsNotNull(observation);
             Assert.IsNotNull(observation.Code);
             Assert.IsNotNull(observation.Code.Coding);
             Assert.AreEqual(2, observation.Code.Coding.Count);
             Assert.AreEqual(HealthVaultVocabularies.BloodPressure.Coding[0], observation.Code.Coding[0]);
-            Assert.AreEqual(HealthVaultVocabularies.BloodPressure.Coding[1], observation.Code.Coding[1]);            
+            Assert.AreEqual(HealthVaultVocabularies.BloodPressure.Coding[1], observation.Code.Coding[1]);
 
             var components = observation.Component;
             Assert.AreEqual(3, components.Count);

@@ -38,6 +38,10 @@ namespace Microsoft.HealthVault.Fhir.Codings
                     {                        
                         ConvertValueToFhir(code.Value, fhirCodes, code.VocabularyName, VocabularyUris.HealthVaultVocabulariesUri, code.Version, codableValue.Text);
                     }
+                    else if (!string.IsNullOrWhiteSpace(code.Family) && (code.Family.Equals(HealthVaultVocabularies.RxNorm, StringComparison.OrdinalIgnoreCase) || code.Family.Equals(HealthVaultVocabularies.Dmd, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        ConvertValueToFhir(code.Value, fhirCodes, code.VocabularyName, VocabularyUris.HealthVaultVocabulariesUri + code.Family, code.Version, codableValue.Text);
+                    }
                     // If family is a well formed URI and it is a vocab name "fhir", the vocab name must be ignored
                     else if(!string.IsNullOrWhiteSpace(code.VocabularyName) && code.VocabularyName.Equals(HealthVaultVocabularies.Fhir, StringComparison.OrdinalIgnoreCase) && Uri.IsWellFormedUriString(code.Family, UriKind.Absolute))
                     {
@@ -52,7 +56,7 @@ namespace Microsoft.HealthVault.Fhir.Codings
 
             return fhirCodes;
         }
-
+        
         /// <summary>
         /// Converts a value from FHIR and adds it to the list of codings passed on the function
         /// </summary>
@@ -95,6 +99,11 @@ namespace Microsoft.HealthVault.Fhir.Codings
         public static string GetVocabularyUrl(string vocabularyName, string version)
         {
             return $"{VocabularyUris.HealthVaultVocabulariesUri}{vocabularyName}/{version}";
+        }
+
+        internal static CodeableConcept CreateVocabularyCodeableConcept(string code)
+        {
+            return new CodeableConcept { Coding = new List<Coding> { new Coding(VocabularyUris.HealthVaultVocabulariesUri, code) } };
         }
     }
 }

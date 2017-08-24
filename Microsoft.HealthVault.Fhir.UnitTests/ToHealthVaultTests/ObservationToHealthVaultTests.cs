@@ -74,9 +74,9 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         [TestMethod]
         public void WhenWeightTransformedToFhirTransformedToHealthvault_ThenValuesEqual()
         {
-            ThingBase hvWeight = new Weight(new HealthServiceDateTime(), new WeightValue(75.5));
+            var hvWeight = new Weight(new HealthServiceDateTime(), new WeightValue(75.5));
 
-            var observation = hvWeight.ToFhir();
+            var observation = hvWeight.ToFhir() as Observation;
 
             var weight = observation.ToHealthVault() as Weight;
             Assert.IsNotNull(weight);

@@ -6,8 +6,6 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -15,22 +13,39 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
 {
     [TestClass]
-    public class HeightToFhirTests
+    public class ApproximateTimeToFhirTests
     {
         [TestMethod]
-        public void WhenHeathVaultHeightTransformedToFhir_ThenCodeAndValuesEqual()
+        public void WhenHeathVaultApproximateTimeTransformedToFhir_ThenValuesEqual()
         {
-            // ToDo, once deserialization is fixed on SDK, use Deserialize
-            var height = new Height(new HealthServiceDateTime(), new Length(1.6));
+            var approximateTime = new ApproximateTime(1, 2, 3, 4);
 
-            var observation = height.ToFhir() as Observation;
-            Assert.IsNotNull(observation);
-            Assert.AreEqual(HealthVaultVocabularies.BodyHeight, observation.Code);
+            var fhirTime = approximateTime.ToFhir();
 
-            var observationValue = observation.Value as Quantity;
-            Assert.IsNotNull(observationValue);
-            Assert.AreEqual((decimal)1.6, observationValue.Value);
-            Assert.AreEqual(UnitAbbreviations.Meter, observationValue.Unit);
+            Assert.IsNotNull(fhirTime);
+            Assert.IsNotNull("01:02:03.004", fhirTime.Value);
+        }
+
+        [TestMethod]
+        public void WhenHeathVaultApproximateTimePartialTransformedToFhir_ThenValuesEqual()
+        {
+            // Only hours, minutes
+            var approximateTime1 = new ApproximateTime(23,59);
+            var fhirTime1 = approximateTime1.ToFhir();
+            Assert.IsNotNull(fhirTime1);
+            Assert.IsNotNull("23:59:00.000", fhirTime1.Value);
+
+            // Only hours, minutes, seconds
+            var approximateTime2 = new ApproximateTime(23, 59, 59);
+            var fhirTime2 = approximateTime2.ToFhir();
+            Assert.IsNotNull(fhirTime2);
+            Assert.IsNotNull("23:59:59.000", fhirTime2.Value);
+
+            // Only hours, minutes, seconds, milliseconds
+            var approximateTime3 = new ApproximateTime(23, 59, 59, 999);
+            var fhirTime3 = approximateTime3.ToFhir();
+            Assert.IsNotNull(fhirTime3);
+            Assert.IsNotNull("23:59:59.999", fhirTime2.Value);
         }
     }
 }

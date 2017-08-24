@@ -6,36 +6,36 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    public static partial class ThingBaseToFhir
+    public static partial class ItemBaseToFhir
     {
-        // Register the type on the generic ThingToFhir partial class
-        public static Observation ToFhir(this Weight weight)
+        // Register the type on the generic ItemBaseToFhir partial class
+        public static Time ToFhir(this ApproximateTime approximateTime)
         {
-            return WeightToFhir.ToFhirInternal(weight, ToFhirInternal<Observation>(weight));
+            return ApproximateTimeToFhir.ToFhirInternal(approximateTime);
         }
     }
 
     /// <summary>
-    /// An extension class that transforms HealthVault weight data types into FHIR Observations
+    /// An extension class that transforms HealthVault approximate times into FHIR times
     /// </summary>
-    internal static class WeightToFhir
+    public class ApproximateTimeToFhir
     {
-        internal static Observation ToFhirInternal(Weight weight, Observation observation)
+        internal static Time ToFhirInternal(ApproximateTime approximateTime)
         {
-            observation.Category = new System.Collections.Generic.List<CodeableConcept> { FhirCategories.VitalSigns };
-            observation.Code = HealthVaultVocabularies.BodyWeight;
+            var timeSpan = new TimeSpan(
+                0,
+                approximateTime?.Hour ?? 0,
+                approximateTime?.Minute ?? 0,
+                approximateTime?.Second ?? 0,
+                approximateTime?.Millisecond ?? 0);
 
-            var quantity = new Quantity((decimal)weight.Value.Kilograms, UnitAbbreviations.Kilogram);
-            observation.Value = quantity;
-            observation.Effective = new FhirDateTime(weight.When.ToLocalDateTime().ToDateTimeUnspecified());
-
-            return observation;
+            return new Time(timeSpan.ToString(@"hh\:mm\:ss\.fff"));
         }
     }
 }

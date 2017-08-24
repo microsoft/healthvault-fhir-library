@@ -12,6 +12,10 @@ namespace Microsoft.HealthVault.Fhir.Constants
     {
         public const string HealthVaultExtensionsUri = "http://healthvault.com/extensions/";
 
+        public const string FirstDayOfWeek = HealthVaultExtensionsUri + "first-day-of-week";
+        public const string IsPrimary = "is-primary";
+        public const string Description = "description";
+
         public const string ExerciseDetail = HealthVaultExtensionsUri + "exercise-detail";
         public const string ExerciseDetailName = "exercise-detail-name";
         public const string ExerciseDetailType = "exercise-detail-type";
@@ -23,5 +27,25 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string ExerciseSegmentDuration = "exercise-segment-duration";
         public const string ExerciseSegmentDistance = "exercise-segment-distance";
         public const string ExerciseSegmentOffset = "exercise-segment-offset";
+
+        public const string PatientBirthYear = HealthVaultExtensionsUri + "patient-birth-year";
+        public const string PatientBirthTime = "patient-birth-time";
+        public const string PatientBloodType = HealthVaultExtensionsUri + "patient-blood-type";
+        public const string PatientEmploymentStatus = HealthVaultExtensionsUri + "patient-employment-status";
+        public const string PatientEthnicity = HealthVaultExtensionsUri + "patient-ethnicity";
+        public const string PatientHighestEducationLevel = HealthVaultExtensionsUri + "patient-highest-education-level";
+        public const string PatientIsDisabled = HealthVaultExtensionsUri + "patient-is-disabled";
+        public const string PatientIsVeteran = HealthVaultExtensionsUri + "patient-is-veteran";
+        public const string PatientMaritalStatus = HealthVaultExtensionsUri + "patient-marital-status";
+        public const string PatientTitle = "patient-title";
+        public const string PatientSuffix = "patient-suffix";
+        public const string PatientOrganDonor = HealthVaultExtensionsUri + "patient-organ-donor";
+        public const string PatientReligion = HealthVaultExtensionsUri + "patient-religion";
+
+        public const string PatientBasicAddress = HealthVaultExtensionsUri + "patient-basic-address";
+        public const string PatientBasicAddressCity = "city";
+        public const string PatientBasicAddressState = "state";
+        public const string PatientBasicAddressPostalCode = "postal-code";
+        public const string PatientBasicAddressCountry = "country";
     }
 }
