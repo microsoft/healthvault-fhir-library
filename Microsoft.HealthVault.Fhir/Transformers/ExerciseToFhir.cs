@@ -31,7 +31,6 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     {
         internal static Observation ToFhirInternal(Exercise exercise, Observation observation)
         {
-            observation.Category = new List<CodeableConcept>() { FhirCategories.VitalSigns };
             observation.Code = new CodeableConcept(VocabularyUris.HealthVaultVocabulariesUri, HealthVaultVocabularies.Exercise);
 
             if (exercise.Distance != null)

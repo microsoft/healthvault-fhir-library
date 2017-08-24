@@ -69,6 +69,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                             {
                                 exercise.Distance = new Length((double)distanceQuantity.Value);
                             }
+
                             break;
                         case HealthVaultVocabularies.ExerciseDuration:
                             var durationQuantity = (Quantity)component.Value;
@@ -76,6 +77,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                             {
                                 exercise.Duration = (double)durationQuantity.Value;
                             }
+
                             break;
                         case HealthVaultVocabularies.ExerciseActivity:
                             var activityCodeableConcept = (CodeableConcept)component.Value;
@@ -91,6 +93,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                             var activityValueCode = activityValue.Length == 2 ? activityValue[1] : null;
 
                             exercise.SetActivity(coding.Display, activityValueCode, activityValueVocabName, HealthVaultVocabularies.Wc, coding.Version);
+
                             break;
                     }
                 }
@@ -120,12 +123,15 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                         var vocabCode = value.Length == 2 ? value[1] : null;
 
                         exerciseSegment.Activity = new CodableValue(activityCoding.Display, vocabCode, vocabName, activityCoding.System, activityCoding.Version);
+
                         break;
                     case HealthVaultExtensions.ExerciseSegmentTitle:
                         exerciseSegment.Title = ((FhirString) extension.Value).Value;
+
                         break;
                     case HealthVaultExtensions.ExerciseSegmentDuration:
                         exerciseSegment.Duration = (double?) ((FhirDecimal) extension.Value).Value;
+
                         break;
                     case HealthVaultExtensions.ExerciseSegmentDistance:
                         var valueQuantity = (Quantity) extension.Value;
@@ -133,9 +139,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                         {
                             exerciseSegment.Distance = new Length((double) valueQuantity.Value);
                         }
+
                         break;
                     case HealthVaultExtensions.ExerciseSegmentOffset:
                         exerciseSegment.Offset = (double?) ((FhirDecimal) extension.Value).Value;
+
                         break;
                     case HealthVaultExtensions.ExerciseDetail:
                         ExerciseDetail exerciseDetail;
@@ -145,6 +153,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                         {
                             exerciseSegment.Details.Add(key, exerciseDetail);
                         }
+
                         break;
                 }
             }
@@ -177,6 +186,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 {
                     case HealthVaultExtensions.ExerciseDetailName:
                         key = ((FhirString)extension.Value).Value;
+
                         break;
                     case HealthVaultExtensions.ExerciseDetailType:
                         var typeCodeableConcept = (CodeableConcept)extension.Value;
@@ -191,6 +201,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                         var vocabCode = value.Length == 2 ? value[1] : null;
 
                         exerciseDetail.Name = new CodedValue(vocabCode, vocabName, HealthVaultVocabularies.Wc, code.Version);
+
                         break;
                     case HealthVaultExtensions.ExerciseDetailValue:
                         var detailQuantity = (Quantity)extension.Value;
@@ -202,6 +213,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                                 CodeToHealthVaultHelper.CreateCodableValueFromQuantityValues(detailQuantity.System, detailQuantity.Code, detailQuantity.Unit)
                                 );
                         }
+
                         break;
                 }
             }
