@@ -83,17 +83,17 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.AreEqual("98052", address1.PostalCode);
             Assert.AreEqual("USA", address1.Country);
             Assert.AreEqual("Home address", address1.Text);
-            Assert.AreEqual(true, ((FhirBoolean)address1.Extension.First(x => x.Url == HealthVaultExtensions.IsPrimary).Value).Value);
+            Assert.AreEqual(true, address1.GetBoolExtension(HealthVaultExtensions.IsPrimary));
 
             Assert.AreEqual(4, patient.Telecom.Count);
             var email1 = patient.Telecom.First(x => x.System == ContactPoint.ContactPointSystem.Email);
             Assert.AreEqual("person1@example.com", email1.Value);
-            Assert.AreEqual("Address 1", ((FhirString)email1.Extension.First(x => x.Url == HealthVaultExtensions.Description).Value).Value);
+            Assert.AreEqual("Address 1", email1.GetStringExtension(HealthVaultExtensions.Description));
             Assert.AreEqual(1, email1.Rank);
 
             var phone1 = patient.Telecom.First(x => x.System == ContactPoint.ContactPointSystem.Phone);
             Assert.AreEqual("1-425-555-0100", phone1.Value);
-            Assert.AreEqual("Phone 1", ((FhirString)phone1.Extension.First(x => x.Url == HealthVaultExtensions.Description).Value).Value);
+            Assert.AreEqual("Phone 1", phone1.GetStringExtension(HealthVaultExtensions.Description));
             Assert.AreEqual(1, phone1.Rank);
         }
     }

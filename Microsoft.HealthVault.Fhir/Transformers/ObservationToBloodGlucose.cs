@@ -22,14 +22,20 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             bloodGlucose.Value = ObservationToHealthVault.GetThingValueFromQuantity<BloodGlucoseMeasurement>(observation.Value as Quantity);
             bloodGlucose.When = ObservationToHealthVault.GetHealthVaultTimeFromEffectiveDate(observation.Effective);
 
-            bloodGlucose.OutsideOperatingTemperature = observation.GetBoolExtension(HealthVaultVocabularies.OutsideOperatingTemperatureExtensionName);
-            bloodGlucose.IsControlTest = observation.GetBoolExtension(HealthVaultVocabularies.IsControlTestExtensionName);
+            var bloodGlucoseExtension = observation.GetExtension(HealthVaultExtensions.BloodGlucose);
 
-            Normalcy normalcy;
-            if (Enum.TryParse<Normalcy>(observation.GetStringExtension(HealthVaultVocabularies.ReadingNormalcyExtensionName), out normalcy)){
-                bloodGlucose.ReadingNormalcy = normalcy;
+            if (bloodGlucoseExtension != null)
+            {
+                bloodGlucose.OutsideOperatingTemperature = bloodGlucoseExtension.GetBoolExtension(HealthVaultExtensions.OutsideOperatingTemperatureExtensionName);
+                bloodGlucose.IsControlTest = bloodGlucoseExtension.GetBoolExtension(HealthVaultExtensions.IsControlTestExtensionName);
+
+                Normalcy normalcy;
+                if (Enum.TryParse<Normalcy>(bloodGlucoseExtension.GetStringExtension(HealthVaultExtensions.ReadingNormalcyExtensionName), out normalcy))
+                {
+                    bloodGlucose.ReadingNormalcy = normalcy;
+                }
             }
-            
+
             if (observation.Code != null && observation.Code.Coding != null)
             {
                 foreach (var code in observation.Code.Coding)
