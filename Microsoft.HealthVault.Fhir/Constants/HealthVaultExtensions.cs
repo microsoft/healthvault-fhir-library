@@ -24,16 +24,16 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string Description = HealthVaultExtensionsUri + "description";
 
         public const string ExerciseDetail = HealthVaultExtensionsUri + "exercise-detail";
-        public const string ExerciseDetailName = "exercise-detail-name";
-        public const string ExerciseDetailType = "exercise-detail-type";
-        public const string ExerciseDetailValue = "exercise-detail-value";
+        public const string ExerciseDetailName = "name";
+        public const string ExerciseDetailType = "type";
+        public const string ExerciseDetailValue = "value";
 
         public const string ExerciseSegment = HealthVaultExtensionsUri + "exercise-segment";
-        public const string ExerciseSegmentActivity = "exercise-segment-activity";
-        public const string ExerciseSegmentTitle = "exercise-segment-title";
-        public const string ExerciseSegmentDuration = "exercise-segment-duration";
-        public const string ExerciseSegmentDistance = "exercise-segment-distance";
-        public const string ExerciseSegmentOffset = "exercise-segment-offset";
+        public const string ExerciseSegmentActivity = "activity";
+        public const string ExerciseSegmentTitle = "title";
+        public const string ExerciseSegmentDuration = "duration";
+        public const string ExerciseSegmentDistance = "distance";
+        public const string ExerciseSegmentOffset = "offset";
 
         public const string PatientBasicV2 = HealthVaultExtensionsUri + "basic-v2";
         public const string PatientBirthYear = "birth-year";

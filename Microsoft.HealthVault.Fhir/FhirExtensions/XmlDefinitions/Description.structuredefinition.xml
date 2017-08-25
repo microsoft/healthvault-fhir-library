@@ -1,13 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <StructureDefinition xmlns="http://hl7.org/fhir">
   <meta>
-    <lastUpdated value="2017-08-24T10:03:56.311-07:00" />
+    <lastUpdated value="2017-08-25T09:55:38.443-07:00" />
   </meta>
   <url value="http://healthvault.com/fhir/stu3/StructureDefinition/desciption" />
   <name value="Description" />
   <status value="draft" />
   <date value="2017-08-24T10:01:44.927-07:00" />
   <publisher value="Microsoft Corporation" />
+  <description value="Generic extension to collect additional text about an element" />
   <copyright value="Copyright (c) Microsoft Corporation.  All rights reserved." />
   <fhirVersion value="3.0.1" />
   <kind value="complex-type" />

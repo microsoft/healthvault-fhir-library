@@ -91,8 +91,6 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     Title = patientName.Prefix.Any() ? new CodableValue(patientName.Prefix.First()) : null, // Take the first prefix if there are any
                 };
 
-                name.Suffix = new CodableValue();
-
                 //todo: figure out how to extend the names so we can be sure to map first and middle correctly
                 if (patientName.Given.Any())
                 {
