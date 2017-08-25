@@ -29,6 +29,11 @@ namespace Microsoft.HealthVault.Fhir.Constants
 
         public const string BodyDimensionMeasurementNames = "body-dimension-measurement-names";
 
+        public const string Exercise = "exercise";
+        public const string ExerciseActivity = "exercise-activity";
+        public const string ExerciseDistance = "exercise-distance";
+        public const string ExerciseDuration = "exercise-duration";
+
 
         public const string SleepJournalAM = "sleep-journal-am";
         public const string SleepJournalAMBedtime = "sleep-journal-bed-time";
