@@ -7,7 +7,6 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Linq;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Support;
 using Microsoft.HealthVault.Fhir.Codings;
@@ -24,7 +23,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             if (!observation.Extension.IsNullOrEmpty())
             {
-                var detailExtensions = observation.Extension.Where(x => x.Url == HealthVaultExtensions.ExerciseDetail).ToList();
+                var detailExtensions = observation.GetExtensions(HealthVaultExtensions.ExerciseDetail);
                 foreach (var detail in detailExtensions)
                 {
                     ExerciseDetail exerciseDetail;
@@ -36,7 +35,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     }
                 }
 
-                var segmentExtensions = observation.Extension.Where(x => x.Url == HealthVaultExtensions.ExerciseSegment).ToList();
+                var segmentExtensions = observation.GetExtensions(HealthVaultExtensions.ExerciseSegment);
                 foreach (var segment in segmentExtensions)
                 {
                     exercise.Segments.Add(CreateExerciseSegment(segment));
