@@ -225,6 +225,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 return observation.ToSleepJournalAM();
             }
 
+            if (type == typeof(Exercise))
+            {
+                return observation.ToExercise();
+            }
+
             return null;
         }
     }

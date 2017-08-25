@@ -15,7 +15,17 @@ using Microsoft.HealthVault.ItemTypes;
 namespace Microsoft.HealthVault.Fhir.Codings
 {
     internal static class CodeToHealthVaultHelper
-    {        
+    {
+        internal static CodableValue CreateCodableValueFromQuantityValues(string system, string code, string unit)
+        {
+            var segments = system.Replace(VocabularyUris.HealthVaultVocabulariesUri, "").Split('/');
+
+            var vocabName = segments[0];
+            var version = segments.Length == 2 ? segments[1] : null;
+
+            return new CodableValue(unit, code, vocabName, HealthVaultVocabularies.Wc, version);
+        }
+
         internal static Type DetectHealthVaultTypeFromObservation(Observation observation)
         {
             if (observation.Code != null && observation.Code.Coding != null)
@@ -100,6 +110,8 @@ namespace Microsoft.HealthVault.Fhir.Codings
             {
                 switch (code)
                 {
+                    case HealthVaultVocabularies.Exercise:
+                        return typeof(Exercise);
                     case HealthVaultVocabularies.SleepJournalAM:
                         return typeof(SleepJournalAM);
                 }
