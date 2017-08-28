@@ -160,6 +160,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\DocumentReferenceHelper.cs" />
+    <Compile Include="ToFhirTests\CcrToFhirTests.cs" />
+    <Compile Include="ToFhirTests\CdaToFhirTests.cs" />
+    <Compile Include="ToFhirTests\FileToFhirTests.cs" />
+    <Compile Include="ToFhirTests\ToFhirDocumentReferenceTests.cs" />
     <Compile Include="ToFhirTests\ToFhirResourceTests.cs" />
     <EmbeddedResource Include="Samples\FhirSleepJournalAM.json" />
     <Compile Include="Samples\SampleUtil.cs" />
@@ -179,6 +184,10 @@
     <Compile Include="ToFhirTests\PersonalToFhirTests.cs" />
     <Compile Include="ToFhirTests\SleepJournalAMToFhirTests.cs" />
     <Compile Include="ToFhirTests\WeightToFhirTests.cs" />
+    <Compile Include="ToHealthVaultTests\DocumentReferenceToFileTests.cs" />
+    <Compile Include="ToHealthVaultTests\DocumentReferenceToHealthVaultCcrTests.cs" />
+    <Compile Include="ToHealthVaultTests\DocumentReferenceToHealthVaultCdaTests.cs" />
+    <Compile Include="ToHealthVaultTests\DocumentReferenceToHealthVaultTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBloodPressure.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyCompositionTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyDimensionTests.cs" />
@@ -205,6 +214,9 @@
     <EmbeddedResource Include="Samples\FhirBodyComposition.json" />
     <EmbeddedResource Include="Samples\FhirBodyDimension.json" />
     <EmbeddedResource Include="Samples\FhirPatientFull.json" />
+    <EmbeddedResource Include="Samples\FhirCCR.json" />
+    <EmbeddedResource Include="Samples\FhirCDA.json" />
+    <EmbeddedResource Include="Samples\FhirFile.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.HealthVault.Fhir\Microsoft.HealthVault.Fhir.csproj">
@@ -215,6 +227,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Samples\HealthVaultIcon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestFiles\CCR.xml" />
+    <Content Include="TestFiles\CDA.xml" />
+    <Content Include="TestFiles\image.jpg" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

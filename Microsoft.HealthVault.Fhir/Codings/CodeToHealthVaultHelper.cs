@@ -8,8 +8,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Xml;
+using System.Xml.XPath;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.Fhir.FhirExtensions;
 using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Codings
@@ -106,6 +110,54 @@ namespace Microsoft.HealthVault.Fhir.Codings
             }
 
             throw new NotSupportedException("The provided code is not supported");
+        }
+
+        internal static Type DetectHealthVaultTypeFromDocumentReference(DocumentReference documentReference)
+        {
+            var contentComponent = documentReference.GetFirstContentComponentWithData();
+
+            if (contentComponent == null)
+            {
+                throw new ArgumentException("DocumentReference must have a content component with data");
+            }
+
+            if (contentComponent.Attachment.ContentType == "text/xml"
+                || contentComponent.Attachment.ContentType == "application/xml")
+            {
+                string xml = Encoding.UTF8.GetString(contentComponent.Attachment.Data);
+
+                XPathDocument xpDoc;
+                try
+                {
+                    using (System.IO.TextReader txtReader = new System.IO.StringReader(xml))
+                    {
+                        xpDoc = new XPathDocument(txtReader);
+                    }
+
+                    XPathNavigator xpNav = xpDoc.CreateNavigator();
+                    xpNav.MoveToFirstChild();
+
+                    do
+                    {
+                        if (xpNav.NodeType == XPathNodeType.Element)
+                        {
+                            switch (xpNav.Name)
+                            {
+                                case "ContinuityOfCareRecord":
+                                    return typeof(CCR);
+                                case "ClinicalDocument":
+                                    return typeof(CDA);
+                            }
+                        }
+                    } while (xpNav.MoveToNext());
+                }
+                catch (XmlException)
+                {
+                   
+                }
+            }
+
+            return typeof(File);
         }
     }
 }
