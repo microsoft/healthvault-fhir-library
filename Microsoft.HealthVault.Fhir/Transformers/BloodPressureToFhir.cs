@@ -34,13 +34,13 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             var diastolicComponent = new Observation.ComponentComponent
             {
-                Code = new CodeableConcept() { Coding = new List<Coding> { HealthVaultVitalStatisticsCodes.BloodPressureDiastolic } },
+                Code = HealthVaultVocabularies.GenerateCodeableConcept(HealthVaultVitalStatisticsCodes.BloodPressureDiastolic),
                 Value = new Quantity((decimal)bp.Diastolic, UnitAbbreviations.MillimeterOfMecury)
             };
 
             var systolicComponent = new Observation.ComponentComponent
             {
-                Code = new CodeableConcept() { Coding = new List<Coding> { HealthVaultVitalStatisticsCodes.BloodPressureSystolic } },
+                Code = HealthVaultVocabularies.GenerateCodeableConcept(HealthVaultVitalStatisticsCodes.BloodPressureSystolic),
                 Value = new Quantity((decimal)bp.Systolic, UnitAbbreviations.MillimeterOfMecury)
             };
 
@@ -50,7 +50,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 observation.Component.Add(new Observation.ComponentComponent
                 {
-                    Code = new CodeableConcept() { Coding = new List<Coding> { HealthVaultVitalStatisticsCodes.HeartRate } },
+                    Code = HealthVaultVocabularies.GenerateCodeableConcept(HealthVaultVitalStatisticsCodes.HeartRate),
                     Value = new Quantity((decimal)bp.Pulse, UnitAbbreviations.PerMinute)
                 });
             }

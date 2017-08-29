@@ -20,12 +20,9 @@ namespace Microsoft.HealthVault.Fhir.Codings
     {
         internal static CodableValue CreateCodableValueFromQuantityValues(string system, string code, string unit)
         {
-            var segments = system.Replace(VocabularyUris.HealthVaultVocabulariesUri, "").Split('/');
+            var uri = new Uri(system);
 
-            var vocabName = segments[0];
-            var version = segments.Length == 2 ? segments[1] : null;
-
-            return new CodableValue(unit, code, vocabName, HealthVaultVocabularies.Wc, version);
+            return new CodableValue(unit, code, GetVocabularyName(uri), GetFamily(uri), null);
         }
 
         internal static Type DetectHealthVaultTypeFromObservation(Observation observation)
@@ -34,9 +31,9 @@ namespace Microsoft.HealthVault.Fhir.Codings
             {
                 foreach (var code in observation.Code.Coding)
                 {
-                    if (!string.IsNullOrWhiteSpace(code.System) && code.CodeElement != null)
+                    if (!String.IsNullOrWhiteSpace(code.System) && code.CodeElement != null)
                     {
-                        if (code.System.ToLowerInvariant().Contains("healthvault.com"))
+                        if (code.System.ToLowerInvariant().Contains(HealthVaultVocabularies.BaseUri.ToLowerInvariant()))
                         {
                             var uri = new Uri(code.System.ToLowerInvariant());
                             return DetectFromHealthVaultCode(uri.Segments.Last(), code.CodeElement.Value);
@@ -54,6 +51,33 @@ namespace Microsoft.HealthVault.Fhir.Codings
             }
 
             throw new NotSupportedException();
+        }
+
+        internal static string GetFamily(Uri uri)
+        {
+            if (uri.ToString().ToLowerInvariant().Contains(HealthVaultVocabularies.BaseUri.ToLowerInvariant()))
+            {
+                // Expected to cotain 6 if the family is specified in the URL
+                if (uri.Segments.Length == 6)
+                {
+                    return uri.Segments[4].TrimEnd('/');
+                }
+
+                // By default if nothing is specified, then wc is assumed
+                return "wc";
+            }
+
+            return null;
+        }
+
+        internal static string GetVocabularyName(Uri uri)
+        {
+            if (uri.ToString().ToLowerInvariant().Contains(HealthVaultVocabularies.BaseUri.ToLowerInvariant()))
+            {
+                return uri.Segments.Last();
+            }
+
+            return null;
         }
 
         private static Type DetectType(Dictionary<string, string> codeDictionary, string code)
@@ -84,25 +108,24 @@ namespace Microsoft.HealthVault.Fhir.Codings
                 case HealthVaultVocabularies.VitalStatistics:
                     switch (code.ToLowerInvariant())
                     {
-                        case "wgt":
+                        case HealthVaultVitalStatisticsCodes.BodyWeightCode:
                             return typeof(Weight);
-                        case "hgt":
+                        case HealthVaultVitalStatisticsCodes.BodyHeightCode:
                             return typeof(Height);
-                        case "pls":
+                        case HealthVaultVitalStatisticsCodes.HeartRateCode:
                             return typeof(HeartRate);
-                        case "bpd":
-                        case "bps":
+                        case HealthVaultVitalStatisticsCodes.BloodPressureDiastolicCode:
+                        case HealthVaultVitalStatisticsCodes.BloodPressureSystolicCode:
                             return typeof(BloodPressure);
                     }
 
                     break;
-                case HealthVaultVocabularies.BloodGlucoseMeasurementContext:
-                case HealthVaultVocabularies.BloodGlucoseMeasurementType:
-                    return typeof(BloodGlucose);
 
                 case HealthVaultVocabularies.ThingTypeNames:
                     switch (code)
                     {
+                        case HealthVaultThingTypeNameCodes.BloodGlucoseCode:
+                            return typeof(BloodGlucose);
                         case HealthVaultThingTypeNameCodes.ExerciseCode:
                             return typeof(Exercise);
                         case HealthVaultThingTypeNameCodes.SleepJournalAMCode:
@@ -110,7 +133,7 @@ namespace Microsoft.HealthVault.Fhir.Codings
                         case HealthVaultThingTypeNameCodes.BodyCompositionCode:
                             return typeof(BodyComposition);
                         case HealthVaultThingTypeNameCodes.BodyDimensionCode:
-                            return typeof(BodyDimension);;
+                            return typeof(BodyDimension);
                     }
 
                     break;

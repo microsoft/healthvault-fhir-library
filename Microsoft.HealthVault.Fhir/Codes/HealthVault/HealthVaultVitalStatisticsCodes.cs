@@ -18,41 +18,46 @@ namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
     {
         private static string System = $"{HealthVaultVocabularies.BaseUri}{HealthVaultVocabularies.Wc}/{HealthVaultVocabularies.VitalStatistics}";
 
+        public const string BodyWeightCode = "wgt";
         public static readonly Coding BodyWeight = new Coding
         {
-            Code = "wgt",
+            Code = BodyWeightCode,
             Version = "1",
             System = System,
             Display = "Body Weight",
         };
 
+        public const string BodyHeightCode = "hgt";
         public static readonly Coding BodyHeight = new Coding
         {
-            Code = "hgt",
+            Code = BodyHeightCode,
             Version = "1",
             System = System,
             Display = "Body Height",
         };
 
+        public const string HeartRateCode = "pls";
         public static readonly Coding HeartRate = new Coding
         {
-            Code = "pls",
+            Code = HeartRateCode,
             Version = "1",
             System = System,
             Display = "Heart Rate"
         };
 
+        public const string BloodPressureDiastolicCode = "bpd";
         public static readonly Coding BloodPressureDiastolic = new Coding
         {
-            Code = "bpd",
+            Code = BloodPressureDiastolicCode,
             Version = "1",
             System = System,
             Display = " Blood Pressure - Diastolic",
         };
 
+        public const string BloodPressureSystolicCode = "bps";
         public static readonly Coding BloodPressureSystolic = new Coding
         {
-            Code = "bps",
+            Code = BloodPressureSystolicCode,
             Version = "1",
             System = System,
             Display = " Blood Pressure - Systolic",
