@@ -33,7 +33,7 @@ namespace Microsoft.HealthVault.Fhir.Codings
                 {
                     if (!String.IsNullOrWhiteSpace(code.System) && code.CodeElement != null)
                     {
-                        if (code.System.ToLowerInvariant().Contains(HealthVaultVocabularies.BaseUri.ToLowerInvariant()))
+                        if (HealthVaultVocabularies.SystemContainsHealthVaultUrl(code.System))
                         {
                             var uri = new Uri(code.System.ToLowerInvariant());
                             return DetectFromHealthVaultCode(uri.Segments.Last(), code.CodeElement.Value);
@@ -55,7 +55,7 @@ namespace Microsoft.HealthVault.Fhir.Codings
 
         internal static string GetFamily(Uri uri)
         {
-            if (uri.ToString().ToLowerInvariant().Contains(HealthVaultVocabularies.BaseUri.ToLowerInvariant()))
+            if (HealthVaultVocabularies.SystemContainsHealthVaultUrl(uri.ToString()))
             {
                 // Expected to cotain 6 if the family is specified in the URL
                 if (uri.Segments.Length == 6)
@@ -72,7 +72,7 @@ namespace Microsoft.HealthVault.Fhir.Codings
 
         internal static string GetVocabularyName(Uri uri)
         {
-            if (uri.ToString().ToLowerInvariant().Contains(HealthVaultVocabularies.BaseUri.ToLowerInvariant()))
+            if (HealthVaultVocabularies.SystemContainsHealthVaultUrl(uri.ToString()))
             {
                 return uri.Segments.Last();
             }

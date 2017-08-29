@@ -6,6 +6,7 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Codes.HealthVault;
@@ -108,6 +109,16 @@ namespace Microsoft.HealthVault.Fhir.Constants
                 return $"{BaseUri}{vocabularyName}";
             }
             return $"{BaseUri}{family}/{vocabularyName}";
+        }
+
+        /// <summary>
+        /// Helper to return if the given system contains the healthvault url
+        /// </summary>
+        /// <param name="system">The system to check</param>
+        /// <returns></returns>
+        public static bool SystemContainsHealthVaultUrl(string system)
+        {
+            return system?.IndexOf(BaseUri, StringComparison.OrdinalIgnoreCase) > -1;
         }
     }
 }

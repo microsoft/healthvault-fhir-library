@@ -35,7 +35,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 foreach (var code in observation.Code.Coding)
                 {
-                    if (code.System.ToLowerInvariant().Contains(HealthVaultVocabularies.BaseUri.ToLowerInvariant()))
+                    if (HealthVaultVocabularies.SystemContainsHealthVaultUrl(code.System))
                     {
                         bloodGlucose.GlucoseMeasurementType = observation.Method.ToCodableValue();
                     }
