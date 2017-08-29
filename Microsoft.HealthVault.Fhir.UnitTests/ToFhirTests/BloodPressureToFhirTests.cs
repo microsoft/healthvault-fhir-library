@@ -17,6 +17,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
 {
+    [TestClass]
     public class BloodPressureToTests
     {
         [TestMethod]

@@ -34,7 +34,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                         {
                             if (code.Code != null)
                             {
-                                if (code.System == HealthVaultVitalStatisticsCodes.System)
+                                if (code.System.ToLowerInvariant().Contains($"{HealthVaultVocabularies.BaseUri.ToLowerInvariant()}"))
                                 {
                                     if (code.Code == HealthVaultVitalStatisticsCodes.BloodPressureDiastolic.Code)
                                     {

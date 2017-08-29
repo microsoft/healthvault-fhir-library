@@ -8,7 +8,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Codes.HealthVault;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 
@@ -34,14 +36,18 @@ namespace Microsoft.HealthVault.Fhir.Codings
                 {
                     if (!string.IsNullOrWhiteSpace(code.System) && code.CodeElement != null)
                     {
+                        if (code.System.ToLowerInvariant().Contains("healthvault.com"))
+                        {
+                            var uri = new Uri(code.System.ToLowerInvariant());
+                            return DetectFromHealthVaultCode(uri.Segments.Last(), code.CodeElement.Value);
+                        }
+
                         switch (code.System.ToLowerInvariant())
                         {
                             case VocabularyUris.SnomedCd:
                                 return DetectFromSnomedCd(code.CodeElement.Value);
                             case VocabularyUris.Loinc:
                                 return DetectFromLoincCodes(code.CodeElement.Value);
-                            case VocabularyUris.HealthVaultVocabulariesUri:
-                                return DetectFromHealthVaultCode(code.CodeElement.Value);
                         }
                     }
                 }
@@ -70,51 +76,44 @@ namespace Microsoft.HealthVault.Fhir.Codings
             return DetectType(CodeToHealthVaultDictionaries.Instance.Loinc, code);
         }
 
-        private static Type DetectFromHealthVaultCode(string code)
+        private static Type DetectFromHealthVaultCode(string vocabName, string code)
         {
-            var vocab = code.Split(':');
 
-            if (vocab.Length == 2)
+            switch (vocabName.ToLowerInvariant())
             {
-                var vocabName = vocab[0];
-                var vocabValue = vocab[1];
+                case HealthVaultVocabularies.VitalStatistics:
+                    switch (code.ToLowerInvariant())
+                    {
+                        case "wgt":
+                            return typeof(Weight);
+                        case "hgt":
+                            return typeof(Height);
+                        case "pls":
+                            return typeof(HeartRate);
+                        case "bpd":
+                        case "bps":
+                            return typeof(BloodPressure);
+                    }
 
-                switch (vocabName.ToLowerInvariant())
-                {
-                    case HealthVaultVocabularies.VitalStatistics:
-                        switch (vocabValue.ToLowerInvariant())
-                        {
-                            case "wgt":
-                                return typeof(Weight);
-                            case "hgt":
-                                return typeof(Height);
-                            case "pls":
-                                return typeof(HeartRate);
-                            case "bpd":
-                            case "bps":
-                                return typeof(BloodPressure);
-                        }
-                        break;
-                    case HealthVaultVocabularies.BloodGlucoseMeasurementContext:
-                    case HealthVaultVocabularies.BloodGlucoseMeasurementType:
-                        return typeof(BloodGlucose);
-                    case HealthVaultVocabularies.BodyCompositionMeasurementNames:
-                    case HealthVaultVocabularies.BodyCompositionMeasurementMethods:
-                    case HealthVaultVocabularies.BodyCompositionSites:
-                        return typeof(BodyComposition);
-                    case HealthVaultVocabularies.BodyDimensionMeasurementNames:
-                        return typeof(BodyDimension);
-                }
-            }
-            else
-            {
-                switch (code)
-                {
-                    case HealthVaultVocabularies.Exercise:
-                        return typeof(Exercise);
-                    case HealthVaultVocabularies.SleepJournalAM:
-                        return typeof(SleepJournalAM);
-                }
+                    break;
+                case HealthVaultVocabularies.BloodGlucoseMeasurementContext:
+                case HealthVaultVocabularies.BloodGlucoseMeasurementType:
+                    return typeof(BloodGlucose);
+
+                case HealthVaultVocabularies.ThingTypeNames:
+                    switch (code)
+                    {
+                        case HealthVaultThingTypeNameCodes.ExerciseCode:
+                            return typeof(Exercise);
+                        case HealthVaultThingTypeNameCodes.SleepJournalAMCode:
+                            return typeof(SleepJournalAM);
+                        case HealthVaultThingTypeNameCodes.BodyCompositionCode:
+                            return typeof(BodyComposition);
+                        case HealthVaultThingTypeNameCodes.BodyDimensionCode:
+                            return typeof(BodyDimension);;
+                    }
+
+                    break;
             }
 
             throw new NotSupportedException("The provided code is not supported");

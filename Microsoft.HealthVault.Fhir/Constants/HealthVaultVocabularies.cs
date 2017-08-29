@@ -17,10 +17,19 @@ namespace Microsoft.HealthVault.Fhir.Constants
     /// </summary>
     public static class HealthVaultVocabularies
     {
+        public const string BaseUri = "http://healthvault.com/fhir/stu3/ValueSet/";
+
+        // Vocab families
+        public const string Fhir = "fhir";
+        public const string Wc = "wc";
+        public const string RxNorm = "RxNorm";
+        public const string Dmd = "dmd";
+
         public const string HealthVaultCodedValueFormat = "{0}:{1}";
 
         public const string VitalStatistics = "vital-statistics";
-        public const string BloodGlucoseMeasurementContext = "glucose-measurement-context";
+        public const string ThingTypeNames = "thing-type-names";
+        public const string BloodGlucoseMeasurementContext = BaseUri + "glucose-measurement-context";
         public const string BloodGlucoseMeasurementType = "glucose-measurement-type";
 
         public const string BodyCompositionMeasurementMethods = "body-composition-measurement-methods";
@@ -34,7 +43,6 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string ExerciseDistance = "exercise-distance";
         public const string ExerciseDuration = "exercise-duration";
 
-
         public const string SleepJournalAM = "sleep-journal-am";
         public const string SleepJournalAMBedtime = "sleep-journal-bed-time";
         public const string SleepJournalAMWaketime = "sleep-journal-wake-time";
@@ -44,15 +52,9 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string SleepJournalAMWakeState = "sleep-journal-wake-state";
         public const string SleepJournalAMMedication = "sleep-journal-medication";
 
-        public const string Fhir = "fhir";
-        public const string Wc = "wc";
-        public const string RxNorm = "RxNorm";
-        public const string Dmd = "dmd";
-
-        public const string BaseUri = "http://healthvault.com/";
         public const string StateFhirExtensionName = BaseUri + "fhir-extensions/thing-state";
         public const string FlagsFhirExtensionName = BaseUri + "fhir-extensions/thing-flags";
-
+        
         public const string OutsideOperatingTemperatureExtensionName = BaseUri + "blood-glucose/outside-operating-temperature";
         public const string ReadingNormalcyExtensionName = BaseUri + "blood-glucose/reading-normalcy";
         public const string IsControlTestExtensionName = BaseUri + "blood-glucose/is-control-test";
@@ -82,5 +84,30 @@ namespace Microsoft.HealthVault.Fhir.Constants
                 HealthVaultVitalStatisticsCodes.BloodPressureDiastolic
             }
         };
+
+        /// <summary>
+        /// Helper to transform a coding into a codeable concept
+        /// </summary>
+        /// <param name="coding">The coding for the codeable concept</param>
+        /// <returns>A codeable concept containing the passed in coding</returns>
+        public static CodeableConcept GenerateCodeableConcept(Coding coding)
+        {
+            return new CodeableConcept{ Coding = new List<Coding> { coding }};
+        }
+
+        /// <summary>
+        /// Helper to generate the system url for a given vocabulary within the healthvault vocabulary set
+        /// </summary>
+        /// <param name="vocabularyName">The vocab name to use in the url</param>
+        /// <param name="family">Optional family name to include in the url</param>
+        /// <returns>A url for the healthvault vocabulary</returns>
+        public static string GenerateSystemUrl(string vocabularyName, string family = null)
+        {
+            if (string.IsNullOrEmpty(family))
+            {
+                return $"{BaseUri}{vocabularyName}";
+            }
+            return $"{BaseUri}{family}/{vocabularyName}";
+        }
     }
 }

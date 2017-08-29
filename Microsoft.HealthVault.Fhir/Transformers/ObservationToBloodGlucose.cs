@@ -24,6 +24,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             bloodGlucose.OutsideOperatingTemperature = observation.GetBoolExtension(HealthVaultVocabularies.OutsideOperatingTemperatureExtensionName);
             bloodGlucose.IsControlTest = observation.GetBoolExtension(HealthVaultVocabularies.IsControlTestExtensionName);
+            bloodGlucose.MeasurementContext = observation.GetExtensionValue<CodeableConcept>(HealthVaultVocabularies.BloodGlucoseMeasurementContext).ToCodableValue();
 
             Normalcy normalcy;
             if (Enum.TryParse<Normalcy>(observation.GetStringExtension(HealthVaultVocabularies.ReadingNormalcyExtensionName), out normalcy)){
@@ -34,29 +35,9 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 foreach (var code in observation.Code.Coding)
                 {
-                    if (string.Equals(code.System, VocabularyUris.HealthVaultVocabulariesUri, StringComparison.OrdinalIgnoreCase))
+                    if (code.System.ToLowerInvariant().Contains(HealthVaultVocabularies.BaseUri.ToLowerInvariant()))
                     {
-                        var value = code.Code.Split(':');
-                        var vocabName = value[0];
-                        var vocabCode = value.Length == 2 ? value[1] : null;
-
-                        switch (vocabName)
-                        {
-                            case HealthVaultVocabularies.BloodGlucoseMeasurementContext:
-                                bloodGlucose.SetGlucoseMeasurementContext(
-                                    code.Display,
-                                    vocabCode,
-                                    vocabName,
-                                    HealthVaultVocabularies.Wc, code.Version);
-                                break;
-                            case HealthVaultVocabularies.BloodGlucoseMeasurementType:
-                                bloodGlucose.SetGlucoseMeasurementType(
-                                    code.Display, 
-                                    vocabCode, 
-                                    vocabName, 
-                                    HealthVaultVocabularies.Wc, code.Version);
-                                break;
-                        }
+                        bloodGlucose.GlucoseMeasurementType = observation.Method.ToCodableValue();
                     }
                     else
                     {

@@ -9,24 +9,28 @@
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.ItemTypes;
 
-namespace Microsoft.HealthVault.Fhir.Codings
+namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    public static class CodeableConceptToHealthVaultHelper
+    internal static class CodeableConceptToCodableValue
     {
-        internal static CodableValue ToCodableValue(this CodeableConcept codeableConcept)
+        public static CodableValue ToCodableValue(this CodeableConcept codeableConcept)
         {
-            var code = codeableConcept.Coding[0];
-            var value = code.Code.Split(':');
-            var vocabName = value[0];
-            var vocabCode = value.Length == 2 ? value[1] : null;
+            if (codeableConcept == null)
+            {
+                return null;
+            }
 
-            return new CodableValue(
-                code.Display,
-                vocabCode,
-                vocabName,
-                code.System,
-                code.Version
-            );
+            var codableValue = new CodableValue
+            {
+                Text = codeableConcept.Text,
+            };
+
+            foreach (var coding in codeableConcept.Coding)
+            {
+                codableValue.Add(coding.ToCodedValue());
+            }
+
+            return codableValue;
         }
     }
 }

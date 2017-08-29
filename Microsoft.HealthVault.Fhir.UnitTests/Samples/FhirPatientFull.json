@@ -2,11 +2,11 @@
     "resourceType": "Patient",
     "extension": [
         {
-            "url": "http://healthvault.com/fhir-extensions/thing-flags",
+            "url": "http://healthvault.com/fhir/stu3/ValueSet/fhir-extensions/thing-flags",
             "valueString": "None"
         },
         {
-            "url": "http://healthvault.com/fhir-extensions/thing-state",
+            "url": "http://healthvault.com/fhir/stu3/ValueSet/fhir-extensions/thing-state",
             "valueString": "Active"
         },
         {
@@ -32,10 +32,9 @@
                     "valueCodeableConcept": {
                         "coding": [
                             {
-                                "system": "http://healthvault.com/vocabularies/",
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/states",
                                 "version": "1",
-                                "code": "states:WA",
-                                "display": "Washington"
+                                "code": "WA"
                             }
                         ],
                         "text": "Washington"
@@ -50,10 +49,9 @@
                     "valueCodeableConcept": {
                         "coding": [
                             {
-                                "system": "iso",
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/iso/iso3166",
                                 "version": "1",
-                                "code": "iso3166:US",
-                                "display": "United States of America"
+                                "code": "US"
                             }
                         ],
                         "text": "United States of America"
@@ -66,10 +64,9 @@
             "valueCodeableConcept": {
                 "coding": [
                     {
-                        "system": "http://healthvault.com/vocabularies/",
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/blood-types",
                         "version": "1",
-                        "code": "blood-types:A+",
-                        "display": "A+"
+                        "code": "A+"
                     }
                 ],
                 "text": "A+"
@@ -84,10 +81,9 @@
             "valueCodeableConcept": {
                 "coding": [
                     {
-                        "system": "http://healthvault.com/vocabularies/",
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/ethnicity-types",
                         "version": "1",
-                        "code": "ethnicity-types:8",
-                        "display": "Other Race"
+                        "code": "8"
                     }
                 ],
                 "text": "Other Race"
@@ -98,10 +94,9 @@
             "valueCodeableConcept": {
                 "coding": [
                     {
-                        "system": "http://healthvault.com/vocabularies/",
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/Education-level",
                         "version": "1",
-                        "code": "Education-level:ColG",
-                        "display": "College Graduate"
+                        "code": "ColG"
                     }
                 ],
                 "text": "College Graduate"
@@ -120,10 +115,9 @@
             "valueCodeableConcept": {
                 "coding": [
                     {
-                        "system": "http://healthvault.com/vocabularies/",
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/marital-status",
                         "version": "1",
-                        "code": "marital-status:NM",
-                        "display": "Never Married"
+                        "code": "NM"
                     }
                 ],
                 "text": "Never Married"
@@ -138,10 +132,9 @@
             "valueCodeableConcept": {
                 "coding": [
                     {
-                        "system": "http://healthvault.com/vocabularies/",
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/religion",
                         "version": "1",
-                        "code": "religion:Agn",
-                        "display": "Agnostic"
+                        "code": "Agn"
                     }
                 ],
                 "text": "Agnostic"
@@ -162,10 +155,9 @@
                     "valueCodeableConcept": {
                         "coding": [
                             {
-                                "system": "http://healthvault.com/vocabularies/",
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/name-prefixes",
                                 "version": "1",
-                                "code": "name-prefixes:Dr",
-                                "display": "Dr."
+                                "code": "Dr"
                             }
                         ],
                         "text": "Dr."
@@ -176,10 +168,9 @@
                     "valueCodeableConcept": {
                         "coding": [
                             {
-                                "system": "http://healthvault.com/vocabularies/",
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/name-suffixes",
                                 "version": "1",
-                                "code": "name-suffixes:Jr",
-                                "display": "Junior"
+                                "code": "Jr"
                             }
                         ],
                         "text": "Junior"
@@ -289,12 +280,12 @@
             "language": {
                 "coding": [
                     {
-                        "system": "iso",
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/iso/iso639-1",
                         "version": "1",
-                        "code": "iso639-1:en",
-                        "display": "English"
+                        "code": "en"
                     }
-                ]
+                ],
+                "text": "English"
             },
             "preferred": true
         },
@@ -302,12 +293,12 @@
             "language": {
                 "coding": [
                     {
-                        "system": "iso",
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/iso/iso639-1",
                         "version": "1",
-                        "code": "iso639-1:fr",
-                        "display": "French"
+                        "code": "fr"
                     }
-                ]
+                ],
+                "text": "French"
             },
             "preferred": false
         }

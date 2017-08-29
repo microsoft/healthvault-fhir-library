@@ -16,11 +16,11 @@ namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
     /// </summary>
     public static class HealthVaultVitalStatisticsCodes
     {
-        public static readonly string System = VocabularyUris.HealthVaultVocabulariesUri;
+        private static string System = $"{HealthVaultVocabularies.BaseUri}{HealthVaultVocabularies.Wc}/{HealthVaultVocabularies.VitalStatistics}";
 
         public static readonly Coding BodyWeight = new Coding
         {
-            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "wgt"),
+            Code = "wgt",
             Version = "1",
             System = System,
             Display = "Body Weight",
@@ -28,7 +28,7 @@ namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
 
         public static readonly Coding BodyHeight = new Coding
         {
-            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "hgt"),
+            Code = "hgt",
             Version = "1",
             System = System,
             Display = "Body Height",
@@ -36,7 +36,7 @@ namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
 
         public static readonly Coding HeartRate = new Coding
         {
-            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "pls"),
+            Code = "pls",
             Version = "1",
             System = System,
             Display = "Heart Rate"
@@ -44,7 +44,7 @@ namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
 
         public static readonly Coding BloodPressureDiastolic = new Coding
         {
-            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "bpd"),
+            Code = "bpd",
             Version = "1",
             System = System,
             Display = " Blood Pressure - Diastolic",
@@ -52,7 +52,7 @@ namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
 
         public static readonly Coding BloodPressureSystolic = new Coding
         {
-            Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "bps"),
+            Code = "bps",
             Version = "1",
             System = System,
             Display = " Blood Pressure - Systolic",
