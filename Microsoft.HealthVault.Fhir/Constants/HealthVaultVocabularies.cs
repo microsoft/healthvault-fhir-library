@@ -51,9 +51,6 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string SleepJournalAMWakeState = "sleep-journal-wake-state";
         public const string SleepJournalAMMedication = "sleep-journal-medication";
 
-        public const string StateFhirExtensionName = BaseUri + "fhir-extensions/thing-state";
-        public const string FlagsFhirExtensionName = BaseUri + "fhir-extensions/thing-flags";
-
         public const string IrregularHeartBeatExtensionName = BaseUri + "vital-signs/blood-pressure/irregular-heartbeat";
      
         public static CodeableConcept BodyWeight = new CodeableConcept()
