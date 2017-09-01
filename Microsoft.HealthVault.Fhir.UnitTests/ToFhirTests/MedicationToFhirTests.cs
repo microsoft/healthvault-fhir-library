@@ -12,6 +12,8 @@ using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using HVMedication = Microsoft.HealthVault.ItemTypes.Medication;
+using FhirMedication = Hl7.Fhir.Model.Medication;
+using Microsoft.HealthVault.Thing;
 
 namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 {
@@ -32,7 +34,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
                     version: "1"))
             };
 
-            var fhirMedication = hvMedication.ToFhir();
+            var fhirMedication = ExtractEmbeddedMedication(hvMedication);
             var medicationCode = fhirMedication.Code;
 
             Assert.AreEqual(medicationName, medicationCode.Text);
@@ -52,7 +54,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
                     version: "09AB_091102F"))
             };
 
-            var fhirMedication = hvMedication.ToFhir();
+            var fhirMedication = ExtractEmbeddedMedication(hvMedication);
 
             Assert.IsTrue(fhirMedication.Ingredient.Any());
 
@@ -77,13 +79,68 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
                             vocabularyName: "medication-strength-unit",
                             version: "1"))));
 
-            var fhirMedication = hvMedication.ToFhir();
+            var fhirMedication = ExtractEmbeddedMedication(hvMedication);
 
             Assert.IsTrue(fhirMedication.Ingredient.Any());
 
             var ingredient = fhirMedication.Ingredient.First();
 
             Assert.AreEqual(600, ingredient?.Amount?.Numerator?.Value);
+        }
+
+        private static FhirMedication ExtractEmbeddedMedication(HVMedication hvMedication)
+        {
+            var medicationStatement = hvMedication.ToFhir();
+            var medication = medicationStatement.Medication as ResourceReference;
+            var fhirMedication = medicationStatement.Contained.First(resource
+                => medication.Reference == resource.Id) as FhirMedication;
+            return fhirMedication;
+        }
+
+
+        [TestMethod]
+        public void WhenMedicationTransformedToFHIR_ThenMedicationStatementHasStatus()
+        {
+            ThingBase medication = getSampleMedication();
+
+            var fhirMedication = medication.ToFhir() as MedicationStatement;
+
+            Assert.IsNotNull(fhirMedication.Status);
+        }
+
+        [TestMethod]
+        public void WhenMedicationTransformedToFHIR_ThenMedicationStatementHasMedication()
+        {
+            ThingBase medication = getSampleMedication();
+
+            var fhirMedication = medication.ToFhir() as MedicationStatement;
+
+            Assert.IsNotNull(fhirMedication.Medication);
+        }
+
+        [TestMethod]
+        public void WhenMedicationTransformedToFHIR_ThenMedicationStatementHasTaken()
+        {
+            ThingBase medication = getSampleMedication();
+
+            var fhirMedication = medication.ToFhir() as MedicationStatement;
+
+            Assert.IsNotNull(fhirMedication.Taken);
+        }
+
+        private static ThingBase getSampleMedication()
+        {
+            return new HVMedication()
+            {
+                Name = new CodableValue("Ibuprofen",
+                    new CodedValue()
+                    {
+                        Value = "df48b0ac-de8b-4bca-8785-dad6897fb53d",
+                        Family = "Mayo",
+                        VocabularyName = "MayoMedications",
+                        Version = "1.0"
+                    })
+            };
         }
     }
 }

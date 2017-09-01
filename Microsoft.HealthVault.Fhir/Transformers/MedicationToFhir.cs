@@ -8,24 +8,60 @@
 
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Codings;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FhirMedication = Hl7.Fhir.Model.Medication;
 using HVMedication = Microsoft.HealthVault.ItemTypes.Medication;
+using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
     public static partial class ThingBaseToFhir
     {
         // Register the type on the generic ThingToFhir partial class
-        public static FhirMedication ToFhir(this HVMedication hvMedication)
+        public static MedicationStatement ToFhir(this HVMedication hvMedication)
         {
-            return MedicationToFhir.ToFhirInternal(hvMedication, ToFhirInternal<FhirMedication>(hvMedication));
+            return MedicationToFhir.ToFhirInternal(hvMedication, ToFhirInternal<MedicationStatement>(hvMedication));
         }
     }
 
     internal static class MedicationToFhir
     {
+        internal static MedicationStatement ToFhirInternal(HVMedication hvMedication, MedicationStatement medicationStatement)
+        {
+            var embeddedMedication = new FhirMedication();
+            string embeddedMedicationId = "med" + Guid.NewGuid();
+            embeddedMedication.Id = embeddedMedicationId;
+
+            medicationStatement.Contained.Add(ToFhirInternal(hvMedication, embeddedMedication));
+            medicationStatement.Medication = new ResourceReference(embeddedMedicationId);
+
+            medicationStatement.SetStatusAsActive();
+            medicationStatement.SetTakenAsNotApplicable();
+
+            medicationStatement.Dosage = AddDosage(hvMedication.Dose, hvMedication.Frequency, hvMedication.Route);
+
+            return medicationStatement;
+        }
+
+        private static List<Dosage> AddDosage(GeneralMeasurement dose, GeneralMeasurement frequency, CodableValue route)
+        {
+            return new List<Dosage> {
+                HealthVaultCodesToFhir.GetDosage(dose, frequency, route)
+                };
+        }
+
+        private static void SetStatusAsActive(this MedicationStatement medicationStatement)
+        {
+            medicationStatement.Status = MedicationStatement.MedicationStatementStatus.Active;
+        }
+
+        private static void SetTakenAsNotApplicable(this MedicationStatement medicationStatement)
+        {
+            medicationStatement.Taken = MedicationStatement.MedicationStatementTaken.Na;
+        }
+
         internal static FhirMedication ToFhirInternal(HVMedication hvMedication, FhirMedication fhirMedication)
         {
             fhirMedication.Code = HealthVaultCodesToFhir.ConvertCodableValueToFhir(hvMedication.Name);
