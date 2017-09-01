@@ -98,5 +98,39 @@ namespace Microsoft.HealthVault.Fhir.Codings
                 return (vocabularyValuePair[1], vocabularyValuePair[0]);
             return (code, null);
         }
+
+        internal static CodableValue GetRecurrenceIntervalFromPeriodUnit(Timing.UnitsOfTime? period)
+        {
+            if (period.HasValue)
+            {
+                switch (period)
+                {
+                    case Timing.UnitsOfTime.S:
+                        return GetRecurrenceCode("second");
+                    case Timing.UnitsOfTime.Min:
+                        return GetRecurrenceCode("minute");
+                    case Timing.UnitsOfTime.H:
+                        return GetRecurrenceCode("hour");
+                    case Timing.UnitsOfTime.D:
+                        return GetRecurrenceCode("day");
+                    case Timing.UnitsOfTime.Wk:
+                        return GetRecurrenceCode("week");
+                    case Timing.UnitsOfTime.Mo:
+                        return GetRecurrenceCode("month");
+                    case Timing.UnitsOfTime.A:
+                        return GetRecurrenceCode("year");
+                }
+            }
+            return null;
+        }
+
+        private static CodableValue GetRecurrenceCode(string code)
+        {
+            return new CodableValue(code,
+                code:code,
+                family: HealthVaultVocabularies.RecurrenceIntervals,
+                vocabularyName: HealthVaultVocabularies.Wc,
+                version:"1");
+        }
     }
 }

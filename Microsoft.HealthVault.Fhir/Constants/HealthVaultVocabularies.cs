@@ -44,6 +44,8 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string SleepJournalAMWakeState = "sleep-journal-wake-state";
         public const string SleepJournalAMMedication = "sleep-journal-medication";
 
+        public const string RecurrenceIntervals = "recurrence-intervals";
+
         public const string Fhir = "fhir";
         public const string Wc = "wc";
         public const string RxNorm = "RxNorm";

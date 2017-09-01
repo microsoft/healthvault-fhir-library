@@ -145,7 +145,7 @@ namespace Microsoft.HealthVault.Fhir.Codings
                 doseQuantity.Value = new decimal(doseMeasurement.Value);
                 doseQuantity.Unit = doseMeasurement.Units.Text;
                 CodedValue doseUnit = doseMeasurement.Units.First();
-                doseQuantity.System = $"healthvault.com/fhir/stu/{doseUnit.Family}/{doseUnit.VocabularyName}";
+                doseQuantity.System = GetVocabularyUrl(doseUnit.VocabularyName,doseUnit.Version);
                 doseQuantity.Code = doseUnit.Value;
                 dosage.Dose = doseQuantity;
             }
