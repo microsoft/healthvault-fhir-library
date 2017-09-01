@@ -78,10 +78,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     patient.Communication.Add(
                         new Patient.CommunicationComponent
                         {
-                            Language = new CodeableConcept
-                            {
-                                Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(language.SpokenLanguage, null)
-                            },
+                            Language = language.SpokenLanguage.ToFhir(),
                             Preferred = language.IsPrimary
                         }
                     );

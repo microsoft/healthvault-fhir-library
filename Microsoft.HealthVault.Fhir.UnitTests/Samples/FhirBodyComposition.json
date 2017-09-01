@@ -2,11 +2,11 @@
     "resourceType": "Observation",
     "extension": [
         {
-            "url": "http://healthvault.com/fhir-extensions/thing-flags",
+            "url": "http://healthvault.com/fhir/stu3/ValueSet/fhir-extensions/thing-flags",
             "valueString": "None"
         },
         {
-            "url": "http://healthvault.com/fhir-extensions/thing-state",
+            "url": "http://healthvault.com/fhir/stu3/ValueSet/fhir-extensions/thing-state",
             "valueString": "Active"
         }
     ],
@@ -26,37 +26,57 @@
     "code": {
         "coding": [
             {
-                "system": "http://healthvault.com/vocabularies/",
+                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/thing-type-names",
                 "version": "1",
-                "code": "body-composition-measurement-methods:DXA",
-                "display": "DXA/DEXA"
-            },
-            {
-                "system": "http://healthvault.com/vocabularies/",
-                "version": "1",
-                "code": "body-composition-sites:Trunk",
-                "display": "Trunk"
-            },
-            {
-                "system": "http://healthvault.com/vocabularies/",
-                "version": "1",
-                "code": "body-composition-measurement-names:fat-percent",
-                "display": "Body fat percentage"
+                "code": "txtNamebody-composition",
+                "display": "Body composition"
             }
         ]
     },
     "effectiveDateTime": "2017-08-03T08:30:01-07:00",
+    "bodySite": {
+        "coding": [
+            {
+                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/body-composition-sites",
+                "version": "1",
+                "code": "Trunk"
+            }
+        ],
+        "text": "Trunk"
+    },
+    "method": {
+        "coding": [
+            {
+                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/body-composition-measurement-methods",
+                "version": "1",
+                "code": "DXA"
+            }
+        ],
+        "text": "DXA/DEXA"
+    },
     "component": [
         {
             "code": {
                 "coding": [
                     {
-                        "system": "http://healthvault.com/vocabularies/",
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/body-composition-measurement-names",
                         "version": "1",
-                        "code": "body-composition-measurement-names:fat-percent",
-                        "display": "Body fat percentage"
+                        "code": "fat-percent"
                     }
-                ]
+                ],
+                "text": "Body fat percentage"
+            }
+        },
+        {
+            "code": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/body-composition-measurement-names",
+                        "version": "1",
+                        "code": "fat-percent"
+                    }
+                ],
+                "text": "Body fat percentage"
             },
             "valueQuantity": {
                 "value": 10,
@@ -69,12 +89,12 @@
             "code": {
                 "coding": [
                     {
-                        "system": "http://healthvault.com/vocabularies/",
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/body-composition-measurement-names",
                         "version": "1",
-                        "code": "body-composition-measurement-names:fat-percent",
-                        "display": "Body fat percentage"
+                        "code": "fat-percent"
                     }
-                ]
+                ],
+                "text": "Body fat percentage"
             },
             "valueQuantity": {
                 "value": 0.15,

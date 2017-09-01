@@ -49,12 +49,12 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
 
             var basicAddress = basicV2Extension.GetExtension(HealthVaultExtensions.PatientBasicAddress);
             Assert.AreEqual("Redmond", basicAddress.GetStringExtension(HealthVaultExtensions.PatientBasicAddressCity));
-            Assert.AreEqual("states:WA", basicAddress.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientBasicAddressState).Coding[0].Code);
+            Assert.AreEqual("WA", basicAddress.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientBasicAddressState).Coding[0].Code);
             Assert.AreEqual("98052", basicAddress.GetStringExtension(HealthVaultExtensions.PatientBasicAddressPostalCode));
-            Assert.AreEqual("iso3166:US", basicAddress.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientBasicAddressCountry).Coding[0].Code);
+            Assert.AreEqual("US", basicAddress.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientBasicAddressCountry).Coding[0].Code);
 
             Assert.AreEqual(2, patient.Communication.Count);
-            Assert.AreEqual("English", patient.Communication[0].Language.Coding[0].Display);
+            Assert.AreEqual("English", patient.Communication[0].Language.Text);
             Assert.AreEqual(true, patient.Communication[0].Preferred);
         }
     }

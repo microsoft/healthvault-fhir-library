@@ -94,7 +94,26 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             Assert.IsNotNull(glucose);
             Assert.AreEqual(6.3, glucose.Value.Value);
             Assert.AreEqual(UnitAbbreviations.MillimolesPerLiter.ToLower(), glucose.Value.DisplayValue.Units);
-            Assert.AreEqual(UnitAbbreviations.MillimolesPerLiter, glucose.Value.DisplayValue.UnitsCode);           
+            Assert.AreEqual(UnitAbbreviations.MillimolesPerLiter, glucose.Value.DisplayValue.UnitsCode);
+        }
+
+        [TestMethod]
+        public void WhenHealthVaultInFhirBloodGlucoseTransformedToHealthvault_ThenValuesEqual()
+        {
+            var observation = GetObservation("HealthVaultToFhirBloodGlucose.json");
+
+            var glucose = observation.ToHealthVault() as BloodGlucose;
+            Assert.IsNotNull(glucose);
+            Assert.AreEqual(101, glucose.Value.Value);
+            Assert.AreEqual(UnitAbbreviations.MillimolesPerLiter, glucose.Value.DisplayValue.Units);
+            Assert.AreEqual(UnitAbbreviations.MillimolesPerLiter, glucose.Value.DisplayValue.UnitsCode);
+            Assert.AreEqual("Whole blood", glucose.GlucoseMeasurementType.Text);
+            Assert.AreEqual("wb", glucose.GlucoseMeasurementType[0].Value);
+            Assert.AreEqual(false, glucose.IsControlTest);
+            Assert.AreEqual(Normalcy.Normal, glucose.ReadingNormalcy);
+            Assert.AreEqual(true, glucose.OutsideOperatingTemperature);
+            Assert.AreEqual("Before meal", glucose.MeasurementContext.Text);
+            Assert.AreEqual("BeforeMeal", glucose.MeasurementContext[0].Value);
         }
 
         [TestMethod]

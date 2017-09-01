@@ -19,6 +19,7 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string OutsideOperatingTemperatureExtensionName = "outside-operating-temperature";
         public const string ReadingNormalcyExtensionName = "reading-normalcy";
         public const string IsControlTestExtensionName = "is-control-test";
+        public const string BloodGlucoseMeasurementContext = "measurement-context";
 
         public const string IsPrimary = HealthVaultExtensionsUri + "is-primary";
         public const string Description = HealthVaultExtensionsUri + "description";

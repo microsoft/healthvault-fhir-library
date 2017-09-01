@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Hl7.Fhir.Model;
+using Hl7.Fhir.Serialization;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
@@ -143,6 +144,8 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 
             personal.ToFhir(patient);
 
+            var json = FhirSerializer.SerializeToJson(patient);
+
             Assert.IsNotNull(patient);
             // Basic Portion
             Assert.AreEqual(AdministrativeGender.Female, patient.Gender.Value);
@@ -153,12 +156,12 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 
             var basicAddress = basicV2Extension.GetExtension(HealthVaultExtensions.PatientBasicAddress);
             Assert.AreEqual("Redmond", basicAddress.GetStringExtension(HealthVaultExtensions.PatientBasicAddressCity));
-            Assert.AreEqual("states:WA", basicAddress.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientBasicAddressState).Coding[0].Code);
+            Assert.AreEqual("WA", basicAddress.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientBasicAddressState).Coding[0].Code);
             Assert.AreEqual("98052", basicAddress.GetStringExtension(HealthVaultExtensions.PatientBasicAddressPostalCode));
-            Assert.AreEqual("iso3166:US", basicAddress.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientBasicAddressCountry).Coding[0].Code);
+            Assert.AreEqual("US", basicAddress.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientBasicAddressCountry).Coding[0].Code);
 
             Assert.AreEqual(2, patient.Communication.Count);
-            Assert.AreEqual("English", patient.Communication[0].Language.Coding[0].Display);
+            Assert.AreEqual("English", patient.Communication[0].Language.Text);
             Assert.AreEqual(true, patient.Communication[0].Preferred);
 
             // Contact portion
@@ -201,11 +204,11 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.AreEqual("1975-02-05", patient.BirthDate);
             Assert.AreEqual("000-12-3456", patient.Identifier[0].Value);
             Assert.AreEqual("2075-05-07T00:00:00-07:00", ((FhirDateTime)patient.Deceased).Value);
-            Assert.AreEqual("blood-types:A+", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientBloodType).Coding[0].Code);
-            Assert.AreEqual("religion:Agn", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientReligion).Coding[0].Code);
-            Assert.AreEqual("marital-status:NM", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientMaritalStatus).Coding[0].Code);
-            Assert.AreEqual("ethnicity-types:8", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientEthnicity).Coding[0].Code);
-            Assert.AreEqual("Education-level:ColG", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientHighestEducationLevel).Coding[0].Code);
+            Assert.AreEqual("A+", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientBloodType).Coding[0].Code);
+            Assert.AreEqual("Agn", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientReligion).Coding[0].Code);
+            Assert.AreEqual("NM", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientMaritalStatus).Coding[0].Code);
+            Assert.AreEqual("8", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientEthnicity).Coding[0].Code);
+            Assert.AreEqual("ColG", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientHighestEducationLevel).Coding[0].Code);
             Assert.AreEqual("Employed", personalExtension.GetStringExtension(HealthVaultExtensions.PatientEmploymentStatus));
             Assert.AreEqual("Organ Donor", personalExtension.GetStringExtension(HealthVaultExtensions.PatientOrganDonor));
             Assert.AreEqual(true, personalExtension.GetBoolExtension(HealthVaultExtensions.PatientIsVeteran));

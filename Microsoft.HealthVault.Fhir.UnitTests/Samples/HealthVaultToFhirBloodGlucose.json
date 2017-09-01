@@ -1,0 +1,71 @@
+﻿{
+    "resourceType": "Observation",
+    "extension": [
+        {
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/thing-flags",
+            "valueString": "None"
+        },
+        {
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/thing-state",
+            "valueString": "Active"
+        },
+        {
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/blood-glucose",
+            "extension": [
+                {
+                    "url": "measurement-context",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/glucose-measurement-context",
+                                "version": "1",
+                                "code": "BeforeMeal"
+                            }
+                        ],
+                        "text": "Before meal"
+                    }
+                },
+                {
+                    "url": "outside-operating-temperature",
+                    "valueBoolean": true
+                },
+                {
+                    "url": "reading-normalcy",
+                    "valueString": "Normal"
+                },
+                {
+                    "url": "is-control-test",
+                    "valueBoolean": false
+                }
+            ]
+        }
+    ],
+    "status": "final",
+    "code": {
+        "coding": [
+            {
+                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/thing-type-names",
+                "version": "1",
+                "code": "txtNameblood-glucose",
+                "display": "Blood glucose"
+            }
+        ]
+    },
+    "effectiveDateTime": "2017-09-01T00:00:00-07:00",
+    "valueQuantity": {
+        "value": 101,
+        "unit": "mmol/L",
+        "system": "http://unitsofmeasure.org",
+        "code": "mmol/L"
+    },
+    "method": {
+        "coding": [
+            {
+                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/glucose-meaurement-type",
+                "version": "1",
+                "code": "wb"
+            }
+        ],
+        "text": "Whole blood"
+    }
+}

@@ -9,7 +9,6 @@
 using System.Linq;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Support;
-using Microsoft.HealthVault.Fhir.Codings;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 using NodaTime;

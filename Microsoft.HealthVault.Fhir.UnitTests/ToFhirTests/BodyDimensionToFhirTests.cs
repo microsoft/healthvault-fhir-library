@@ -8,6 +8,7 @@
 
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Support;
+using Microsoft.HealthVault.Fhir.Codes.HealthVault;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
@@ -33,7 +34,8 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             var observation = bodyDimension.ToFhir();
 
             Assert.IsNotNull(observation);
-            Assert.AreEqual("body-dimension-measurement-names:BicepCircumferenceLeft", observation.Code.Coding[0].Code);
+            Assert.AreEqual(HealthVaultThingTypeNameCodes.BodyDimension, observation.Code.Coding[0]);
+            Assert.AreEqual("BicepCircumferenceLeft", observation.Method.Coding[0].Code);
 
             var when = observation.Effective as FhirDateTime;
             Assert.IsNotNull(when);

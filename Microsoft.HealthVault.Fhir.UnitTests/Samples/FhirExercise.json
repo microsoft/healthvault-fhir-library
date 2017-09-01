@@ -21,15 +21,10 @@
                 },
                 {
                     "url": "type",
-                    "valueCodeableConcept": {
-                        "coding": [
-                            {
-                                "system": "http://healthvault.com/vocabularies/",
-                                "version": "1",
-                                "code": "exercise-activities:swimming",
-                                "display": "swimming"
-                            }
-                        ]
+                    "valueCoding": {
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/exercise-activities",
+                        "version": "1",
+                        "code": "swimming"
                     }
                 },
                 {
@@ -37,7 +32,7 @@
                     "valueQuantity": {
                         "value": 30,
                         "unit": "seconds",
-                        "system": "http://healthvault.com/vocabularies/duration-units/1",
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/duration-units",
                         "code": "s"
                     }
                 }
@@ -52,15 +47,10 @@
                 },
                 {
                     "url": "type",
-                    "valueCodeableConcept": {
-                        "coding": [
-                            {
-                                "system": "http://healthvault.com/vocabularies/",
-                                "version": "1",
-                                "code": "exercise-activities:swimming",
-                                "display": "swimming"
-                            }
-                        ]
+                    "valueCoding": {
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/exercise-activities",
+                        "version": "1",
+                        "code": "swimming"
                     }
                 },
                 {
@@ -68,7 +58,7 @@
                     "valueQuantity": {
                         "value": 28,
                         "unit": "seconds",
-                        "system": "http://healthvault.com/vocabularies/duration-units/1",
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/duration-units",
                         "code": "s"
                     }
                 }
@@ -82,12 +72,12 @@
                     "valueCodeableConcept": {
                         "coding": [
                             {
-                                "system": "http://healthvault.com/vocabularies/",
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/exercise-activities",
                                 "version": "1",
-                                "code": "exercise-activities:swimming",
-                                "display": "Swimming"
+                                "code": "swimming"
                             }
-                        ]
+                        ],
+                        "text": "Swimming"
                     }
                 },
                 {
@@ -118,15 +108,10 @@
                         },
                         {
                             "url": "type",
-                            "valueCodeableConcept": {
-                                "coding": [
-                                    {
-                                        "system": "http://healthvault.com/vocabularies/",
-                                        "version": "1",
-                                        "code": "exercise-activities:swimming",
-                                        "display": "swimming"
-                                    }
-                                ]
+                            "valueCoding": {
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/exercise-activities",
+                                "version": "1",
+                                "code": "swimming"
                             }
                         },
                         {
@@ -134,7 +119,7 @@
                             "valueQuantity": {
                                 "value": 46.2,
                                 "unit": "seconds",
-                                "system": "http://healthvault.com/vocabularies/duration-units/1",
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/duration-units",
                                 "code": "s"
                             }
                         }
@@ -149,15 +134,10 @@
                         },
                         {
                             "url": "type",
-                            "valueCodeableConcept": {
-                                "coding": [
-                                    {
-                                        "system": "http://healthvault.com/vocabularies/",
-                                        "version": "1",
-                                        "code": "exercise-activities:swimming",
-                                        "display": "swimming"
-                                    }
-                                ]
+                            "valueCoding": {
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/exercise-activities",
+                                "version": "1",
+                                "code": "swimming"
                             }
                         },
                         {
@@ -165,7 +145,7 @@
                             "valueQuantity": {
                                 "value": 21,
                                 "unit": "seconds",
-                                "system": "http://healthvault.com/vocabularies/duration-units/1",
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/duration-units",
                                 "code": "s"
                             }
                         }
@@ -178,8 +158,10 @@
     "code": {
         "coding": [
             {
-                "system": "http://healthvault.com/vocabularies/",
-                "code": "exercise"
+                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/thing-type-names",
+                "version": "1",
+                "code": "txtNameexercise",
+                "display": "Exercise"
             }
         ]
     },
@@ -187,14 +169,7 @@
     "component": [
         {
             "code": {
-                "coding": [
-                    {
-                        "system": "http://healthvault.com/vocabularies/",
-                        "version": "1",
-                        "code": "exercise:exercise-distance",
-                        "display": "exercise-distance"
-                    }
-                ]
+                "text": "exercise-distance"
             },
             "valueQuantity": {
                 "value": 30,
@@ -205,14 +180,7 @@
         },
         {
             "code": {
-                "coding": [
-                    {
-                        "system": "http://healthvault.com/vocabularies/",
-                        "version": "1",
-                        "code": "exercise:exercise-duration",
-                        "display": "exercise-duration"
-                    }
-                ]
+                "text": "exercise-duration"
             },
             "valueQuantity": {
                 "value": 10,
@@ -223,24 +191,17 @@
         },
         {
             "code": {
-                "coding": [
-                    {
-                        "system": "http://healthvault.com/vocabularies/",
-                        "version": "1",
-                        "code": "exercise:exercise-activity",
-                        "display": "exercise-activity"
-                    }
-                ]
+                "text": "exercise-activity"
             },
             "valueCodeableConcept": {
                 "coding": [
                     {
-                        "system": "http://healthvault.com/vocabularies/",
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/exercise-activities",
                         "version": "1",
-                        "code": "exercise-activities:swimming",
-                        "display": "Swimming"
+                        "code": "swimming"
                     }
-                ]
+                ],
+                "text": "Swimming"
             }
         }
     ]

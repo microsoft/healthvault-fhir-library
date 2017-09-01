@@ -53,9 +53,9 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             Assert.AreEqual(new FhirDateTime(when.Year, when.Month, when.Day, 0, 30), ((Hl7.Fhir.Model.Period)observation.Component[5].Value).StartElement);
             Assert.AreEqual(new FhirDateTime(when.Year, when.Month, when.Day, 0, 40), ((Hl7.Fhir.Model.Period)observation.Component[5].Value).EndElement);
 
-            Assert.AreEqual("Tired", ((CodeableConcept)observation.Component[6].Value).Coding[0].Code);
+            Assert.AreEqual("Tired", ((FhirString)observation.Component[6].Value).Value);
 
-            Assert.AreEqual("Mayo:ccabbac8-58f0-4e88-a1eb-538e21e7524d", ((CodeableConcept)observation.Component[7].Value).Coding[0].Code);
+            Assert.AreEqual("ccabbac8-58f0-4e88-a1eb-538e21e7524d", ((CodeableConcept)observation.Component[7].Value).Coding[0].Code);
         }
     }
 }

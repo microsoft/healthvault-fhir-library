@@ -8,6 +8,7 @@
 
 using System.Collections.Generic;
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Codes.HealthVault;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Codings;
 using Microsoft.HealthVault.ItemTypes;
@@ -27,15 +28,17 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     {
         internal static Observation ToFhirInternal(BloodGlucose bg, Observation observation)
         {
-            var fhirCodes = new List<Coding>();
-
-            HealthVaultCodesToFhir.ConvertCodableValueToFhir(bg.MeasurementContext, fhirCodes);
-            HealthVaultCodesToFhir.ConvertCodableValueToFhir(bg.GlucoseMeasurementType, fhirCodes);
+            observation.Method = bg.GlucoseMeasurementType.ToFhir();
 
             var bloodGlucoseExtension = new Extension
             {
                 Url = HealthVaultExtensions.BloodGlucose
             };
+
+            if (bg.MeasurementContext != null)
+            {
+                bloodGlucoseExtension.AddExtension(HealthVaultExtensions.BloodGlucoseMeasurementContext, bg.MeasurementContext.ToFhir());
+            }
 
             if (bg.OutsideOperatingTemperature.HasValue)
             {
@@ -53,9 +56,9 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
 
             observation.Extension.Add(bloodGlucoseExtension);
-            
-            observation.Code = new CodeableConcept() { Coding = fhirCodes };
-            
+
+            observation.Code = HealthVaultVocabularies.GenerateCodeableConcept(HealthVaultThingTypeNameCodes.BloodGlucose);
+
             var quantity = new Quantity((decimal)bg.Value.Value, UnitAbbreviations.MillimolesPerLiter);
             observation.Value = quantity;
             observation.Effective = new FhirDateTime(bg.When.ToLocalDateTime().ToDateTimeUnspecified());

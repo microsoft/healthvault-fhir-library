@@ -68,11 +68,11 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.AreEqual("2075-05-07T00:00:00-07:00", ((FhirDateTime)patient.Deceased).Value);
 
             var personalExtension = patient.GetExtension(HealthVaultExtensions.PatientPersonal);
-            Assert.AreEqual("blood-types:A+", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientBloodType).Coding[0].Code);
-            Assert.AreEqual("religion:Agn", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientReligion).Coding[0].Code);
-            Assert.AreEqual("marital-status:NM", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientMaritalStatus).Coding[0].Code);
-            Assert.AreEqual("ethnicity-types:8", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientEthnicity).Coding[0].Code);
-            Assert.AreEqual("Education-level:ColG", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientHighestEducationLevel).Coding[0].Code);
+            Assert.AreEqual("A+", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientBloodType).Coding[0].Code);
+            Assert.AreEqual("Agn", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientReligion).Coding[0].Code);
+            Assert.AreEqual("NM", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientMaritalStatus).Coding[0].Code);
+            Assert.AreEqual("8", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientEthnicity).Coding[0].Code);
+            Assert.AreEqual("ColG", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientHighestEducationLevel).Coding[0].Code);
             Assert.AreEqual("Employed", personalExtension.GetStringExtension(HealthVaultExtensions.PatientEmploymentStatus));
             Assert.AreEqual("Organ Donor", personalExtension.GetStringExtension(HealthVaultExtensions.PatientOrganDonor));
             Assert.AreEqual(true, personalExtension.GetBoolExtension(HealthVaultExtensions.PatientIsVeteran));
