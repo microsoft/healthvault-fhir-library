@@ -8,9 +8,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
+
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.HealthVault.Fhir.UnitTests")]
 
 namespace Microsoft.HealthVault.Fhir.Codings
 {
@@ -112,6 +115,75 @@ namespace Microsoft.HealthVault.Fhir.Codings
         internal static CodeableConcept CreateVocabularyCodeableConcept(string code)
         {
             return new CodeableConcept { Coding = new List<Coding> { new Coding(VocabularyUris.HealthVaultVocabulariesUri, code) } };
+        }
+
+        internal static Dosage GetDosage(GeneralMeasurement dose, GeneralMeasurement frequency, CodableValue route)
+        {
+            var dosage = new Dosage();
+
+            if (route != null)
+            {
+                dosage.Route = ConvertCodableValueToFhir(route);
+            }
+            if (frequency != null)
+            {
+                var repeatComponent = new Timing.RepeatComponent();
+                StructuredMeasurement frequencyMeasurement = frequency.Structured.First();
+                repeatComponent.Period = new decimal(frequencyMeasurement.Value);
+                repeatComponent.PeriodUnit = GetPeriodUnitFromFromRecurrenceIntervals(frequencyMeasurement.Units);
+                var timing = new Timing()
+                {
+                    Repeat = repeatComponent
+                };
+
+                dosage.Timing = timing;
+            }
+            if (dose != null)
+            {
+                var doseQuantity = new SimpleQuantity();
+                StructuredMeasurement doseMeasurement = dose.Structured.First();
+                doseQuantity.Value = new decimal(doseMeasurement.Value);
+                doseQuantity.Unit = doseMeasurement.Units.Text;
+                CodedValue doseUnit = doseMeasurement.Units.First();
+                doseQuantity.System = $"healthvault.com/fhir/stu/{doseUnit.Family}/{doseUnit.VocabularyName}";
+                doseQuantity.Code = doseUnit.Value;
+                dosage.Dose = doseQuantity;
+            }
+
+            return dosage;
+        }
+
+        private static Timing.UnitsOfTime? GetPeriodUnitFromFromRecurrenceIntervals(CodableValue units)
+        {
+            Func<CodedValue, bool> recurrenceIntervalsPredicate =
+                coded => coded.VocabularyName == "recurrence-intervals";
+            if (units.Any(recurrenceIntervalsPredicate))
+            {
+                var coded = units.First(recurrenceIntervalsPredicate);
+                switch (coded.Value)
+                {
+                    case "second":
+                        return Timing.UnitsOfTime.S;
+                    case "minute":
+                        return Timing.UnitsOfTime.Min;
+                    case "hour":
+                        return Timing.UnitsOfTime.H;
+                    case "day":
+                        return Timing.UnitsOfTime.D;
+                    case "week":
+                        return Timing.UnitsOfTime.Wk;
+                    case "month":
+                        return Timing.UnitsOfTime.Mo;
+                    case "year":
+                        return Timing.UnitsOfTime.A;
+                    default:
+                        return null;
+                }
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }
