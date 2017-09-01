@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <meta>
+    <lastUpdated value="2017-08-24T10:10:38.195-07:00" />
+  </meta>
+  <url value="http://healthvault.com/fhir/stu3/StructureDefinition/Personal" />
+  <name value="Personal" />
+  <status value="draft" />
+  <date value="2017-08-24T10:08:21.063-07:00" />
+  <publisher value="Microsoft Corporation" />
+  <description value="Extension that encapsulates the additional data found in a Personal thing type." />
+  <copyright value="Copyright (c) Microsoft Corporation.  All rights reserved." />
+  <fhirVersion value="3.0.1" />
+  <kind value="complex-type" />
+  <abstract value="false" />
+  <contextType value="resource" />
+  <context value="Patient" />
+  <type value="Extension" />
+  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Extension" />
+  <derivation value="constraint" />
+  <differential>
+    <element>
+      <path value="Extension.extension" />
+      <slicing>
+        <discriminator>
+          <type value="value" />
+          <path value="url" />
+        </discriminator>
+        <rules value="open" />
+      </slicing>
+    </element>
+    <element id="Extension.extension:blood-type">
+      <path value="Extension.extension" />
+      <sliceName value="blood-type" />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:blood-type.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="blood-type" />
+    </element>
+    <element id="Extension.extension:blood-type.value[x]:valueCodeableConcept">
+      <path value="Extension.extension.valueCodeableConcept" />
+      <sliceName value="valueCodeableConcept" />
+      <type>
+        <code value="CodeableConcept" />
+      </type>
+    </element>
+    <element id="Extension.extension:employment-status">
+      <path value="Extension.extension" />
+      <sliceName value="employment-status" />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:employment-status.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="employment-status" />
+    </element>
+    <element id="Extension.extension:employment-status.value[x]:valueString">
+      <path value="Extension.extension.valueString" />
+      <sliceName value="valueString" />
+      <type>
+        <code value="string" />
+      </type>
+    </element>
+    <element id="Extension.extension:ethnicity">
+      <path value="Extension.extension" />
+      <sliceName value="ethnicity" />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:ethnicity.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="ethnicity" />
+    </element>
+    <element id="Extension.extension:ethnicity.value[x]:valueCodeableConcept">
+      <path value="Extension.extension.valueCodeableConcept" />
+      <sliceName value="valueCodeableConcept" />
+      <type>
+        <code value="CodeableConcept" />
+      </type>
+    </element>
+    <element id="Extension.url">
+      <path value="Extension.url" />
+      <fixedUri value="http://healthvault.com/fhir/stu3/StructureDefinition/Personal" />
+    </element>
+    <element id="Extension.value[x]">
+      <path value="Extension.value[x]" />
+      <max value="0" />
+    </element>
+  </differential>
+</StructureDefinition>

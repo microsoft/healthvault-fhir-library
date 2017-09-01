@@ -23,40 +23,42 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             var personal = patient.ToThingBase<Personal>();
             var hasValue = false;
 
-            personal.BloodType = ((CodeableConcept)patient.Extension.FirstOrDefault(x => x.Url == HealthVaultExtensions.PatientBloodType)?.Value)?.ToCodableValue();
-            personal.Ethnicity = ((CodeableConcept)patient.Extension.FirstOrDefault(x => x.Url == HealthVaultExtensions.PatientEthnicity)?.Value)?.ToCodableValue();
-            personal.HighestEducationLevel = ((CodeableConcept)patient.Extension.FirstOrDefault(x => x.Url == HealthVaultExtensions.PatientHighestEducationLevel)?.Value)?.ToCodableValue();
-            personal.IsDisabled = ((FhirBoolean)patient.Extension.FirstOrDefault(x => x.Url == HealthVaultExtensions.PatientIsDisabled)?.Value)?.Value;
-            personal.MaritalStatus = ((CodeableConcept)patient.Extension.FirstOrDefault(x => x.Url == HealthVaultExtensions.PatientMaritalStatus)?.Value)?.ToCodableValue();
-            personal.IsVeteran = ((FhirBoolean)patient.Extension.FirstOrDefault(x => x.Url == HealthVaultExtensions.PatientIsVeteran)?.Value)?.Value;
-            personal.OrganDonor = ((FhirString)patient.Extension.FirstOrDefault(x => x.Url == HealthVaultExtensions.PatientOrganDonor)?.Value)?.Value;
-            personal.EmploymentStatus = ((FhirString)patient.Extension.FirstOrDefault(x => x.Url == HealthVaultExtensions.PatientEmploymentStatus)?.Value)?.Value;
-            personal.Religion = ((CodeableConcept)patient.Extension.FirstOrDefault(x => x.Url == HealthVaultExtensions.PatientReligion)?.Value)?.ToCodableValue();
-            personal.SocialSecurityNumber = patient.Identifier.FirstOrDefault(x => x.System == Constants.FhirExtensions.SSN)?.Value;
-
-            if (personal.BloodType != null ||
-                personal.Ethnicity != null ||
-                personal.HighestEducationLevel != null ||
-                personal.IsDisabled != null ||
-                personal.MaritalStatus != null ||
-                personal.IsVeteran != null ||
-                personal.OrganDonor != null ||
-                personal.EmploymentStatus != null ||
-                personal.Religion != null ||
-                personal.SocialSecurityNumber != null)
+            var personalExtension = patient.GetExtension(HealthVaultExtensions.PatientPersonal);
+            if (personalExtension != null)
             {
-                hasValue = true;
+                personal.BloodType = personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientBloodType)?.ToCodableValue();
+                personal.Ethnicity = personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientEthnicity)?.ToCodableValue();
+                personal.HighestEducationLevel = personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientHighestEducationLevel)?.ToCodableValue();
+                personal.IsDisabled = personalExtension.GetBoolExtension(HealthVaultExtensions.PatientIsDisabled);
+                personal.MaritalStatus = personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientMaritalStatus)?.ToCodableValue();
+                personal.IsVeteran = personalExtension.GetBoolExtension(HealthVaultExtensions.PatientIsVeteran);
+                personal.OrganDonor = personalExtension.GetStringExtension(HealthVaultExtensions.PatientOrganDonor);
+                personal.EmploymentStatus = personalExtension.GetStringExtension(HealthVaultExtensions.PatientEmploymentStatus);
+                personal.Religion = personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientReligion)?.ToCodableValue();
+                personal.SocialSecurityNumber = patient.Identifier.FirstOrDefault(x => x.System == Constants.FhirExtensions.SSN)?.Value;
+
+                if (personal.BloodType != null ||
+                    personal.Ethnicity != null ||
+                    personal.HighestEducationLevel != null ||
+                    personal.IsDisabled != null ||
+                    personal.MaritalStatus != null ||
+                    personal.IsVeteran != null ||
+                    !string.IsNullOrEmpty(personal.OrganDonor) ||
+                    !string.IsNullOrEmpty(personal.EmploymentStatus) ||
+                    personal.Religion != null ||
+                    personal.SocialSecurityNumber != null)
+                {
+                    hasValue = true;
+                }
             }
 
             if (patient.BirthDateElement != null)
             {
                 hasValue = true;
-                personal.BirthDate = new HealthServiceDateTime(LocalDateTime.FromDateTime(patient.BirthDateElement.ToDateTime().Value));
-                
-                if (patient.BirthDateElement.Extension.Any(x => x.Url == HealthVaultExtensions.PatientBirthTime))
+                personal.BirthDate = new HealthServiceDateTime(LocalDateTime.FromDateTime(patient.BirthDateElement.ToDateTime().Value))
                 {
-                    personal.BirthDate.Time = ((Time)patient.BirthDateElement.Extension.First(x => x.Url == HealthVaultExtensions.PatientBirthTime).Value).ToAppoximateTime();
-                }
+                    Time = patient.BirthDateElement.GetExtensionValue<Time>(HealthVaultExtensions.PatientBirthTime)?.ToAppoximateTime()
+                };
             }
 
             if (patient.Deceased != null)
@@ -80,13 +82,13 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             if (!patient.Name.IsNullOrEmpty())
             {
                 hasValue = true;
-                var patientName = patient.Name.First();
+                var patientName = patient.Name.First(); // Take the first name available
                 var name = new Name
                 {
                     Full = patientName.Text,
                     Last = patientName.Family,
-                    Suffix = ((CodeableConcept)patientName.Extension.FirstOrDefault(x => x.Url == HealthVaultExtensions.PatientSuffix)?.Value)?.ToCodableValue(),
-                    Title = ((CodeableConcept)patientName.Extension.FirstOrDefault(x => x.Url == HealthVaultExtensions.PatientTitle)?.Value)?.ToCodableValue(),
+                    Suffix = patientName.Suffix.Any() ? new CodableValue(patientName.Suffix.First()) : null, // Take the first suffix if there are any
+                    Title = patientName.Prefix.Any() ? new CodableValue(patientName.Prefix.First()) : null, // Take the first prefix if there are any
                 };
 
                 //todo: figure out how to extend the names so we can be sure to map first and middle correctly

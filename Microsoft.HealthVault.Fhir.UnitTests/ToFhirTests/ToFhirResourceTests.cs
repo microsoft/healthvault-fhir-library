@@ -71,7 +71,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             IExtendable extendable = thing.ToFhir() as IExtendable;
 
             Assert.IsTrue(extendable.HasExtensions());
-            Assert.AreEqual(readOnlyFlag.ToString(), extendable.GetStringExtension(HealthVaultVocabularies.FlagsFhirExtensionName));
+            Assert.AreEqual(readOnlyFlag.ToString(), extendable.GetStringExtension(HealthVaultExtensions.FlagsFhirExtensionName));
         }
 
         [TestMethod]
@@ -83,7 +83,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             IExtendable extendable = thing.ToFhir() as IExtendable;
 
             Assert.IsTrue(extendable.HasExtensions());
-            Assert.AreEqual(activeState.ToString(), extendable.GetStringExtension(HealthVaultVocabularies.StateFhirExtensionName));
+            Assert.AreEqual(activeState.ToString(), extendable.GetStringExtension(HealthVaultExtensions.StateFhirExtensionName));
         }
 
         [TestMethod]

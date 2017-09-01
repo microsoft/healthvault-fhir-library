@@ -10,42 +10,53 @@ namespace Microsoft.HealthVault.Fhir.Constants
 {
     public static class HealthVaultExtensions
     {
-        public const string HealthVaultExtensionsUri = "http://healthvault.com/extensions/";
+        public const string HealthVaultExtensionsUri = "http://healthvault.com/fhir/stu3/StructuredDefinition/";
 
-        public const string FirstDayOfWeek = HealthVaultExtensionsUri + "first-day-of-week";
-        public const string IsPrimary = "is-primary";
-        public const string Description = "description";
+        public const string StateFhirExtensionName = HealthVaultExtensionsUri + "thing-state";
+        public const string FlagsFhirExtensionName = HealthVaultExtensionsUri + "thing-flags";
+
+        public const string BloodGlucose = HealthVaultExtensionsUri + "blood-glucose";
+        public const string OutsideOperatingTemperatureExtensionName = "outside-operating-temperature";
+        public const string ReadingNormalcyExtensionName = "reading-normalcy";
+        public const string IsControlTestExtensionName = "is-control-test";
+
+        public const string IsPrimary = HealthVaultExtensionsUri + "is-primary";
+        public const string Description = HealthVaultExtensionsUri + "description";
 
         public const string ExerciseDetail = HealthVaultExtensionsUri + "exercise-detail";
-        public const string ExerciseDetailName = "exercise-detail-name";
-        public const string ExerciseDetailType = "exercise-detail-type";
-        public const string ExerciseDetailValue = "exercise-detail-value";
+        public const string ExerciseDetailName = "name";
+        public const string ExerciseDetailType = "type";
+        public const string ExerciseDetailValue = "value";
 
         public const string ExerciseSegment = HealthVaultExtensionsUri + "exercise-segment";
-        public const string ExerciseSegmentActivity = "exercise-segment-activity";
-        public const string ExerciseSegmentTitle = "exercise-segment-title";
-        public const string ExerciseSegmentDuration = "exercise-segment-duration";
-        public const string ExerciseSegmentDistance = "exercise-segment-distance";
-        public const string ExerciseSegmentOffset = "exercise-segment-offset";
+        public const string ExerciseSegmentActivity = "activity";
+        public const string ExerciseSegmentTitle = "title";
+        public const string ExerciseSegmentDuration = "duration";
+        public const string ExerciseSegmentDistance = "distance";
+        public const string ExerciseSegmentOffset = "offset";
 
-        public const string PatientBirthYear = HealthVaultExtensionsUri + "patient-birth-year";
-        public const string PatientBirthTime = "patient-birth-time";
-        public const string PatientBloodType = HealthVaultExtensionsUri + "patient-blood-type";
-        public const string PatientEmploymentStatus = HealthVaultExtensionsUri + "patient-employment-status";
-        public const string PatientEthnicity = HealthVaultExtensionsUri + "patient-ethnicity";
-        public const string PatientHighestEducationLevel = HealthVaultExtensionsUri + "patient-highest-education-level";
-        public const string PatientIsDisabled = HealthVaultExtensionsUri + "patient-is-disabled";
-        public const string PatientIsVeteran = HealthVaultExtensionsUri + "patient-is-veteran";
-        public const string PatientMaritalStatus = HealthVaultExtensionsUri + "patient-marital-status";
-        public const string PatientTitle = "patient-title";
-        public const string PatientSuffix = "patient-suffix";
-        public const string PatientOrganDonor = HealthVaultExtensionsUri + "patient-organ-donor";
-        public const string PatientReligion = HealthVaultExtensionsUri + "patient-religion";
-
-        public const string PatientBasicAddress = HealthVaultExtensionsUri + "patient-basic-address";
+        public const string PatientBasicV2 = HealthVaultExtensionsUri + "basic-v2";
+        public const string PatientBirthYear = "birth-year";
+        public const string PatientFirstDayOfWeek ="first-day-of-week";
+        public const string PatientBasicAddress = "basic-address";
         public const string PatientBasicAddressCity = "city";
         public const string PatientBasicAddressState = "state";
         public const string PatientBasicAddressPostalCode = "postal-code";
         public const string PatientBasicAddressCountry = "country";
+
+        public const string PatientPersonal = HealthVaultExtensionsUri + "personal";
+        public const string PatientBloodType = "blood-type";
+        public const string PatientEmploymentStatus =  "employment-status";
+        public const string PatientEthnicity = "ethnicity";
+        public const string PatientHighestEducationLevel = "highest-education-level";
+        public const string PatientIsDisabled = "is-disabled";
+        public const string PatientIsVeteran = "is-veteran";
+        public const string PatientMaritalStatus = "marital-status";
+        public const string PatientOrganDonor = "organ-donor";
+        public const string PatientReligion = "religion";
+
+        public const string PatientBirthTime = HealthVaultExtensionsUri + "birth-time";
+        public const string PatientTitle = "codable-title";
+        public const string PatientSuffix = "codable-suffix";
     }
 }

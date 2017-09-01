@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <meta>
+    <lastUpdated value="2017-08-25T09:53:35.189-07:00" />
+  </meta>
+  <url value="http://healthvault.com/fhir/stu3/StructuredDefinition/exercise-segment" />
+  <name value="ExerciseSegment" />
+  <status value="draft" />
+  <date value="2017-08-25T09:20:42.01-07:00" />
+  <publisher value="Microsoft Corporation" />
+  <description value="Extension that encapsulates the additional data found in an exercise thing around exercise segments" />
+  <copyright value="Copyright (c) Microsoft Corporation.  All rights reserved." />
+  <fhirVersion value="3.0.1" />
+  <kind value="complex-type" />
+  <abstract value="false" />
+  <contextType value="resource" />
+  <context value="Observation" />
+  <type value="Extension" />
+  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Extension" />
+  <derivation value="constraint" />
+  <differential>
+    <element>
+      <path value="Extension.extension" />
+      <slicing>
+        <discriminator>
+          <type value="value" />
+          <path value="url" />
+        </discriminator>
+        <rules value="open" />
+      </slicing>
+    </element>
+    <element id="Extension.extension:activity">
+      <path value="Extension.extension" />
+      <sliceName value="activity" />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:activity.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="activity" />
+    </element>
+    <element id="Extension.extension:activity.value[x]:valueCodeableConcept">
+      <path value="Extension.extension.valueCodeableConcept" />
+      <sliceName value="valueCodeableConcept" />
+      <type>
+        <code value="CodeableConcept" />
+      </type>
+    </element>
+    <element id="Extension.extension:title">
+      <path value="Extension.extension" />
+      <sliceName value="title" />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:title.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="title" />
+    </element>
+    <element id="Extension.extension:title.value[x]:valueString">
+      <path value="Extension.extension.valueString" />
+      <sliceName value="valueString" />
+      <type>
+        <code value="string" />
+      </type>
+    </element>
+    <element id="Extension.extension:duration">
+      <path value="Extension.extension" />
+      <sliceName value="duration" />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:duration.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="duration" />
+    </element>
+    <element id="Extension.extension:duration.value[x]:valueDecimal">
+      <path value="Extension.extension.valueDecimal" />
+      <sliceName value="valueDecimal" />
+      <type>
+        <code value="decimal" />
+      </type>
+    </element>
+    <element id="Extension.extension:distance">
+      <path value="Extension.extension" />
+      <sliceName value="distance" />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:distance.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="distance" />
+    </element>
+    <element id="Extension.extension:distance.value[x]:valueQuantity">
+      <path value="Extension.extension.valueQuantity" />
+      <sliceName value="valueQuantity" />
+      <type>
+        <code value="Quantity" />
+      </type>
+    </element>
+    <element id="Extension.extension:offset">
+      <path value="Extension.extension" />
+      <sliceName value="offset" />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:offset.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="offset" />
+    </element>
+    <element id="Extension.extension:offset.value[x]:valueDecimal">
+      <path value="Extension.extension.valueDecimal" />
+      <sliceName value="valueDecimal" />
+      <type>
+        <code value="decimal" />
+      </type>
+    </element>
+    <element id="Extension.url">
+      <path value="Extension.url" />
+      <fixedUri value="http://healthvault.com/fhir/stu3/StructuredDefinition/exercise-segment" />
+    </element>
+    <element id="Extension.value[x]">
+      <path value="Extension.value[x]" />
+      <max value="0" />
+    </element>
+  </differential>
+</StructureDefinition>

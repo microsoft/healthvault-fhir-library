@@ -32,20 +32,27 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             HealthVaultCodesToFhir.ConvertCodableValueToFhir(bg.MeasurementContext, fhirCodes);
             HealthVaultCodesToFhir.ConvertCodableValueToFhir(bg.GlucoseMeasurementType, fhirCodes);
 
+            var bloodGlucoseExtension = new Extension
+            {
+                Url = HealthVaultExtensions.BloodGlucose
+            };
+
             if (bg.OutsideOperatingTemperature.HasValue)
             {
-                observation.AddExtension(HealthVaultVocabularies.OutsideOperatingTemperatureExtensionName, new FhirBoolean(bg.OutsideOperatingTemperature.Value));
+                bloodGlucoseExtension.AddExtension(HealthVaultExtensions.OutsideOperatingTemperatureExtensionName, new FhirBoolean(bg.OutsideOperatingTemperature.Value));
             }
 
             if (bg.ReadingNormalcy.HasValue)
             {
-                observation.AddExtension(HealthVaultVocabularies.ReadingNormalcyExtensionName, new FhirString(bg.ReadingNormalcy.Value.ToString()));
+                bloodGlucoseExtension.AddExtension(HealthVaultExtensions.ReadingNormalcyExtensionName, new FhirString(bg.ReadingNormalcy.Value.ToString()));
             }
 
             if (bg.IsControlTest.HasValue)
             {
-                observation.AddExtension(HealthVaultVocabularies.IsControlTestExtensionName, new FhirBoolean(bg.IsControlTest.Value));                
+                bloodGlucoseExtension.AddExtension(HealthVaultExtensions.IsControlTestExtensionName, new FhirBoolean(bg.IsControlTest.Value));                
             }
+
+            observation.Extension.Add(bloodGlucoseExtension);
             
             observation.Code = new CodeableConcept() { Coding = fhirCodes };
             

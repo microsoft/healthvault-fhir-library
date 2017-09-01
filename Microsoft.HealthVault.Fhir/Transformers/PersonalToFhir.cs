@@ -41,7 +41,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
                 if (personal.BirthDate?.Time != null)
                 {
-                    patient.BirthDateElement.Extension.Add(new Extension(HealthVaultExtensions.PatientBirthTime,personal.BirthDate.Time.ToFhir()));
+                    patient.BirthDateElement.AddExtension(HealthVaultExtensions.PatientBirthTime,personal.BirthDate.Time.ToFhir());
                 }
             }
 
@@ -53,41 +53,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 patient.Deceased = new FhirBoolean(personal.IsDeceased);
             }
-
-            if (personal.BloodType != null)
-            {
-                patient.Extension.Add(new Extension(HealthVaultExtensions.PatientBloodType, personal.BloodType.ToFhir()));
-            }
-
-            if (!string.IsNullOrEmpty(personal.EmploymentStatus))
-            {
-                patient.Extension.Add(new Extension(HealthVaultExtensions.PatientEmploymentStatus,new FhirString(personal.EmploymentStatus)));
-            }
-
-            if (personal.Ethnicity != null)
-            {
-                patient.Extension.Add(new Extension(HealthVaultExtensions.PatientEthnicity, personal.Ethnicity.ToFhir()));
-            }
-
-            if (personal.HighestEducationLevel != null)
-            {
-                patient.Extension.Add(new Extension(HealthVaultExtensions.PatientHighestEducationLevel,personal.HighestEducationLevel.ToFhir()));
-            }
-
-            if (personal.IsDisabled.HasValue)
-            {
-                patient.Extension.Add(new Extension(HealthVaultExtensions.PatientIsDisabled, new FhirBoolean(personal.IsDisabled)));
-            }
-
-            if (personal.IsVeteran.HasValue)
-            {
-                patient.Extension.Add(new Extension(HealthVaultExtensions.PatientIsVeteran, new FhirBoolean(personal.IsVeteran)));
-            }
-
-            if (personal.MaritalStatus != null)
-            {
-                patient.Extension.Add(new Extension(HealthVaultExtensions.PatientMaritalStatus, personal.MaritalStatus.ToFhir()));
-            }
+            
+            patient.Extension.Add(PopulatePersonalExtension(personal));
 
             if (personal.Name != null)
             {
@@ -111,25 +78,15 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
                 if (personal.Name.Title != null)
                 {
-                    humanName.Extension.Add(new Extension(HealthVaultExtensions.PatientTitle,personal.Name.Title.ToFhir()));
+                    humanName.Prefix = new List<string>{ personal.Name.Title.Text };
                 }
 
                 if (personal.Name.Suffix != null)
                 {
-                    humanName.Extension.Add(new Extension(HealthVaultExtensions.PatientSuffix, personal.Name.Suffix.ToFhir()));
+                    humanName.Suffix = new List<string>{ personal.Name.Suffix.Text };
                 }
 
                 patient.Name.Add(humanName);
-            }
-
-            if (!string.IsNullOrEmpty(personal.OrganDonor))
-            {
-                patient.Extension.Add(new Extension(HealthVaultExtensions.PatientOrganDonor, new FhirString(personal.OrganDonor)));
-            }
-
-            if (personal.Religion != null)
-            {
-                patient.Extension.Add(new Extension(HealthVaultExtensions.PatientReligion, personal.Religion.ToFhir()));
             }
 
             if (!string.IsNullOrEmpty(personal.SocialSecurityNumber))
@@ -140,7 +97,63 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     }
                 );
             }
+
             return patient;
+        }
+
+        private static Extension PopulatePersonalExtension(Personal personal)
+        {
+            var personalExtension = new Extension
+            {
+                Url = HealthVaultExtensions.PatientPersonal
+            };
+
+            if (personal.BloodType != null)
+            {
+                personalExtension.AddExtension(HealthVaultExtensions.PatientBloodType, personal.BloodType.ToFhir());
+            }
+
+            if (!string.IsNullOrEmpty(personal.EmploymentStatus))
+            {
+                personalExtension.AddExtension(HealthVaultExtensions.PatientEmploymentStatus, new FhirString(personal.EmploymentStatus));
+            }
+
+            if (personal.Ethnicity != null)
+            {
+                personalExtension.AddExtension(HealthVaultExtensions.PatientEthnicity, personal.Ethnicity.ToFhir());
+            }
+
+            if (personal.HighestEducationLevel != null)
+            {
+                personalExtension.AddExtension(HealthVaultExtensions.PatientHighestEducationLevel, personal.HighestEducationLevel.ToFhir());
+            }
+
+            if (personal.IsDisabled.HasValue)
+            {
+                personalExtension.AddExtension(HealthVaultExtensions.PatientIsDisabled, new FhirBoolean(personal.IsDisabled));
+            }
+
+            if (personal.IsVeteran.HasValue)
+            {
+                personalExtension.AddExtension(HealthVaultExtensions.PatientIsVeteran, new FhirBoolean(personal.IsVeteran));
+            }
+
+            if (personal.MaritalStatus != null)
+            {
+                personalExtension.AddExtension(HealthVaultExtensions.PatientMaritalStatus, personal.MaritalStatus.ToFhir());
+            }
+
+            if (!string.IsNullOrEmpty(personal.OrganDonor))
+            {
+                personalExtension.AddExtension(HealthVaultExtensions.PatientOrganDonor, new FhirString(personal.OrganDonor));
+            }
+
+            if (personal.Religion != null)
+            {
+                personalExtension.AddExtension(HealthVaultExtensions.PatientReligion, personal.Religion.ToFhir());
+            }
+
+            return personalExtension;
         }
     }
 }

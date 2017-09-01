@@ -6,7 +6,6 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Collections.Generic;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Support;
 using Microsoft.HealthVault.Fhir.Codings;
@@ -93,17 +92,17 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 Url = HealthVaultExtensions.ExerciseDetail
             };
 
-            extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseDetailName, new FhirString(key)));
+            extension.AddExtension(HealthVaultExtensions.ExerciseDetailName, new FhirString(key));
 
-            extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseDetailType, new CodeableConcept{Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(new CodableValue(exerciseDetail.Name.Value, exerciseDetail.Name), null) }));
+            extension.AddExtension(HealthVaultExtensions.ExerciseDetailType, new CodeableConcept{Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(new CodableValue(exerciseDetail.Name.Value, exerciseDetail.Name), null) });
 
-            extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseDetailValue, new Quantity
+            extension.AddExtension(HealthVaultExtensions.ExerciseDetailValue, new Quantity
             {
                 Value = (decimal)exerciseDetail.Value.Value,
                 Unit = exerciseDetail.Value.Units.Text,
                 Code = exerciseDetail.Value.Units[0].Value,
                 System = HealthVaultCodesToFhir.GetVocabularyUrl(exerciseDetail.Value.Units[0].VocabularyName, exerciseDetail.Value.Units[0].Version),
-            }));
+            });
             return extension;
         }
 
@@ -114,30 +113,30 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 Url = HealthVaultExtensions.ExerciseSegment
             };
             
-            extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseSegmentActivity, new CodeableConcept { Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(segment.Activity, null) }));
+            extension.AddExtension(HealthVaultExtensions.ExerciseSegmentActivity, new CodeableConcept { Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(segment.Activity, null) });
 
             if (!string.IsNullOrEmpty(segment.Title))
             {
-                extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseSegmentTitle, new FhirString(segment.Title)));
+                extension.AddExtension(HealthVaultExtensions.ExerciseSegmentTitle, new FhirString(segment.Title));
             }
 
             if (segment.Duration.HasValue)
             { 
-                extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseSegmentDuration, new FhirDecimal((decimal)segment.Duration)));
+                extension.AddExtension(HealthVaultExtensions.ExerciseSegmentDuration, new FhirDecimal((decimal)segment.Duration));
             }
 
             if (segment.Distance != null)
             {
-                extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseSegmentDistance, new Quantity
+                extension.AddExtension(HealthVaultExtensions.ExerciseSegmentDistance, new Quantity
                 {
                     Value = (decimal)segment.Distance.Value,
                     Unit = UnitAbbreviations.Meter
-                }));
+                });
             }
 
             if (segment.Offset.HasValue)
             {
-                extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseSegmentOffset, new FhirDecimal((decimal)segment.Offset)));
+                extension.AddExtension(HealthVaultExtensions.ExerciseSegmentOffset, new FhirDecimal((decimal)segment.Offset));
             }
 
             if (segment.Details != null)

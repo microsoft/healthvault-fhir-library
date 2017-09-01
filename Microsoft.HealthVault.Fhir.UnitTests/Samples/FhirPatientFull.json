@@ -2,150 +2,160 @@
     "resourceType": "Patient",
     "extension": [
         {
-            "url": "http://healthvault.com/fhir-extensions/thing-flags",
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/thing-flags",
             "valueString": "None"
         },
         {
-            "url": "http://healthvault.com/fhir-extensions/thing-state",
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/thing-state",
             "valueString": "Active"
         },
         {
-            "url": "http://healthvault.com/extensions/patient-birth-year",
-            "valueDecimal": 1975
-        },
-        {
-            "url": "http://healthvault.com/extensions/first-day-of-week",
-            "valueCoding": {
-                "code": "0",
-                "display": "Sunday"
-            }
-        },
-        {
-            "url": "http://healthvault.com/extensions/patient-basic-address",
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/basic-v2",
             "extension": [
                 {
-                    "url": "city",
-                    "valueString": "Redmond"
+                    "url": "birth-year",
+                    "valueInteger": 1975
                 },
                 {
-                    "url": "state",
+                    "url": "first-day-of-week",
+                    "valueCoding": {
+                        "code": "0",
+                        "display": "Sunday"
+                    }
+                },
+                {
+                    "url": "basic-address",
+                    "extension": [
+                        {
+                            "url": "city",
+                            "valueString": "Redmond"
+                        },
+                        {
+                            "url": "state",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "system": "http://healthvault.com/vocabularies/",
+                                        "version": "1",
+                                        "code": "states:WA",
+                                        "display": "Washington"
+                                    }
+                                ],
+                                "text": "Washington"
+                            }
+                        },
+                        {
+                            "url": "postal-code",
+                            "valueString": "98052"
+                        },
+                        {
+                            "url": "country",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "system": "iso",
+                                        "version": "1",
+                                        "code": "iso3166:US",
+                                        "display": "United States of America"
+                                    }
+                                ],
+                                "text": "United States of America"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/personal",
+            "extension": [
+                {
+                    "url": "blood-type",
                     "valueCodeableConcept": {
                         "coding": [
                             {
                                 "system": "http://healthvault.com/vocabularies/",
                                 "version": "1",
-                                "code": "states:WA",
-                                "display": "Washington"
+                                "code": "blood-types:A+",
+                                "display": "A+"
                             }
                         ],
-                        "text": "Washington"
+                        "text": "A+"
                     }
                 },
                 {
-                    "url": "postal-code",
-                    "valueString": "98052"
+                    "url": "employment-status",
+                    "valueString": "Employed"
                 },
                 {
-                    "url": "country",
+                    "url": "ethnicity",
                     "valueCodeableConcept": {
                         "coding": [
                             {
-                                "system": "iso",
+                                "system": "http://healthvault.com/vocabularies/",
                                 "version": "1",
-                                "code": "iso3166:US",
-                                "display": "United States of America"
+                                "code": "ethnicity-types:8",
+                                "display": "Other Race"
                             }
                         ],
-                        "text": "United States of America"
+                        "text": "Other Race"
+                    }
+                },
+                {
+                    "url": "highest-education-level",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "system": "http://healthvault.com/vocabularies/",
+                                "version": "1",
+                                "code": "Education-level:ColG",
+                                "display": "College Graduate"
+                            }
+                        ],
+                        "text": "College Graduate"
+                    }
+                },
+                {
+                    "url": "is-disabled",
+                    "valueBoolean": false
+                },
+                {
+                    "url": "is-veteran",
+                    "valueBoolean": true
+                },
+                {
+                    "url": "marital-status",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "system": "http://healthvault.com/vocabularies/",
+                                "version": "1",
+                                "code": "marital-status:NM",
+                                "display": "Never Married"
+                            }
+                        ],
+                        "text": "Never Married"
+                    }
+                },
+                {
+                    "url": "organ-donor",
+                    "valueString": "Organ Donor"
+                },
+                {
+                    "url": "religion",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "system": "http://healthvault.com/vocabularies/",
+                                "version": "1",
+                                "code": "religion:Agn",
+                                "display": "Agnostic"
+                            }
+                        ],
+                        "text": "Agnostic"
                     }
                 }
             ]
-        },
-        {
-            "url": "http://healthvault.com/extensions/patient-blood-type",
-            "valueCodeableConcept": {
-                "coding": [
-                    {
-                        "system": "http://healthvault.com/vocabularies/",
-                        "version": "1",
-                        "code": "blood-types:A+",
-                        "display": "A+"
-                    }
-                ],
-                "text": "A+"
-            }
-        },
-        {
-            "url": "http://healthvault.com/extensions/patient-employment-status",
-            "valueString": "Employed"
-        },
-        {
-            "url": "http://healthvault.com/extensions/patient-ethnicity",
-            "valueCodeableConcept": {
-                "coding": [
-                    {
-                        "system": "http://healthvault.com/vocabularies/",
-                        "version": "1",
-                        "code": "ethnicity-types:8",
-                        "display": "Other Race"
-                    }
-                ],
-                "text": "Other Race"
-            }
-        },
-        {
-            "url": "http://healthvault.com/extensions/patient-highest-education-level",
-            "valueCodeableConcept": {
-                "coding": [
-                    {
-                        "system": "http://healthvault.com/vocabularies/",
-                        "version": "1",
-                        "code": "Education-level:ColG",
-                        "display": "College Graduate"
-                    }
-                ],
-                "text": "College Graduate"
-            }
-        },
-        {
-            "url": "http://healthvault.com/extensions/patient-is-disabled",
-            "valueBoolean": false
-        },
-        {
-            "url": "http://healthvault.com/extensions/patient-is-veteran",
-            "valueBoolean": true
-        },
-        {
-            "url": "http://healthvault.com/extensions/patient-marital-status",
-            "valueCodeableConcept": {
-                "coding": [
-                    {
-                        "system": "http://healthvault.com/vocabularies/",
-                        "version": "1",
-                        "code": "marital-status:NM",
-                        "display": "Never Married"
-                    }
-                ],
-                "text": "Never Married"
-            }
-        },
-        {
-            "url": "http://healthvault.com/extensions/patient-organ-donor",
-            "valueString": "Organ Donor"
-        },
-        {
-            "url": "http://healthvault.com/extensions/patient-religion",
-            "valueCodeableConcept": {
-                "coding": [
-                    {
-                        "system": "http://healthvault.com/vocabularies/",
-                        "version": "1",
-                        "code": "religion:Agn",
-                        "display": "Agnostic"
-                    }
-                ],
-                "text": "Agnostic"
-            }
         }
     ],
     "identifier": [
@@ -156,41 +166,17 @@
     ],
     "name": [
         {
-            "extension": [
-                {
-                    "url": "patient-title",
-                    "valueCodeableConcept": {
-                        "coding": [
-                            {
-                                "system": "http://healthvault.com/vocabularies/",
-                                "version": "1",
-                                "code": "name-prefixes:Dr",
-                                "display": "Dr."
-                            }
-                        ],
-                        "text": "Dr."
-                    }
-                },
-                {
-                    "url": "patient-suffix",
-                    "valueCodeableConcept": {
-                        "coding": [
-                            {
-                                "system": "http://healthvault.com/vocabularies/",
-                                "version": "1",
-                                "code": "name-suffixes:Jr",
-                                "display": "Junior"
-                            }
-                        ],
-                        "text": "Junior"
-                    }
-                }
-            ],
             "text": "Dr. John Phillip Doe, Jr.",
             "family": "Doe",
             "given": [
                 "John",
                 "Phillip"
+            ],
+            "prefix": [
+                "Dr."
+            ],
+            "suffix": [
+                "Junior"
             ]
         }
     ],
@@ -198,7 +184,7 @@
         {
             "extension": [
                 {
-                    "url": "description",
+                    "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/description",
                     "valueString": "Address 1"
                 }
             ],
@@ -209,7 +195,7 @@
         {
             "extension": [
                 {
-                    "url": "description",
+                    "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/description",
                     "valueString": "Address 2"
                 }
             ],
@@ -219,7 +205,7 @@
         {
             "extension": [
                 {
-                    "url": "description",
+                    "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/description",
                     "valueString": "Phone 1"
                 }
             ],
@@ -230,7 +216,7 @@
         {
             "extension": [
                 {
-                    "url": "description",
+                    "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/description",
                     "valueString": "Phone 2"
                 }
             ],
@@ -243,7 +229,7 @@
     "_birthDate": {
         "extension": [
             {
-                "url": "patient-birth-time",
+                "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/birth-time",
                 "valueTime": "01:30:34.015"
             }
         ]
@@ -253,7 +239,7 @@
         {
             "extension": [
                 {
-                    "url": "is-primary",
+                    "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/is-primary",
                     "valueBoolean": true
                 }
             ],
