@@ -209,6 +209,7 @@
     <EmbeddedResource Include="Samples\FhirBodyDimension.json" />
     <EmbeddedResource Include="Samples\FhirExercise.json" />
     <EmbeddedResource Include="Samples\FhirPatientFull.json" />
+    <EmbeddedResource Include="Samples\HealthVaultToFhirBloodGlucose.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.HealthVault.Fhir\Microsoft.HealthVault.Fhir.csproj">

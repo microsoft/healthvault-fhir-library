@@ -59,7 +59,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
 
             ThingFlags flags;
-            var extensionFlag = observation.GetExtension(HealthVaultVocabularies.FlagsFhirExtensionName);
+            var extensionFlag = observation.GetExtension(HealthVaultExtensions.FlagsFhirExtensionName);
             if (extensionFlag != null)
             {
                 if (extensionFlag.Value is FhirString && Enum.TryParse<ThingFlags>((extensionFlag.Value as FhirString).ToString(), out flags))

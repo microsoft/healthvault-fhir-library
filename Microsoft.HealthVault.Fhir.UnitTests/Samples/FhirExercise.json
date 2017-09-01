@@ -5,22 +5,22 @@
     },
     "extension": [
         {
-            "url": "http://healthvault.com/fhir/stu3/ValueSet/fhir-extensions/thing-flags",
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/thing-flags",
             "valueString": "None"
         },
         {
-            "url": "http://healthvault.com/fhir/stu3/ValueSet/fhir-extensions/thing-state",
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/thing-state",
             "valueString": "Active"
         },
         {
-            "url": "http://healthvault.com/extensions/exercise-detail",
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/exercise-detail",
             "extension": [
                 {
-                    "url": "exercise-detail-name",
+                    "url": "name",
                     "valueString": "lap 1"
                 },
                 {
-                    "url": "exercise-detail-type",
+                    "url": "type",
                     "valueCoding": {
                         "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/exercise-activities",
                         "version": "1",
@@ -28,7 +28,7 @@
                     }
                 },
                 {
-                    "url": "exercise-detail-value",
+                    "url": "value",
                     "valueQuantity": {
                         "value": 30,
                         "unit": "seconds",
@@ -39,14 +39,14 @@
             ]
         },
         {
-            "url": "http://healthvault.com/extensions/exercise-detail",
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/exercise-detail",
             "extension": [
                 {
-                    "url": "exercise-detail-name",
+                    "url": "name",
                     "valueString": "lap 2"
                 },
                 {
-                    "url": "exercise-detail-type",
+                    "url": "type",
                     "valueCoding": {
                         "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/exercise-activities",
                         "version": "1",
@@ -54,7 +54,7 @@
                     }
                 },
                 {
-                    "url": "exercise-detail-value",
+                    "url": "value",
                     "valueQuantity": {
                         "value": 28,
                         "unit": "seconds",
@@ -65,10 +65,10 @@
             ]
         },
         {
-            "url": "http://healthvault.com/extensions/exercise-segment",
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/exercise-segment",
             "extension": [
                 {
-                    "url": "exercise-segment-activity",
+                    "url": "activity",
                     "valueCodeableConcept": {
                         "coding": [
                             {
@@ -81,33 +81,33 @@
                     }
                 },
                 {
-                    "url": "exercise-segment-title",
+                    "url": "title",
                     "valueString": "Segment 1"
                 },
                 {
-                    "url": "exercise-segment-duration",
+                    "url": "duration",
                     "valueDecimal": 180
                 },
                 {
-                    "url": "exercise-segment-distance",
+                    "url": "distance",
                     "valueQuantity": {
                         "value": 31.5,
                         "unit": "m"
                     }
                 },
                 {
-                    "url": "exercise-segment-offset",
+                    "url": "offset",
                     "valueDecimal": 43.3
                 },
                 {
-                    "url": "http://healthvault.com/extensions/exercise-detail",
+                    "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/exercise-detail",
                     "extension": [
                         {
-                            "url": "exercise-detail-name",
+                            "url": "name",
                             "valueString": "segment 1 - lap 1"
                         },
                         {
-                            "url": "exercise-detail-type",
+                            "url": "type",
                             "valueCoding": {
                                 "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/exercise-activities",
                                 "version": "1",
@@ -115,7 +115,7 @@
                             }
                         },
                         {
-                            "url": "exercise-detail-value",
+                            "url": "value",
                             "valueQuantity": {
                                 "value": 46.2,
                                 "unit": "seconds",
@@ -126,14 +126,14 @@
                     ]
                 },
                 {
-                    "url": "http://healthvault.com/extensions/exercise-detail",
+                    "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/exercise-detail",
                     "extension": [
                         {
-                            "url": "exercise-detail-name",
+                            "url": "name",
                             "valueString": "segment 1 - lap 2"
                         },
                         {
-                            "url": "exercise-detail-type",
+                            "url": "type",
                             "valueCoding": {
                                 "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/exercise-activities",
                                 "version": "1",
@@ -141,7 +141,7 @@
                             }
                         },
                         {
-                            "url": "exercise-detail-value",
+                            "url": "value",
                             "valueQuantity": {
                                 "value": 21,
                                 "unit": "seconds",
@@ -165,7 +165,7 @@
             }
         ]
     },
-    "effectiveDateTime": "2017-08-29T16:10:46.071-07:00",
+    "effectiveDateTime": "2017-08-25T16:05:54.081-07:00",
     "component": [
         {
             "code": {

@@ -35,6 +35,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     {
         internal static Patient ToFhirInternal(ItemTypes.BasicV2 basic, Patient patient)
         {
+            var basicV2Extension = new Extension
+            {
+                Url = HealthVaultExtensions.PatientBasicV2
+            };
+
             if (basic.Gender.HasValue)
             {
                 switch (basic.Gender.Value)
@@ -53,28 +58,17 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             if (basic.BirthYear.HasValue)
             {
-                patient.Extension.Add(
-                    new Extension
-                    {
-                        Url = HealthVaultExtensions.PatientBirthYear,
-                        Value = new FhirDecimal(basic.BirthYear)
-                    }
-                );
+                basicV2Extension.AddExtension(HealthVaultExtensions.PatientBirthYear, new Integer(basic.BirthYear));
             }
 
             if (basic.FirstDayOfWeek.HasValue)
             {
-                patient.Extension.Add(
-                    new Extension
+                basicV2Extension.AddExtension(HealthVaultExtensions.PatientFirstDayOfWeek,
+                    new Coding
                     {
-                        Url = HealthVaultExtensions.FirstDayOfWeek,
-                        Value = new Coding
-                        {
-                            Code = ((int)basic.FirstDayOfWeek).ToString(),
-                            Display = basic.FirstDayOfWeek.Value.ToString()
-                        }
-                    }
-                );
+                        Code = ((int)basic.FirstDayOfWeek).ToString(),
+                        Display = basic.FirstDayOfWeek.Value.ToString()
+                    });
             }
 
             if (basic.Languages != null && basic.Languages.Count > 0)
@@ -96,11 +90,13 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 Url = HealthVaultExtensions.PatientBasicAddress
             };
 
-            basicAddress.Extension.Add(new Extension(HealthVaultExtensions.PatientBasicAddressCity, new FhirString(basic.City)));
-            basicAddress.Extension.Add(new Extension(HealthVaultExtensions.PatientBasicAddressState, basic.StateOrProvince.ToFhir()));
-            basicAddress.Extension.Add(new Extension(HealthVaultExtensions.PatientBasicAddressPostalCode, new FhirString(basic.PostalCode)));
-            basicAddress.Extension.Add(new Extension(HealthVaultExtensions.PatientBasicAddressCountry, basic.Country.ToFhir()));
-            patient.Extension.Add(basicAddress);
+            basicAddress.AddExtension(HealthVaultExtensions.PatientBasicAddressCity, new FhirString(basic.City));
+            basicAddress.AddExtension(HealthVaultExtensions.PatientBasicAddressState, basic.StateOrProvince.ToFhir());
+            basicAddress.AddExtension(HealthVaultExtensions.PatientBasicAddressPostalCode, new FhirString(basic.PostalCode));
+            basicAddress.AddExtension(HealthVaultExtensions.PatientBasicAddressCountry, basic.Country.ToFhir());
+            basicV2Extension.Extension.Add(basicAddress);
+
+            patient.Extension.Add(basicV2Extension);
 
             return patient;
         }

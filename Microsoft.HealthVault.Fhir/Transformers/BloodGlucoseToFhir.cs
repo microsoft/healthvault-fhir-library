@@ -30,28 +30,35 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         {
             observation.Method = bg.GlucoseMeasurementType.ToFhir();
 
+            var bloodGlucoseExtension = new Extension
+            {
+                Url = HealthVaultExtensions.BloodGlucose
+            };
+
             if (bg.MeasurementContext != null)
             {
-                observation.AddExtension(HealthVaultVocabularies.BloodGlucoseMeasurementContext, bg.MeasurementContext.ToFhir() );
+                bloodGlucoseExtension.AddExtension(HealthVaultExtensions.BloodGlucoseMeasurementContext, bg.MeasurementContext.ToFhir());
             }
 
             if (bg.OutsideOperatingTemperature.HasValue)
             {
-                observation.AddExtension(HealthVaultVocabularies.OutsideOperatingTemperatureExtensionName, new FhirBoolean(bg.OutsideOperatingTemperature.Value));
+                bloodGlucoseExtension.AddExtension(HealthVaultExtensions.OutsideOperatingTemperatureExtensionName, new FhirBoolean(bg.OutsideOperatingTemperature.Value));
             }
 
             if (bg.ReadingNormalcy.HasValue)
             {
-                observation.AddExtension(HealthVaultVocabularies.ReadingNormalcyExtensionName, new FhirString(bg.ReadingNormalcy.Value.ToString()));
+                bloodGlucoseExtension.AddExtension(HealthVaultExtensions.ReadingNormalcyExtensionName, new FhirString(bg.ReadingNormalcy.Value.ToString()));
             }
 
             if (bg.IsControlTest.HasValue)
             {
-                observation.AddExtension(HealthVaultVocabularies.IsControlTestExtensionName, new FhirBoolean(bg.IsControlTest.Value));                
+                bloodGlucoseExtension.AddExtension(HealthVaultExtensions.IsControlTestExtensionName, new FhirBoolean(bg.IsControlTest.Value));                
             }
 
+            observation.Extension.Add(bloodGlucoseExtension);
+
             observation.Code = HealthVaultVocabularies.GenerateCodeableConcept(HealthVaultThingTypeNameCodes.BloodGlucose);
-            
+
             var quantity = new Quantity((decimal)bg.Value.Value, UnitAbbreviations.MillimolesPerLiter);
             observation.Value = quantity;
             observation.Effective = new FhirDateTime(bg.When.ToLocalDateTime().ToDateTimeUnspecified());

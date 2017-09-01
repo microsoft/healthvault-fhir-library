@@ -2,143 +2,153 @@
     "resourceType": "Patient",
     "extension": [
         {
-            "url": "http://healthvault.com/fhir/stu3/ValueSet/fhir-extensions/thing-flags",
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/thing-flags",
             "valueString": "None"
         },
         {
-            "url": "http://healthvault.com/fhir/stu3/ValueSet/fhir-extensions/thing-state",
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/thing-state",
             "valueString": "Active"
         },
         {
-            "url": "http://healthvault.com/extensions/patient-birth-year",
-            "valueDecimal": 1975
-        },
-        {
-            "url": "http://healthvault.com/extensions/first-day-of-week",
-            "valueCoding": {
-                "code": "0",
-                "display": "Sunday"
-            }
-        },
-        {
-            "url": "http://healthvault.com/extensions/patient-basic-address",
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/basic-v2",
             "extension": [
                 {
-                    "url": "city",
-                    "valueString": "Redmond"
+                    "url": "birth-year",
+                    "valueInteger": 1975
                 },
                 {
-                    "url": "state",
-                    "valueCodeableConcept": {
-                        "coding": [
-                            {
-                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/states",
-                                "version": "1",
-                                "code": "WA"
-                            }
-                        ],
-                        "text": "Washington"
+                    "url": "first-day-of-week",
+                    "valueCoding": {
+                        "code": "0",
+                        "display": "Sunday"
                     }
                 },
                 {
-                    "url": "postal-code",
-                    "valueString": "98052"
-                },
-                {
-                    "url": "country",
-                    "valueCodeableConcept": {
-                        "coding": [
-                            {
-                                "system": "http://healthvault.com/fhir/stu3/ValueSet/iso/iso3166",
-                                "version": "1",
-                                "code": "US"
+                    "url": "basic-address",
+                    "extension": [
+                        {
+                            "url": "city",
+                            "valueString": "Redmond"
+                        },
+                        {
+                            "url": "state",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/states",
+                                        "version": "1",
+                                        "code": "WA"
+                                    }
+                                ],
+                                "text": "Washington"
                             }
-                        ],
-                        "text": "United States of America"
-                    }
+                        },
+                        {
+                            "url": "postal-code",
+                            "valueString": "98052"
+                        },
+                        {
+                            "url": "country",
+                            "valueCodeableConcept": {
+                                "coding": [
+                                    {
+                                        "system": "http://healthvault.com/fhir/stu3/ValueSet/iso/iso3166",
+                                        "version": "1",
+                                        "code": "US"
+                                    }
+                                ],
+                                "text": "United States of America"
+                            }
+                        }
+                    ]
                 }
             ]
         },
         {
-            "url": "http://healthvault.com/extensions/patient-blood-type",
-            "valueCodeableConcept": {
-                "coding": [
-                    {
-                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/blood-types",
-                        "version": "1",
-                        "code": "A+"
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/personal",
+            "extension": [
+                {
+                    "url": "blood-type",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/blood-types",
+                                "version": "1",
+                                "code": "A+"
+                            }
+                        ],
+                        "text": "A+"
                     }
-                ],
-                "text": "A+"
-            }
-        },
-        {
-            "url": "http://healthvault.com/extensions/patient-employment-status",
-            "valueString": "Employed"
-        },
-        {
-            "url": "http://healthvault.com/extensions/patient-ethnicity",
-            "valueCodeableConcept": {
-                "coding": [
-                    {
-                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/ethnicity-types",
-                        "version": "1",
-                        "code": "8"
+                },
+                {
+                    "url": "employment-status",
+                    "valueString": "Employed"
+                },
+                {
+                    "url": "ethnicity",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/ethnicity-types",
+                                "version": "1",
+                                "code": "8"
+                            }
+                        ],
+                        "text": "Other Race"
                     }
-                ],
-                "text": "Other Race"
-            }
-        },
-        {
-            "url": "http://healthvault.com/extensions/patient-highest-education-level",
-            "valueCodeableConcept": {
-                "coding": [
-                    {
-                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/Education-level",
-                        "version": "1",
-                        "code": "ColG"
+                },
+                {
+                    "url": "highest-education-level",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/Education-level",
+                                "version": "1",
+                                "code": "ColG"
+                            }
+                        ],
+                        "text": "College Graduate"
                     }
-                ],
-                "text": "College Graduate"
-            }
-        },
-        {
-            "url": "http://healthvault.com/extensions/patient-is-disabled",
-            "valueBoolean": false
-        },
-        {
-            "url": "http://healthvault.com/extensions/patient-is-veteran",
-            "valueBoolean": true
-        },
-        {
-            "url": "http://healthvault.com/extensions/patient-marital-status",
-            "valueCodeableConcept": {
-                "coding": [
-                    {
-                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/marital-status",
-                        "version": "1",
-                        "code": "NM"
+                },
+                {
+                    "url": "is-disabled",
+                    "valueBoolean": false
+                },
+                {
+                    "url": "is-veteran",
+                    "valueBoolean": true
+                },
+                {
+                    "url": "marital-status",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/marital-status",
+                                "version": "1",
+                                "code": "NM"
+                            }
+                        ],
+                        "text": "Never Married"
                     }
-                ],
-                "text": "Never Married"
-            }
-        },
-        {
-            "url": "http://healthvault.com/extensions/patient-organ-donor",
-            "valueString": "Organ Donor"
-        },
-        {
-            "url": "http://healthvault.com/extensions/patient-religion",
-            "valueCodeableConcept": {
-                "coding": [
-                    {
-                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/religion",
-                        "version": "1",
-                        "code": "Agn"
+                },
+                {
+                    "url": "organ-donor",
+                    "valueString": "Organ Donor"
+                },
+                {
+                    "url": "religion",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/religion",
+                                "version": "1",
+                                "code": "Agn"
+                            }
+                        ],
+                        "text": "Agnostic"
                     }
-                ],
-                "text": "Agnostic"
-            }
+                }
+            ]
         }
     ],
     "identifier": [
@@ -149,39 +159,17 @@
     ],
     "name": [
         {
-            "extension": [
-                {
-                    "url": "patient-title",
-                    "valueCodeableConcept": {
-                        "coding": [
-                            {
-                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/name-prefixes",
-                                "version": "1",
-                                "code": "Dr"
-                            }
-                        ],
-                        "text": "Dr."
-                    }
-                },
-                {
-                    "url": "patient-suffix",
-                    "valueCodeableConcept": {
-                        "coding": [
-                            {
-                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/name-suffixes",
-                                "version": "1",
-                                "code": "Jr"
-                            }
-                        ],
-                        "text": "Junior"
-                    }
-                }
-            ],
             "text": "Dr. John Phillip Doe, Jr.",
             "family": "Doe",
             "given": [
                 "John",
                 "Phillip"
+            ],
+            "prefix": [
+                "Dr."
+            ],
+            "suffix": [
+                "Junior"
             ]
         }
     ],
@@ -189,7 +177,7 @@
         {
             "extension": [
                 {
-                    "url": "description",
+                    "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/description",
                     "valueString": "Address 1"
                 }
             ],
@@ -200,7 +188,7 @@
         {
             "extension": [
                 {
-                    "url": "description",
+                    "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/description",
                     "valueString": "Address 2"
                 }
             ],
@@ -210,7 +198,7 @@
         {
             "extension": [
                 {
-                    "url": "description",
+                    "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/description",
                     "valueString": "Phone 1"
                 }
             ],
@@ -221,7 +209,7 @@
         {
             "extension": [
                 {
-                    "url": "description",
+                    "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/description",
                     "valueString": "Phone 2"
                 }
             ],
@@ -234,7 +222,7 @@
     "_birthDate": {
         "extension": [
             {
-                "url": "patient-birth-time",
+                "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/birth-time",
                 "valueTime": "01:30:34.015"
             }
         ]
@@ -244,7 +232,7 @@
         {
             "extension": [
                 {
-                    "url": "is-primary",
+                    "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/is-primary",
                     "valueBoolean": true
                 }
             ],

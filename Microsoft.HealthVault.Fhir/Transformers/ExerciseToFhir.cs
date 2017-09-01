@@ -93,17 +93,17 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 Url = HealthVaultExtensions.ExerciseDetail
             };
 
-            extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseDetailName, new FhirString(key)));
+            extension.AddExtension(HealthVaultExtensions.ExerciseDetailName, new FhirString(key));
 
-            extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseDetailType, exerciseDetail.Name.ToFhir()));
+            extension.AddExtension(HealthVaultExtensions.ExerciseDetailType, exerciseDetail.Name.ToFhir());
 
-            extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseDetailValue, new Quantity
+            extension.AddExtension(HealthVaultExtensions.ExerciseDetailValue, new Quantity
             {
                 Value = (decimal)exerciseDetail.Value.Value,
                 Unit = exerciseDetail.Value.Units.Text,
                 Code = exerciseDetail.Value.Units[0].Value,
                 System = HealthVaultVocabularies.GenerateSystemUrl(exerciseDetail.Value.Units[0].VocabularyName, exerciseDetail.Value.Units[0].Family),
-            }));
+            });
             return extension;
         }
 
@@ -114,30 +114,30 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 Url = HealthVaultExtensions.ExerciseSegment
             };
             
-            extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseSegmentActivity, segment.Activity.ToFhir()));
+            extension.AddExtension(HealthVaultExtensions.ExerciseSegmentActivity, segment.Activity.ToFhir());
 
             if (!string.IsNullOrEmpty(segment.Title))
             {
-                extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseSegmentTitle, new FhirString(segment.Title)));
+                extension.AddExtension(HealthVaultExtensions.ExerciseSegmentTitle, new FhirString(segment.Title));
             }
 
             if (segment.Duration.HasValue)
             { 
-                extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseSegmentDuration, new FhirDecimal((decimal)segment.Duration)));
+                extension.AddExtension(HealthVaultExtensions.ExerciseSegmentDuration, new FhirDecimal((decimal)segment.Duration));
             }
 
             if (segment.Distance != null)
             {
-                extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseSegmentDistance, new Quantity
+                extension.AddExtension(HealthVaultExtensions.ExerciseSegmentDistance, new Quantity
                 {
                     Value = (decimal)segment.Distance.Value,
                     Unit = UnitAbbreviations.Meter
-                }));
+                });
             }
 
             if (segment.Offset.HasValue)
             {
-                extension.Extension.Add(new Extension(HealthVaultExtensions.ExerciseSegmentOffset, new FhirDecimal((decimal)segment.Offset)));
+                extension.AddExtension(HealthVaultExtensions.ExerciseSegmentOffset, new FhirDecimal((decimal)segment.Offset));
             }
 
             if (segment.Details != null)

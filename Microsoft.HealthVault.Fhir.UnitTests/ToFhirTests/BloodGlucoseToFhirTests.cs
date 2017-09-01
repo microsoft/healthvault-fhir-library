@@ -39,10 +39,12 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.IsNotNull(observation);
             Assert.AreEqual(101, ((Quantity)observation.Value).Value);
             Assert.AreEqual("Whole blood", observation.Method.Text);
-            Assert.AreEqual("Before meal", observation.GetExtensionValue<CodeableConcept>(HealthVaultVocabularies.BloodGlucoseMeasurementContext).Text);
-            Assert.AreEqual(true, observation.GetBoolExtension(HealthVaultVocabularies.OutsideOperatingTemperatureExtensionName));
-            Assert.AreEqual(false, observation.GetBoolExtension(HealthVaultVocabularies.IsControlTestExtensionName));
-            Assert.AreEqual("Normal", observation.GetStringExtension(HealthVaultVocabularies.ReadingNormalcyExtensionName));
+
+            var bloodGlucoseExtension = observation.GetExtension(HealthVaultExtensions.BloodGlucose);
+            Assert.AreEqual("Before meal", bloodGlucoseExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.BloodGlucoseMeasurementContext).Text);
+            Assert.AreEqual(true, bloodGlucoseExtension.GetBoolExtension(HealthVaultExtensions.OutsideOperatingTemperatureExtensionName));
+            Assert.AreEqual(false, bloodGlucoseExtension.GetBoolExtension(HealthVaultExtensions.IsControlTestExtensionName));
+            Assert.AreEqual("Normal", bloodGlucoseExtension.GetStringExtension(HealthVaultExtensions.ReadingNormalcyExtensionName));
         }
     }
 }

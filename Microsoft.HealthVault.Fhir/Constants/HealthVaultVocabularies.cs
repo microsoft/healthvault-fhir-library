@@ -30,8 +30,6 @@ namespace Microsoft.HealthVault.Fhir.Constants
 
         public const string VitalStatistics = "vital-statistics";
         public const string ThingTypeNames = "thing-type-names";
-        public const string BloodGlucoseMeasurementContext = BaseUri + "glucose-measurement-context";
-        public const string BloodGlucoseMeasurementType = "glucose-measurement-type";
 
         public const string BodyCompositionMeasurementMethods = "body-composition-measurement-methods";
         public const string BodyCompositionSites = "body-composition-sites";
@@ -55,10 +53,6 @@ namespace Microsoft.HealthVault.Fhir.Constants
 
         public const string StateFhirExtensionName = BaseUri + "fhir-extensions/thing-state";
         public const string FlagsFhirExtensionName = BaseUri + "fhir-extensions/thing-flags";
-        
-        public const string OutsideOperatingTemperatureExtensionName = BaseUri + "blood-glucose/outside-operating-temperature";
-        public const string ReadingNormalcyExtensionName = BaseUri + "blood-glucose/reading-normalcy";
-        public const string IsControlTestExtensionName = BaseUri + "blood-glucose/is-control-test";
 
         public const string IrregularHeartBeatExtensionName = BaseUri + "vital-signs/blood-pressure/irregular-heartbeat";
      
