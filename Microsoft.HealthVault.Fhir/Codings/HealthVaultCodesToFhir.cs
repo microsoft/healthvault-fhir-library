@@ -16,6 +16,14 @@ namespace Microsoft.HealthVault.Fhir.Codings
 {
     internal class HealthVaultCodesToFhir
     {
+        public static CodeableConcept ConvertCodableValueToFhir(CodableValue codableValue)
+        {
+            return new CodeableConcept
+            {
+                Text = codableValue.Text,
+                Coding = ConvertCodableValueToFhir(codableValue, null)
+            };
+        }
         /// <summary>
         /// This function converts codable values into codings for FHIR. It takes a list of codings and returns it after
         /// adding the new codings. 
