@@ -25,7 +25,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 foreach (var component in observation.Component)
                 {
                     var componentValue = component.Value as Quantity;
-                    if (componentValue?.Value == null  )
+                    if (componentValue?.Value == null)
                     {
                         if(component.Code != null)
                         { 
