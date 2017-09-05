@@ -181,6 +181,7 @@
     <Compile Include="ToFhirTests\PersonalToFhirTests.cs" />
     <Compile Include="ToFhirTests\SleepJournalAMToFhirTests.cs" />
     <Compile Include="ToFhirTests\WeightToFhirTests.cs" />
+    <Compile Include="ToHealthVaultTests\FhirProcedureToHealthVaultProcedure.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBloodPressure.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyCompositionTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyDimensionTests.cs" />
@@ -209,6 +210,7 @@
     <EmbeddedResource Include="Samples\FhirBodyDimension.json" />
     <EmbeddedResource Include="Samples\FhirExercise.json" />
     <EmbeddedResource Include="Samples\FhirPatientFull.json" />
+    <EmbeddedResource Include="Samples\FhirProcedure.json" />
     <EmbeddedResource Include="Samples\HealthVaultToFhirBloodGlucose.json" />
   </ItemGroup>
   <ItemGroup>
