@@ -6,14 +6,15 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Codings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Codings;
+using Microsoft.HealthVault.Fhir.FhirExtensions.Helpers;
+using Microsoft.HealthVault.ItemTypes;
 using FhirMedication = Hl7.Fhir.Model.Medication;
 using HVMedication = Microsoft.HealthVault.ItemTypes.Medication;
-using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
@@ -31,11 +32,10 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         internal static MedicationStatement ToFhirInternal(HVMedication hvMedication, MedicationStatement medicationStatement)
         {
             var embeddedMedication = new FhirMedication();
-            string embeddedMedicationId = "med" + Guid.NewGuid();
-            embeddedMedication.Id = embeddedMedicationId;
+            embeddedMedication.Id = "med" + Guid.NewGuid();
 
             medicationStatement.Contained.Add(ToFhirInternal(hvMedication, embeddedMedication));
-            medicationStatement.Medication = new ResourceReference(embeddedMedicationId);
+            medicationStatement.Medication = embeddedMedication.GetContainerReference();
 
             medicationStatement.SetStatusAsActive();
             medicationStatement.SetTakenAsNotApplicable();
@@ -86,18 +86,12 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     }};
                 }
 
-                var structuredMeasurement = hvMedication.Strength.Structured.First();
-                var units = structuredMeasurement.Units;
-                var codedUnit = units.First();
-                var amount = new Quantity
+                if (hvMedication.Strength.Structured.Any())
                 {
-                    Value = new decimal(structuredMeasurement.Value),
-                    Unit = units.Text,
-                    Code = codedUnit.Value,
-                    System = HealthVaultCodesToFhir.GetVocabularyUrl(codedUnit.VocabularyName, codedUnit.Version)
-                };
+                    var amount = HealthVaultCodesToFhir.GetSimpleQuantity(hvMedication.Strength);
 
-                fhirMedication.Ingredient.First().Amount = new Ratio() { Numerator = amount };
+                    fhirMedication.Ingredient.First().Amount = new Ratio() { Numerator = amount };
+                }
             }
 
             return fhirMedication;

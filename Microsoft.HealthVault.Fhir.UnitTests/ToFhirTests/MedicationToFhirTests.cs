@@ -6,14 +6,15 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System.Linq;
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.FhirExtensions.Helpers;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
-using HVMedication = Microsoft.HealthVault.ItemTypes.Medication;
-using FhirMedication = Hl7.Fhir.Model.Medication;
 using Microsoft.HealthVault.Thing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using FhirMedication = Hl7.Fhir.Model.Medication;
+using HVMedication = Microsoft.HealthVault.ItemTypes.Medication;
 
 namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 {
@@ -71,13 +72,14 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
                 Name = new CodableValue("Ibuprofen"),
                 Strength = new GeneralMeasurement("600mg")
             };
+
             hvMedication.Strength.Structured.Add(
-                new StructuredMeasurement(600,
-                    new CodableValue("Milligrams (mg)",
-                        new CodedValue("mg",
-                            family: "wc",
-                            vocabularyName: "medication-strength-unit",
-                            version: "1"))));
+                  new StructuredMeasurement(600,
+                      new CodableValue("Milligrams (mg)",
+                          new CodedValue("mg",
+                              family: "wc",
+                              vocabularyName: "medication-strength-unit",
+                              version: "1"))));
 
             var fhirMedication = ExtractEmbeddedMedication(hvMedication);
 
@@ -91,10 +93,24 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
         private static FhirMedication ExtractEmbeddedMedication(HVMedication hvMedication)
         {
             var medicationStatement = hvMedication.ToFhir();
-            var medication = medicationStatement.Medication as ResourceReference;
-            var fhirMedication = medicationStatement.Contained.First(resource
-                => medication.Reference == resource.Id) as FhirMedication;
-            return fhirMedication;
+            var medicationReference = medicationStatement.Medication as ResourceReference;
+            if (medicationReference != null)
+            {
+                if (medicationReference.IsContainedReference)
+                {
+                    return medicationStatement.Contained.First(domainResource
+                             => medicationReference.Matches(domainResource.GetContainerReference())) as FhirMedication; 
+                }
+                throw new AssertInconclusiveException();
+            }
+            else
+            {
+                var medicationCodeableConcept = medicationStatement.Medication as CodeableConcept;
+                return new FhirMedication
+                {
+                    Code = medicationCodeableConcept
+                };
+            }
         }
 
 

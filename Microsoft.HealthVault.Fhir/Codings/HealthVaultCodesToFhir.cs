@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Codes.HealthVault;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 
@@ -36,7 +37,7 @@ namespace Microsoft.HealthVault.Fhir.Codings
         /// <returns>The updated list of fhir codes</returns>
         public static List<Coding> ConvertCodableValueToFhir(CodableValue codableValue, List<Coding> fhirCodes)
         {
-            if(fhirCodes == null)
+            if (fhirCodes == null)
             {
                 fhirCodes = new List<Coding>();
             }
@@ -46,7 +47,7 @@ namespace Microsoft.HealthVault.Fhir.Codings
                 foreach (var code in codableValue)
                 {
                     if (!string.IsNullOrWhiteSpace(code.Family) && code.Family.Equals(HealthVaultVocabularies.Wc, StringComparison.OrdinalIgnoreCase))
-                    {                        
+                    {
                         ConvertValueToFhir(code.Value, fhirCodes, code.VocabularyName, VocabularyUris.HealthVaultVocabulariesUri, code.Version, codableValue.Text);
                     }
                     else if (!string.IsNullOrWhiteSpace(code.Family) && (code.Family.Equals(HealthVaultVocabularies.RxNorm, StringComparison.OrdinalIgnoreCase) || code.Family.Equals(HealthVaultVocabularies.Dmd, StringComparison.OrdinalIgnoreCase)))
@@ -54,7 +55,7 @@ namespace Microsoft.HealthVault.Fhir.Codings
                         ConvertValueToFhir(code.Value, fhirCodes, code.VocabularyName, VocabularyUris.HealthVaultVocabulariesUri + code.Family, code.Version, codableValue.Text);
                     }
                     // If family is a well formed URI and it is a vocab name "fhir", the vocab name must be ignored
-                    else if(!string.IsNullOrWhiteSpace(code.VocabularyName) && code.VocabularyName.Equals(HealthVaultVocabularies.Fhir, StringComparison.OrdinalIgnoreCase) && Uri.IsWellFormedUriString(code.Family, UriKind.Absolute))
+                    else if (!string.IsNullOrWhiteSpace(code.VocabularyName) && code.VocabularyName.Equals(HealthVaultVocabularies.Fhir, StringComparison.OrdinalIgnoreCase) && Uri.IsWellFormedUriString(code.Family, UriKind.Absolute))
                     {
                         ConvertValueToFhir(code.Value, fhirCodes, null, code.Family, code.Version, codableValue.Text);
                     }
@@ -67,7 +68,7 @@ namespace Microsoft.HealthVault.Fhir.Codings
 
             return fhirCodes;
         }
-        
+
         /// <summary>
         /// Converts a value from FHIR and adds it to the list of codings passed on the function
         /// </summary>
@@ -125,59 +126,92 @@ namespace Microsoft.HealthVault.Fhir.Codings
             {
                 dosage.Route = ConvertCodableValueToFhir(route);
             }
+
             if (frequency != null)
             {
-                var repeatComponent = new Timing.RepeatComponent();
-                StructuredMeasurement frequencyMeasurement = frequency.Structured.First();
-                repeatComponent.Period = new decimal(frequencyMeasurement.Value);
-                repeatComponent.PeriodUnit = GetPeriodUnitFromFromRecurrenceIntervals(frequencyMeasurement.Units);
-                var timing = new Timing()
-                {
-                    Repeat = repeatComponent
-                };
+                dosage.Text = frequency.Display;
 
-                dosage.Timing = timing;
+                dosage.Timing = GetTiming(frequency);
             }
+
             if (dose != null)
             {
-                var doseQuantity = new SimpleQuantity();
-                StructuredMeasurement doseMeasurement = dose.Structured.First();
-                doseQuantity.Value = new decimal(doseMeasurement.Value);
-                doseQuantity.Unit = doseMeasurement.Units.Text;
-                CodedValue doseUnit = doseMeasurement.Units.First();
-                doseQuantity.System = GetVocabularyUrl(doseUnit.VocabularyName,doseUnit.Version);
-                doseQuantity.Code = doseUnit.Value;
-                dosage.Dose = doseQuantity;
+                dosage.Text = string.Join(Environment.NewLine, dose.Display, dosage.Text);
+
+                dosage.Dose = GetSimpleQuantity(dose);
             }
 
             return dosage;
         }
 
+        private static Timing GetTiming(GeneralMeasurement frequency)
+        {
+            if (frequency.Structured.Any())
+            {
+                StructuredMeasurement frequencyMeasurement = frequency.Structured.First();
+
+                var repeatComponent = new Timing.RepeatComponent();
+                repeatComponent.Period = new decimal(frequencyMeasurement.Value);
+                repeatComponent.PeriodUnit = GetPeriodUnitFromFromRecurrenceIntervals(frequencyMeasurement.Units);
+
+                return new Timing()
+                {
+                    Repeat = repeatComponent
+                };
+            }
+            return null;
+        }
+
+        public static SimpleQuantity GetSimpleQuantity(GeneralMeasurement measurement)
+        {
+            if (measurement.Structured.Any())
+            {
+                StructuredMeasurement structuredMeasurement = measurement.Structured.First();
+
+                var simpleQuantity = new SimpleQuantity()
+                {
+                    Value = new decimal(structuredMeasurement.Value),
+                    Unit = structuredMeasurement.Units.Text
+                };
+
+                if (structuredMeasurement.Units.Any())
+                {
+                    CodedValue measurementUnit = structuredMeasurement.Units.First();
+
+                    simpleQuantity.Code = measurementUnit.Value;
+                    simpleQuantity.System = GetVocabularyUrl(measurementUnit.VocabularyName, measurementUnit.Version);
+                }
+
+                return simpleQuantity;
+            }
+            return null;
+        }
+
         private static Timing.UnitsOfTime? GetPeriodUnitFromFromRecurrenceIntervals(CodableValue units)
         {
             Func<CodedValue, bool> recurrenceIntervalsPredicate =
-                coded => coded.VocabularyName == "recurrence-intervals";
+                coded => coded.VocabularyName == HealthVaultVocabularies.RecurrenceIntervals;
             if (units.Any(recurrenceIntervalsPredicate))
             {
                 var coded = units.First(recurrenceIntervalsPredicate);
                 switch (coded.Value)
                 {
-                    case "second":
+                    case HealthVaultRecurrenceIntervalCodes.SecondCode:
                         return Timing.UnitsOfTime.S;
-                    case "minute":
+                    case HealthVaultRecurrenceIntervalCodes.MinuteCode:
                         return Timing.UnitsOfTime.Min;
-                    case "hour":
+                    case HealthVaultRecurrenceIntervalCodes.HourCode:
                         return Timing.UnitsOfTime.H;
-                    case "day":
+                    case HealthVaultRecurrenceIntervalCodes.DayCode:
                         return Timing.UnitsOfTime.D;
-                    case "week":
+                    case HealthVaultRecurrenceIntervalCodes.WeekCode:
                         return Timing.UnitsOfTime.Wk;
-                    case "month":
+                    case HealthVaultRecurrenceIntervalCodes.MonthCode:
                         return Timing.UnitsOfTime.Mo;
-                    case "year":
+                    case HealthVaultRecurrenceIntervalCodes.YearCode:
                         return Timing.UnitsOfTime.A;
                     default:
-                        return null;
+                        throw new NotImplementedException();
                 }
             }
             else

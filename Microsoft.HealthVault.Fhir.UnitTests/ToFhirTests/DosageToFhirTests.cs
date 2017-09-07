@@ -6,8 +6,11 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Codes.HealthVault;
 using Microsoft.HealthVault.Fhir.Codings;
+using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -18,12 +21,28 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
     public class DosageToFhirTests
     {
         [TestMethod]
-        public void WhenDosageCreatedFromHV_DoseQuantityIsPopulatededFromDose()
+        public void WhenDosageCreatedFromHV_RouteIsCopied()
+        {
+            const string routeText = "By mouth";
+            var hvRoute = new CodableValue(routeText);
+
+            var dosage = HealthVaultCodesToFhir.GetDosage(null, null, hvRoute);
+
+            Assert.AreEqual(routeText, dosage.Route.Text);
+        }
+
+        [TestMethod]
+        public void WhenDosageCreatedFromHV_DoseIsCopiedToDoseQuantity()
         {
             var hvDose = new GeneralMeasurement("3tablets/day");
             const int value = 3;
             const string code = "tablets";
             const string unitText = "Tablets";
+
+            var dosage = HealthVaultCodesToFhir.GetDosage(hvDose, null, null);
+
+            Assert.IsNull(dosage.Dose);
+
             hvDose.Structured.Add(
                 new StructuredMeasurement(value,
                     new CodableValue(unitText,
@@ -32,7 +51,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
                             family: "wc",
                             version: "1"))));
 
-            var dosage = HealthVaultCodesToFhir.GetDosage(hvDose, null, null);
+            dosage = HealthVaultCodesToFhir.GetDosage(hvDose, null, null);
 
             var dose = dosage.Dose;
 
@@ -47,21 +66,26 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
         }
 
         [TestMethod]
-        public void WhenDosageCreatedFromHV_DoseIsCopiedToTiming()
+        public void WhenDosageCreatedFromHV_FrequencyIsCopiedToTiming()
         {
             var frequency = new GeneralMeasurement("1 tablet every 8 hrs");
             const int value = 8;
-            const string unitText = "Hour";
+            const string unitText = HealthVaultRecurrenceIntervalCodes.HourCode;
             const string code = "hour";
+
+            var dosage = HealthVaultCodesToFhir.GetDosage(null, frequency, null);
+
+            Assert.IsNull(dosage.Timing);
+
             frequency.Structured.Add(
                 new StructuredMeasurement(value,
                     new CodableValue(unitText,
                         new CodedValue(code,
-                            vocabularyName: "recurrence-intervals",
-                            family: "wc",
+                            vocabularyName: HealthVaultVocabularies.RecurrenceIntervals,
+                            family: HealthVaultVocabularies.Wc,
                             version: "1"))));
 
-            var dosage = HealthVaultCodesToFhir.GetDosage(null, frequency, null);
+            dosage = HealthVaultCodesToFhir.GetDosage(null, frequency, null);
 
             var timing = dosage.Timing;
 
@@ -71,5 +95,26 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.AreEqual("H", timing.Repeat.PeriodUnit.ToString());
         }
 
+        [TestMethod]
+        public void WhenDosageCreatedFromHV_UnknownFrequencyThowsError()
+        {
+            var frequency = new GeneralMeasurement("1 tablet every 8 hrs");
+
+            frequency.Structured.Add(
+                new StructuredMeasurement(8,
+                    new CodableValue("Decade",
+                        new CodedValue("decade", HealthVaultVocabularies.RecurrenceIntervals))));
+
+            Assert.ThrowsException<NotImplementedException>(()
+                => HealthVaultCodesToFhir.GetDosage(null, frequency, null));
+
+            frequency.Structured.Add(
+                new StructuredMeasurement(8,
+                    new CodableValue("Hour",
+                        new CodedValue("hour", HealthVaultVocabularies.Fhir))));
+
+            Assert.ThrowsException<NotImplementedException>(()
+                => HealthVaultCodesToFhir.GetDosage(null, frequency, null));
+        }
     }
 }

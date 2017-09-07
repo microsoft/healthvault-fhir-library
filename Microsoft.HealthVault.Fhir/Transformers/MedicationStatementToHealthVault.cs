@@ -7,9 +7,11 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+using System;
 using System.Linq;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Codings;
+using Microsoft.HealthVault.Fhir.FhirExtensions.Helpers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
 using FhirMedication = Hl7.Fhir.Model.Medication;
@@ -25,48 +27,65 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             var hvMedication = fhirMedication.ToHealthVault() as HVMedication;
 
-            var dosage = medicationStatement.Dosage.First();
-
-            var doseQuantity = dosage.Dose as SimpleQuantity;
-            var dose = new GeneralMeasurement { };
-            dose.Structured.Add(new StructuredMeasurement
+            if (medicationStatement.Dosage.Any())
             {
-                Value = (double)doseQuantity.Value,
-                Units = CodeToHealthVaultHelper.CreateCodableValueFromQuantityValues(doseQuantity.System, doseQuantity.Code, doseQuantity.Unit)
-            });
-            hvMedication.Dose = dose;
+                var dosage = medicationStatement.Dosage.First();
 
-            Timing.RepeatComponent repeat = dosage.Timing.Repeat;
-            var frequency = new GeneralMeasurement { };
-            frequency.Structured.Add(new StructuredMeasurement
-            {
-                Value = (double)repeat.Period,
-                Units= FhirCodesToHealthVault.GetRecurrenceIntervalFromPeriodUnit(repeat.PeriodUnit)
-            });
-            hvMedication.Frequency = frequency;
+                switch (dosage.Dose)
+                {
+                    case null:
+                        break;
+                    case SimpleQuantity doseQuantity:
+                        var dose = new GeneralMeasurement { };
+                        dose.Structured.Add(new StructuredMeasurement
+                        {
+                            Value = (double)doseQuantity.Value,
+                            Units = CodeToHealthVaultHelper.CreateCodableValueFromQuantityValues(doseQuantity.System, doseQuantity.Code, doseQuantity.Unit)
+                        });
+                        hvMedication.Dose = dose;
+                        break;
+                    case Range doseRange:
+                        throw new NotImplementedException();
+                }
 
-            var route = dosage.Route.GetCodableValue();
-            hvMedication.Route = route;
+                Timing.RepeatComponent repeat = dosage.Timing?.Repeat;
+                if (repeat?.Period != null && repeat?.PeriodUnit != null)
+                {
+                    var frequency = new GeneralMeasurement { };
+                    frequency.Structured.Add(new StructuredMeasurement
+                    {
+                        Value = (double)repeat.Period,
+                        Units = FhirCodesToHealthVault.GetRecurrenceIntervalFromPeriodUnit(repeat.PeriodUnit.Value)
+                    });
+                    hvMedication.Frequency = frequency;
+                }
 
+                var route = dosage.Route.GetCodableValue();
+                hvMedication.Route = route;
+
+            }
             return hvMedication;
         }
 
         private static FhirMedication ExtractEmbeddedMedication(MedicationStatement medicationStatement)
         {
-            var medicationReference = medicationStatement.Medication as ResourceReference;
-            if (medicationReference != null)
+            switch (medicationStatement.Medication)
             {
-                var fhirMedication = medicationStatement.Contained.FirstOrDefault(resource
-                    => medicationReference.Reference == resource.Id) as FhirMedication;
-                return fhirMedication ?? new FhirMedication();
-            }
-            else
-            {
-                var medicationCodeableConcept = medicationStatement.Medication as CodeableConcept;
-                return new FhirMedication
-                {
-                    Code = medicationCodeableConcept
-                };
+                case ResourceReference medicationReference:
+                    if (!medicationReference.IsContainedReference)
+                    {
+                        throw new NotImplementedException();
+                    }
+                    var fhirMedication = medicationStatement.Contained.First(domainResource
+                             => medicationReference.Matches(domainResource.GetContainerReference())) as FhirMedication;
+                    return fhirMedication ?? new FhirMedication();
+                case CodeableConcept medicationCodeableConcept:
+                    return new FhirMedication
+                    {
+                        Code = medicationCodeableConcept
+                    };
+                default:
+                    throw new NotImplementedException();
             }
         }
     }

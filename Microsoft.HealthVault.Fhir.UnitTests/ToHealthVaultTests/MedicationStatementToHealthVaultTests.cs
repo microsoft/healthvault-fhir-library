@@ -11,6 +11,7 @@ using System.Linq;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Codings;
 using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.Fhir.FhirExtensions.Helpers;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FhirMedication = Hl7.Fhir.Model.Medication;
@@ -77,6 +78,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
                }
             };
             medicationStatement.Contained.Add(embeddedMedication);
+            medicationStatement.Medication = embeddedMedication.GetContainerReference();
 
             var hvMedication = medicationStatement.ToHealthVault() as HVMedication;
 
