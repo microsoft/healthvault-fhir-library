@@ -41,36 +41,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         {
             return observation.ToHealthVault(CodeToHealthVaultHelper.DetectHealthVaultTypeFromObservation(observation));
         }
-
-        internal static T ToThingBase<T>(this Observation observation) where T : ThingBase, new()
-        {
-            T baseThing = new T();
-
-            Guid id;
-            if (Guid.TryParse(observation.Id, out id))
-            {
-                baseThing.Key = new ThingKey(id);
-            }
-
-            Guid version;
-            if (observation.Meta != null && observation.Meta.VersionId != null && Guid.TryParse(observation.Meta.VersionId, out version))
-            {
-                baseThing.Key.VersionStamp = version;
-            }
-
-            ThingFlags flags;
-            var extensionFlag = observation.GetExtension(HealthVaultExtensions.FlagsFhirExtensionName);
-            if (extensionFlag != null)
-            {
-                if (extensionFlag.Value is FhirString && Enum.TryParse<ThingFlags>((extensionFlag.Value as FhirString).ToString(), out flags))
-                {
-                    baseThing.Flags = flags;
-                }
-            }
-
-            return baseThing;
-        }
-
+        
         internal static T GetThingValueFromQuantity<T>(Quantity quantityValue) where T : Measurement<double>, new()
         {
             if (quantityValue?.Value == null)
