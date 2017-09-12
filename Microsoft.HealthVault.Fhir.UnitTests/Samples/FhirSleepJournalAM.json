@@ -1,0 +1,100 @@
+﻿{
+    "resourceType": "Observation",
+    "extension": [
+        {
+            "url": "http://healthvault.com/fhir/stu3/ValueSet/fhir-extensions/thing-flags",
+            "valueString": "None"
+        },
+        {
+            "url": "http://healthvault.com/fhir/stu3/ValueSet/fhir-extensions/thing-state",
+            "valueString": "Active"
+        }
+    ],
+    "status": "final",
+    "code": {
+        "coding": [
+            {
+                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/thing-type-names",
+                "version": "1",
+                "code": "txtNamesleepjournal-am",
+                "display": "\tSleep session"
+            }
+        ]
+    },
+    "effectiveDateTime": "2017-08-29T16:24:44.25-07:00",
+    "component": [
+        {
+            "code": {
+                "text": "sleep-journal-bed-time"
+            },
+            "valueTime": "22:30:00.9"
+        },
+        {
+            "code": {
+                "text": "sleep-journal-wake-time"
+            },
+            "valueTime": "06:28:59.1823"
+        },
+        {
+            "code": {
+                "text": "sleep-journal-sleep-minutes"
+            },
+            "valueQuantity": {
+                "value": 100,
+                "unit": "min",
+                "system": "http://unitsofmeasure.org",
+                "code": "min"
+            }
+        },
+        {
+            "code": {
+                "text": "sleep-journal-settling-minutes"
+            },
+            "valueQuantity": {
+                "value": 110,
+                "unit": "min",
+                "system": "http://unitsofmeasure.org",
+                "code": "min"
+            }
+        },
+        {
+            "code": {
+                "text": "sleep-journal-awakening"
+            },
+            "valuePeriod": {
+                "start": "2017-08-29T23:30:00-07:00",
+                "end": "2017-08-30T00:10:00-07:00"
+            }
+        },
+        {
+            "code": {
+                "text": "sleep-journal-awakening"
+            },
+            "valuePeriod": {
+                "start": "2017-08-29T00:30:00-07:00",
+                "end": "2017-08-29T00:40:00-07:00"
+            }
+        },
+        {
+            "code": {
+                "text": "sleep-journal-wake-state"
+            },
+            "valueString": "Tired"
+        },
+        {
+            "code": {
+                "text": "sleep-journal-medication"
+            },
+            "valueCodeableConcept": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/RxNorm/Mayo",
+                        "version": "2",
+                        "code": "ccabbac8-58f0-4e88-a1eb-538e21e7524d"
+                    }
+                ],
+                "text": "Benzaclin"
+            }
+        }
+    ]
+}

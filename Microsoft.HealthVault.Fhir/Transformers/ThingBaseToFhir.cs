@@ -30,7 +30,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         public static Resource ToFhir(this ThingBase thing)
         {
             var transformerType = typeof(ThingBaseToFhir);
-            var method = transformerType.GetRuntimeMethod("ToFhir", new Type[] { thing.GetType() });
+            var thingType = thing.GetType();
+            var method = transformerType.GetRuntimeMethod("ToFhir", new Type[] { thingType });
 
             if (method != null && method.GetParameters()[0].ParameterType != typeof(ThingBase))
             {
@@ -38,8 +39,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
             else
             {
-                //TODO Should Observation be the default?
-                return thing.ToFhirInternal<Observation>();
+                throw new NotImplementedException($"Unable to find tranformer for '{thingType}'");
             }
         }
 

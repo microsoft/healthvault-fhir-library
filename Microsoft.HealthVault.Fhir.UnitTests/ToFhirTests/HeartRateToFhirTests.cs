@@ -10,7 +10,6 @@ using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
-using Microsoft.HealthVault.Thing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
@@ -23,7 +22,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
         {
             // ToDo, once deserialization is fixed on SDK, use Deserialize
 
-            ThingBase heartRate = new HeartRate(new HealthServiceDateTime(), 65);
+            var heartRate = new HeartRate(new HealthServiceDateTime(), 65);
 
             var observation = heartRate.ToFhir() as Observation;
             Assert.IsNotNull(observation);

@@ -8,6 +8,7 @@
 
 using System.Collections.Generic;
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Codes.HealthVault;
 using Microsoft.HealthVault.Fhir.Codings;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
@@ -31,17 +32,15 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         internal static Observation ToFhirInternal(BodyDimension bodyDimension, Observation observation)
         {
             observation.Category = new List<CodeableConcept> { FhirCategories.VitalSigns };
-            
+
+            observation.Code = HealthVaultVocabularies.GenerateCodeableConcept(HealthVaultThingTypeNameCodes.BodyDimension);
+
             if (bodyDimension.MeasurementName != null)
             {
-                observation.Code = new CodeableConcept
-                {
-                    Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(bodyDimension.MeasurementName, new List<Coding>())
-                };
+                observation.Method = bodyDimension.MeasurementName.ToFhir();
             }
-
-            var quantity = new Quantity((decimal)bodyDimension.Value.Meters, UnitAbbreviations.Meter);
-            observation.Value = quantity;
+            
+            observation.Value = new Quantity((decimal)bodyDimension.Value.Meters, UnitAbbreviations.Meter);
 
             observation.Effective = bodyDimension.When.ToFhir();
 

@@ -17,6 +17,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
 {
+    [TestClass]
     public class BloodPressureToTests
     {
         [TestMethod]
@@ -24,7 +25,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
         {
             // ToDo, once deserialization is fixed on SDK, use Deserialize
 
-            ThingBase bloodPressure = new BloodPressure(new HealthServiceDateTime(), 120, 60);
+            var bloodPressure = new BloodPressure(new HealthServiceDateTime(), 120, 60);
 
             var observation = bloodPressure.ToFhir() as Observation;
             Assert.IsNotNull(observation);
@@ -58,7 +59,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
         {
             // ToDo, once deserialization is fixed on SDK, use Deserialize
 
-            ThingBase bloodPressure = new BloodPressure(new HealthServiceDateTime(), 120, 60)
+            var bloodPressure = new BloodPressure(new HealthServiceDateTime(), 120, 60)
             {
                 Pulse = 55
             };

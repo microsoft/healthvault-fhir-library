@@ -8,6 +8,7 @@
 
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Serialization;
+using Microsoft.HealthVault.Fhir.Codes.HealthVault;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
@@ -33,17 +34,19 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             };
 
             var observation = bodyComposition.ToFhir();
+            
             Assert.IsNotNull(observation);
-            Assert.AreEqual("body-composition-measurement-methods:DXA", observation.Code.Coding[0].Code);
-            Assert.AreEqual("body-composition-sites:Trunk", observation.Code.Coding[1].Code);
-            Assert.AreEqual("body-composition-measurement-names:fat-percent", observation.Code.Coding[2].Code);
+            Assert.AreEqual(HealthVaultThingTypeNameCodes.BodyComposition, observation.Code.Coding[0]);
+            Assert.AreEqual("DXA", observation.Method.Coding[0].Code);
+            Assert.AreEqual("Trunk", observation.BodySite.Coding[0].Code);
+            Assert.AreEqual("fat-percent", observation.Component[0].Code.Coding[0].Code);
 
-            var massValue = observation.Component[0].Value as Quantity;
+            var massValue = observation.Component[1].Value as Quantity;
             Assert.IsNotNull(massValue);
             Assert.AreEqual(10, massValue.Value);
             Assert.AreEqual(UnitAbbreviations.Kilogram, massValue.Unit);
 
-            var percentageValue = observation.Component[1].Value as Quantity;
+            var percentageValue = observation.Component[2].Value as Quantity;
             Assert.IsNotNull(percentageValue);
             Assert.AreEqual((decimal)0.15, percentageValue.Value);
             Assert.AreEqual(UnitAbbreviations.Percent, percentageValue.Unit);
@@ -61,10 +64,10 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             var observation = bodyComposition.ToFhir();
             Assert.IsNotNull(observation);
             Assert.AreEqual(1, observation.Code.Coding.Count);
-            Assert.AreEqual("body-composition-measurement-names:fat-percent", observation.Code.Coding[0].Code);
+            Assert.AreEqual("fat-percent", observation.Component[0].Code.Coding[0].Code);
 
-            Assert.AreEqual(1, observation.Component.Count);
-            var massValue = observation.Component[0].Value as Quantity;
+            Assert.AreEqual(2, observation.Component.Count);
+            var massValue = observation.Component[1].Value as Quantity;
             Assert.IsNotNull(massValue);
             Assert.AreEqual(10, massValue.Value);
             Assert.AreEqual(UnitAbbreviations.Kilogram, massValue.Unit);

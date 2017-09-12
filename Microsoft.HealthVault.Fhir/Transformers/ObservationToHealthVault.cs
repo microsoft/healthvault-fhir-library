@@ -59,7 +59,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
 
             ThingFlags flags;
-            var extensionFlag = observation.GetExtension(HealthVaultVocabularies.FlagsFhirExtensionName);
+            var extensionFlag = observation.GetExtension(HealthVaultExtensions.FlagsFhirExtensionName);
             if (extensionFlag != null)
             {
                 if (extensionFlag.Value is FhirString && Enum.TryParse<ThingFlags>((extensionFlag.Value as FhirString).ToString(), out flags))
@@ -218,6 +218,16 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             if (type == typeof(BodyDimension))
             {
                 return observation.ToBodyDimension();
+            }
+
+            if(type == typeof(SleepJournalAM))
+            {
+                return observation.ToSleepJournalAM();
+            }
+
+            if (type == typeof(Exercise))
+            {
+                return observation.ToExercise();
             }
 
             return null;

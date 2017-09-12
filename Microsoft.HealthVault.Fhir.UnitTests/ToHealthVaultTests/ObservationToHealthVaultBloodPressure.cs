@@ -37,7 +37,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         [TestMethod]
         public void WhenBloodPressureToObservationToHealthVault_ThenValuesEqual()
         {
-            ThingBase hvBloodPressure = new BloodPressure(new HealthServiceDateTime(), 120, 60);
+            var hvBloodPressure = new BloodPressure(new HealthServiceDateTime(), 120, 60);
 
             var observation = hvBloodPressure.ToFhir() as Observation;
 

@@ -10,7 +10,6 @@ using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
-using Microsoft.HealthVault.Thing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
@@ -22,7 +21,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
         public void WhenHeathVaultHeightTransformedToFhir_ThenCodeAndValuesEqual()
         {
             // ToDo, once deserialization is fixed on SDK, use Deserialize
-            ThingBase height = new Height(new HealthServiceDateTime(), new Length(1.6));
+            var height = new Height(new HealthServiceDateTime(), new Length(1.6));
 
             var observation = height.ToFhir() as Observation;
             Assert.IsNotNull(observation);

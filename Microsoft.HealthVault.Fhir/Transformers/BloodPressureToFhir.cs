@@ -7,7 +7,6 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System.Collections.Generic;
-using System.Linq;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Codes.HealthVault;
 using Microsoft.HealthVault.Fhir.Constants;
@@ -35,13 +34,13 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             var diastolicComponent = new Observation.ComponentComponent
             {
-                Code = new CodeableConcept() { Coding = new List<Coding> { HealthVaultVitalStatisticsCodes.BloodPressureDiastolic } },
+                Code = HealthVaultVocabularies.GenerateCodeableConcept(HealthVaultVitalStatisticsCodes.BloodPressureDiastolic),
                 Value = new Quantity((decimal)bp.Diastolic, UnitAbbreviations.MillimeterOfMecury)
             };
 
             var systolicComponent = new Observation.ComponentComponent
             {
-                Code = new CodeableConcept() { Coding = new List<Coding> { HealthVaultVitalStatisticsCodes.BloodPressureSystolic } },
+                Code = HealthVaultVocabularies.GenerateCodeableConcept(HealthVaultVitalStatisticsCodes.BloodPressureSystolic),
                 Value = new Quantity((decimal)bp.Systolic, UnitAbbreviations.MillimeterOfMecury)
             };
 
@@ -51,7 +50,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 observation.Component.Add(new Observation.ComponentComponent
                 {
-                    Code = new CodeableConcept() { Coding = new List<Coding> { HealthVaultVitalStatisticsCodes.HeartRate } },
+                    Code = HealthVaultVocabularies.GenerateCodeableConcept(HealthVaultVitalStatisticsCodes.HeartRate),
                     Value = new Quantity((decimal)bp.Pulse, UnitAbbreviations.PerMinute)
                 });
             }
