@@ -7,9 +7,12 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Linq;
+using System.Reflection;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Serialization;
 using Microsoft.HealthVault.Fhir.Transformers;
+using Microsoft.HealthVault.Fhir.UnitTests.Helpers;
 using Microsoft.HealthVault.Fhir.UnitTests.Samples;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -43,7 +46,14 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         public void WhenHealthVaultFileTransformedToFhirToHealthVault_ThenValuesEqual()
         {
             File inputFile = new File();
-            inputFile.SetContent(@"..\..\TestFiles\image.jpg", new CodableValue("image/jpeg"));
+
+            string resourceName = "Microsoft.HealthVault.Fhir.UnitTests.Samples.image.jpg";
+            using (System.IO.Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+            {
+                DocumentReferenceHelper.WriteByteArrayToHealthVaultFile(inputFile, DocumentReferenceHelper.StreamToByteArray(stream));
+            }
+
+            inputFile.ContentType = new CodableValue("image/jpeg");
             inputFile.EffectiveDate = new NodaTime.LocalDateTime(2016, 12, 10, 2, 45, 30);
 
             var documentReference = inputFile.ToFhir() as DocumentReference;

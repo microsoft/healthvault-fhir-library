@@ -228,9 +228,9 @@
     <EmbeddedResource Include="Samples\HealthVaultIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TestFiles\CCR.xml" />
-    <Content Include="TestFiles\CDA.xml" />
-    <Content Include="TestFiles\image.jpg" />
+    <EmbeddedResource Include="Samples\CCR.xml" />
+    <EmbeddedResource Include="Samples\CDA.xml" />
+    <EmbeddedResource Include="Samples\image.jpg" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

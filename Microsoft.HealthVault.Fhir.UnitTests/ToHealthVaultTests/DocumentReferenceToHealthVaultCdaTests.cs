@@ -52,7 +52,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         [TestMethod]
         public void WhenHealthVaultCdaToFhirToHealthVault_ThenValuesEqual()
         {
-            string inputCdaXmlRaw = System.IO.File.ReadAllText(@"..\..\TestFiles\CDA.xml");
+            string inputCdaXmlRaw = SampleUtil.GetSampleContent("CDA.xml");
 
             XPathDocument xpDoc = DocumentReferenceHelper.GetXPathDocumentFromXml(inputCdaXmlRaw);
 

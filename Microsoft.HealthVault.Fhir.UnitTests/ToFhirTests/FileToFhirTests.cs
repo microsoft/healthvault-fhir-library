@@ -7,8 +7,10 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Reflection;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Transformers;
+using Microsoft.HealthVault.Fhir.UnitTests.Helpers;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -21,7 +23,14 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
         public void WhenHealthVaultFileTransformedToFhir_ThenValuesEqual()
         {
             File file = new File();
-            file.SetContent(@"..\..\TestFiles\image.jpg", new CodableValue("image/jpeg"));
+
+            string resourceName = "Microsoft.HealthVault.Fhir.UnitTests.Samples.image.jpg";
+            using (System.IO.Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+            {
+                DocumentReferenceHelper.WriteByteArrayToHealthVaultFile(file, DocumentReferenceHelper.StreamToByteArray(stream));
+            }
+
+            file.ContentType = new CodableValue("image/jpeg");
 
             var documentReference = file.ToFhir() as DocumentReference;
 

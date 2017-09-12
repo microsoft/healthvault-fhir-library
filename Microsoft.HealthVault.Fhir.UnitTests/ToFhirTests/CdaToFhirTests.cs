@@ -13,6 +13,7 @@ using System.Xml.XPath;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.Fhir.UnitTests.Helpers;
+using Microsoft.HealthVault.Fhir.UnitTests.Samples;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -24,7 +25,7 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
         [TestMethod]
         public void WhenHealthVaultCdaTransformedToFhir_ThenValuesEqual()
         {
-            string cdaXmlRaw = System.IO.File.ReadAllText(@"..\..\TestFiles\CDA.xml");
+            string cdaXmlRaw = SampleUtil.GetSampleContent("CDA.xml");
 
             XPathDocument xpDoc = DocumentReferenceHelper.GetXPathDocumentFromXml(cdaXmlRaw) ?? throw new Exception("Invalid XML");
 

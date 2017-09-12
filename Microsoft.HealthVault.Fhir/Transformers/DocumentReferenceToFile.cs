@@ -21,11 +21,6 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         {
             var contentComponent = documentReference.GetFirstContentComponentWithData();
 
-            if (contentComponent == null)
-            {
-                throw new ArgumentException("DocumentReference must have a content component with data");
-            }
-
             File file = documentReference.ToThingBase<File>();
 
             MethodInfo getBlobStoreMethod = file.GetType().GetMethod("GetBlobStore", BindingFlags.NonPublic | BindingFlags.Instance);

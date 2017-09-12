@@ -21,11 +21,6 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         {
             var contentComponent = documentReference.GetFirstContentComponentWithData();
 
-            if (contentComponent == null)
-            {
-                throw new ArgumentException("DocumentReference must have a content component with data");
-            }
-
             CCR ccr = documentReference.ToThingBase<CCR>();
 
             string xml = Encoding.UTF8.GetString(contentComponent.Attachment.Data);

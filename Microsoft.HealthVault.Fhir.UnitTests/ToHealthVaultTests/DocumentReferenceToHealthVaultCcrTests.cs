@@ -52,7 +52,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         [TestMethod]
         public void WhenHealthVaultCcrTransformedToFhirToHealthVault_ThenValuesEqual()
         {
-            string inputCcrXmlRaw = System.IO.File.ReadAllText(@"..\..\TestFiles\CCR.xml");
+            string inputCcrXmlRaw = SampleUtil.GetSampleContent("CCR.xml");
 
             XPathDocument xpDoc = DocumentReferenceHelper.GetXPathDocumentFromXml(inputCcrXmlRaw) ?? throw new Exception("Invalid XML");
 

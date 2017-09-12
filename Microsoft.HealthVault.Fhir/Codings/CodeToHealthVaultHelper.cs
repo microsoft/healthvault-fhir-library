@@ -116,11 +116,6 @@ namespace Microsoft.HealthVault.Fhir.Codings
         {
             var contentComponent = documentReference.GetFirstContentComponentWithData();
 
-            if (contentComponent == null)
-            {
-                throw new ArgumentException("DocumentReference must have a content component with data");
-            }
-
             if (contentComponent.Attachment.ContentType == "text/xml"
                 || contentComponent.Attachment.ContentType == "application/xml")
             {

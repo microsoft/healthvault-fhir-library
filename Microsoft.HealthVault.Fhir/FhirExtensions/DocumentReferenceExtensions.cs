@@ -20,7 +20,7 @@ namespace Microsoft.HealthVault.Fhir.FhirExtensions
         public static ContentComponent GetFirstContentComponentWithData(this DocumentReference documentReference)
         {
             //We are considering only the first ContentComponent with data
-            var contentComponent = documentReference.Content.FirstOrDefault(o => o.Attachment != null && o.Attachment.Data != null);
+            var contentComponent = documentReference.Content.First(o => o.Attachment != null && o.Attachment.Data != null);
 
             return contentComponent;
         }
