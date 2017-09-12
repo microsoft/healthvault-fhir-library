@@ -48,8 +48,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
                 bodyComposition.Value = bodyCompositionValue;
             }
-
-            bodyComposition.When = ObservationToHealthVault.GetApproximateDateTimeFromEffectiveDate(observation.Effective);
+           
+            bodyComposition.When = observation.Effective?.ToAproximateDateTime();
 
             if (observation.BodySite != null)
             {

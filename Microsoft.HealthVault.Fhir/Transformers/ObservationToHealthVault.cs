@@ -75,55 +75,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
 
             return null;
-        }
-
-        internal static HealthServiceDateTime GetHealthVaultTimeFromEffectiveDate(Element effectiveDate)
-        {
-            var dateTime = GetFhirDateTime(effectiveDate);
-
-            if (dateTime != null)
-            {
-                var dt = dateTime.ToDateTimeOffset();
-                return new HealthServiceDateTime(
-                    new HealthServiceDate(dt.Year, dt.Month, dt.Day),
-                    new ApproximateTime(dt.Hour, dt.Minute, dt.Second, dt.Millisecond));
-            }
-
-            return null;
-        }
-
-        internal static ApproximateDateTime GetApproximateDateTimeFromEffectiveDate(Element effectiveDate)
-        {
-            var dateTime = GetFhirDateTime(effectiveDate);
-
-            if (dateTime != null)
-            {
-                var dt = dateTime.ToDateTimeOffset();
-                return new ApproximateDateTime(
-                    new ApproximateDate(dt.Year, dt.Month, dt.Day),
-                    new ApproximateTime(dt.Hour, dt.Minute, dt.Second, dt.Millisecond));
-            }
-
-            return null;
-        }
-
-        private static FhirDateTime GetFhirDateTime(Element effectiveDate)
-        {
-            FhirDateTime dateTime = null;
-
-            /* Per Spec DSTU3 Effective Date in an observation can only be of type FhirDateTime or FhirPeriod
-             * in this transformation if we have a period we will map it to the start time
-             */
-            if (effectiveDate is FhirDateTime)
-            {
-                dateTime = effectiveDate as FhirDateTime;
-            }
-            else if (effectiveDate is Period && ((Period) effectiveDate).Start != null)
-            {
-                dateTime = new FhirDateTime(((Period) effectiveDate).Start);
-            }
-            return dateTime;
-        }
+        }               
 
         private static double GetQuantityInUnit(Quantity quantityValue, Units.UnitConversion unitConversion)
         {

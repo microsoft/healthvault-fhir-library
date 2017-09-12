@@ -29,17 +29,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             //Populate when if present
             if(fhirProcedure.Performed != null)
-            {
-                if (fhirProcedure.Performed is Hl7.Fhir.Model.Period)
-                {
-                    //Choise of data for performed is Period; use the start date
-                    //See https://www.hl7.org/fhir/procedure-definitions.html#Procedure.performed_x_
-                    hvProcedure.When = ((Hl7.Fhir.Model.Period)fhirProcedure.Performed).StartElement.ToAproximateDateTime();
-                }
-                else
-                {
-                    hvProcedure.When = fhirProcedure.Performed.ToAproximateDateTime();
-                }
+            {                
+                hvProcedure.When = fhirProcedure.Performed.ToAproximateDateTime();                
             }
 
             if (fhirProcedure.Code.IsNullOrEmpty())
