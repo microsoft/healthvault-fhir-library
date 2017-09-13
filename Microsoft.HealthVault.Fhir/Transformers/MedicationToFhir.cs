@@ -10,7 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Codes.HealthVault;
 using Microsoft.HealthVault.Fhir.Codings;
+using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.FhirExtensions.Helpers;
 using Microsoft.HealthVault.ItemTypes;
 using FhirMedication = Hl7.Fhir.Model.Medication;
@@ -41,6 +43,17 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             medicationStatement.SetTakenAsNotApplicable();
 
             medicationStatement.Dosage = AddDosage(hvMedication.Dose, hvMedication.Frequency, hvMedication.Route);
+
+            if (hvMedication.Prescription != null)
+            {
+                var embeddedMedicationRequest = new MedicationRequest();
+                embeddedMedicationRequest.Id = "medReq" + Guid.NewGuid();
+
+                MedicationRequest request = ToFhirInternal(hvMedication.Prescription, embeddedMedicationRequest);
+                request.Medication = embeddedMedication.GetContainerReference();
+                medicationStatement.Contained.Add(request);
+                medicationStatement.BasedOn.Add(embeddedMedicationRequest.GetContainerReference());
+            }
 
             return medicationStatement;
         }
@@ -95,6 +108,72 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
 
             return fhirMedication;
+        }
+
+        internal static MedicationRequest ToFhirInternal(Prescription prescription, MedicationRequest medicationRequest)
+        {
+            medicationRequest.SetIntentAsInstanceOrder();
+            //hvMedication.PrescribedBy
+            medicationRequest.AuthoredOnElement = prescription.DatePrescribed?.ToFhir();
+            if (prescription.AmountPrescribed != null
+                || prescription.Refills.HasValue
+                || prescription.DaysSupply.HasValue
+                || prescription.PrescriptionExpiration != null)
+            {
+                medicationRequest.DispenseRequest = new MedicationRequest.DispenseRequestComponent
+                {
+                    Quantity = HealthVaultCodesToFhir.GetSimpleQuantity(prescription.AmountPrescribed),
+                    NumberOfRepeatsAllowed = prescription.Refills == 0 ? null : prescription.Refills,
+                    ExpectedSupplyDuration = new Duration()
+                    {
+                        Value = prescription.DaysSupply,
+                        Code = nameof(UnitsNet.Units.DurationUnit.Day)
+                    },
+                    ValidityPeriod = new Period
+                    {
+                        EndElement = prescription.PrescriptionExpiration?.ToFhir()
+                    }
+                };
+            }
+            if (prescription.Substitution != null)
+            {
+                medicationRequest.Substitution = new MedicationRequest.SubstitutionComponent
+                {
+                    Allowed = IsAllowed(prescription.Substitution)
+                };
+            }
+            if (prescription.Instructions != null)
+            {
+                var dosage = new Dosage();
+                dosage.AdditionalInstruction.Add(
+                    HealthVaultCodesToFhir.ConvertCodableValueToFhir(prescription.Instructions));
+                medicationRequest.DosageInstruction.Add(dosage);
+            }
+            
+            return medicationRequest;
+        }
+
+        private static void SetIntentAsInstanceOrder(this MedicationRequest medicationRequest)
+        {
+            medicationRequest.Intent = MedicationRequest.MedicationRequestIntent.InstanceOrder;
+        }
+
+        private static bool? IsAllowed(CodableValue substitution)
+        {
+            Func<CodedValue, bool> medicationSubstitutionPredicate =
+                coded => coded.VocabularyName == HealthVaultVocabularies.MedicationSubstitution;
+            if (substitution.Any(medicationSubstitutionPredicate))
+            {
+                var coded = substitution.First(medicationSubstitutionPredicate);
+                switch (coded.Value)
+                {
+                    case HealthVaultMedicationSubstitutionCodes.DispenseAsWrittenCode:
+                        return false;
+                    case HealthVaultMedicationSubstitutionCodes.SubstitutionPermittedCode:
+                        return true;
+                }
+            }
+            throw new NotImplementedException();
         }
     }
 }

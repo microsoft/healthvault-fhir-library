@@ -164,7 +164,7 @@ namespace Microsoft.HealthVault.Fhir.Codings
 
         public static SimpleQuantity GetSimpleQuantity(GeneralMeasurement measurement)
         {
-            if (measurement.Structured.Any())
+            if (measurement?.Structured.Any() == true)
             {
                 StructuredMeasurement structuredMeasurement = measurement.Structured.First();
 

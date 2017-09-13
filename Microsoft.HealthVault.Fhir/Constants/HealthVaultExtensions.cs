@@ -47,5 +47,7 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string PatientBasicAddressState = "state";
         public const string PatientBasicAddressPostalCode = "postal-code";
         public const string PatientBasicAddressCountry = "country";
+
+        public const string PersonOrganisation = "person-organisation";
     }
 }
