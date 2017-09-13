@@ -8,6 +8,7 @@
 
 using System;
 using Hl7.Fhir.Model;
+using Hl7.Fhir.Support;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.FhirExtensions;
 using Microsoft.HealthVault.Thing;
@@ -15,7 +16,7 @@ using HVCondition = Microsoft.HealthVault.ItemTypes.Condition;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    public static class ConditionToHealthVault
+    public static partial class ConditionToHealthVault
     {
         public static HVCondition ToHealthVault(this Condition fhirCondition)
         {
@@ -26,24 +27,12 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     {
         internal static HVCondition ToCondition(this Condition fhirCondition)
         {
-            HVCondition hvCondition = new HVCondition();
-
-            Guid id;
-            if (Guid.TryParse(fhirCondition.Id, out id))
-            {
-                hvCondition.Key = new ThingKey(id);
-            }
-
-            Guid version;
-            if (fhirCondition.Meta != null && fhirCondition.Meta.VersionId != null && Guid.TryParse(fhirCondition.Meta.VersionId, out version))
-            {
-                hvCondition.Key.VersionStamp = version;
-            }
+            HVCondition hvCondition = fhirCondition.ToThingBase<HVCondition>();
 
             hvCondition.StopReason = fhirCondition.GetStringExtension(HealthVaultVocabularies.ConditionStopReason);
             hvCondition.CommonData.Source = fhirCondition.GetStringExtension(HealthVaultVocabularies.ConditionSource);
-            hvCondition.OnsetDate = fhirCondition.Onset.ToItemBase();
-            hvCondition.StopDate = fhirCondition.Abatement.ToItemBase();
+            hvCondition.OnsetDate = fhirCondition.Onset.ToAproximateDateTime();
+            hvCondition.StopDate = fhirCondition.Abatement.ToAproximateDateTime();
 
             if (fhirCondition.ClinicalStatus.HasValue)
             {
@@ -57,22 +46,10 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     (HealthVaultVocabularies.ConditionOccurrenceExtensionName), HealthVaultVocabularies.ConditionOccurrence, HealthVaultVocabularies.Wc, "1"));
             }
 
-            if (fhirCondition.Code != null && fhirCondition.Code.Coding != null)
-            {
-                foreach (var code in fhirCondition.Code.Coding)
-                {
-                    var value = code.Code.Split(':');
-                    var vocabCode = value.Length == 2 ? value[1] : null;
-                    var vocab = value.Length == 2 ? value[0] : HealthVaultVocabularies.Fhir;
+            if (fhirCondition.Code.IsNullOrEmpty())
+                throw new System.ArgumentNullException($"Can not transform a {typeof(Condition)} with no code into {typeof(HVCondition)}");
 
-                    hvCondition.SetConditionName(
-                            code.Display,
-                            vocabCode,
-                            vocab,
-                            code.System,
-                            code.Version);
-                }
-            }
+            hvCondition.Name = fhirCondition.Code.ToCodableValue();
 
             if (fhirCondition.Note != null)
             {
@@ -83,15 +60,6 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
             
             return hvCondition;
-        }
-        private static void SetConditionName(this HVCondition condition, string display, string code, string vocabName, string family, string version)
-        {
-            if (condition.Name == null || condition.Name.Text == null)
-            {
-                condition.Name = new ItemTypes.CodableValue(display);
-            }
-
-            condition.Name.Add(new ItemTypes.CodedValue(code, vocabName, family, version));
         }
     }
 }

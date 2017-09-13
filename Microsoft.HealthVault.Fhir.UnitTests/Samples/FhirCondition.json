@@ -14,15 +14,15 @@
 		"valueString": "Active"
 	},
 	{
-		"url": "http://healthvault.com/condition/stop-reason",
+		"url": "http://healthvault.com/fhir/stu3/ValueSet/condition/stop-reason",
 		"valueString": "In Control"
 	},
     {
-		"url": "http://healthvault.com/condition/source",
+		"url": "http://healthvault.com/fhir/stu3/ValueSet/condition/source",
 		"valueString": "patient via InstantPHR patient portal"
 	},
     {
-		"url": "http://healthvault.com/condition-occurrence",
+		"url": "http://healthvault.com/fhir/stu3/ValueSet/condition-occurrence",
 		"valueString": "intermittent"
 	}],
  
@@ -55,10 +55,11 @@
     "coding": [
       {
         "system": "http://snomed.info/sct",
-        "code": "Mayo:36225005",
+        "code": "36225005",
         "display": "Acute renal insufficiency specified as due to procedure"
       }
-    ]
+    ],
+     "text": "Acute renal insufficiency specified as due to procedure"
   },
   "bodySite": [
     {

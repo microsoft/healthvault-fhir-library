@@ -41,10 +41,9 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 fhirCondition.AddExtension(HealthVaultVocabularies.ConditionSource, new FhirString(cd.CommonData.Source));
             }
 
-            if (cd.Name != null)
-            {
-                fhirCondition.Code = new CodeableConcept() { Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(cd.Name, fhirCodes),Text= cd.Name.Text};   
-            }
+                     
+            fhirCondition.Code = cd.Name.ToFhir();
+            
 
             if (cd.Status != null)
             {
