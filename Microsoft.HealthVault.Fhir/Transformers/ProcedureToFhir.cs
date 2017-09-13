@@ -20,11 +20,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     {
         public static FhirProcedure ToFhir(this HVProcedure hvProcedure)
         {
-            return HealthVaultProcedureToFhirProcedure.ToFhirInternal(hvProcedure, hvProcedure.ToFhirInternal<FhirProcedure>());
+            return ProcedureToFhir.ToFhirInternal(hvProcedure, hvProcedure.ToFhirInternal<FhirProcedure>());
         }
     }
 
-    internal static class HealthVaultProcedureToFhirProcedure
+    internal static class ProcedureToFhir
     {
        internal static FhirProcedure ToFhirInternal(HVProcedure hvProcedure, FhirProcedure fhirProcedure)
         {

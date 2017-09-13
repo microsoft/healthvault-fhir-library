@@ -14,41 +14,34 @@ using Hl7.Fhir.Support;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    public static partial class ThingBaseToFhir
+    public static class ProcedureToHealthVault
     {
         public static Procedure ToHealthVault(this FhirProcedure fhirProcedure)
-        {
-            return fhirProcedure.ToProcedure();
-        }
-    }
-    internal static class FhirProcedureToHealthVaultProcedure
-    { 
-        internal static Procedure ToProcedure(this FhirProcedure fhirProcedure)
         {
             Procedure hvProcedure = fhirProcedure.ToThingBase<Procedure>();
 
             //Populate when (if present)
-            if(fhirProcedure.Performed != null)
-            {                
-                hvProcedure.When = fhirProcedure.Performed.ToAproximateDateTime();                
+            if (fhirProcedure.Performed != null)
+            {
+                hvProcedure.When = fhirProcedure.Performed.ToAproximateDateTime();
             }
 
             if (fhirProcedure.Code.IsNullOrEmpty())
-                throw new System.InvalidOperationException($"Can not transform a {typeof(FhirProcedure)} with no code into {typeof(Procedure)}");
+                throw new System.ArgumentException($"Can not transform a {typeof(FhirProcedure)} with no code into {typeof(Procedure)}");
 
             hvProcedure.Name = fhirProcedure.Code.ToCodableValue();
             hvProcedure.AnatomicLocation = fhirProcedure.BodySite?.FirstOrDefault()?.ToCodableValue();
-            
-            if(!fhirProcedure.Performer.IsNullOrEmpty())
-            {                
+
+            if (!fhirProcedure.Performer.IsNullOrEmpty())
+            {
                 hvProcedure.PrimaryProvider = getProvider(fhirProcedure, 0);
-                
-                if(fhirProcedure.Performer.Count>1)
+
+                if (fhirProcedure.Performer.Count > 1)
                     hvProcedure.SecondaryProvider = getProvider(fhirProcedure, 1);
-            }            
-            
+            }
+
             return hvProcedure;
-        }
+        }    
 
         private static PersonItem getProvider(FhirProcedure fhirProcedure, int index)
         {
