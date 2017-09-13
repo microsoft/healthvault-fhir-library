@@ -24,12 +24,12 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             foreach(var component in observation.Component)
             {
-                if (component.Code == null || component.Code.Coding.IsNullOrEmpty() || component.Value == null)
+                if (string.IsNullOrEmpty(component.Code?.Text) || component.Value == null)
                 {
                     continue;
                 }
 
-                switch (component.Code.Coding[0].Code)
+                switch (component.Code.Text)
                 {
                     case HealthVaultVocabularies.SleepJournalAMBedtime:
                         if(component.Value.GetType() == typeof(Time))
@@ -68,17 +68,12 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
                         break;
                     case HealthVaultVocabularies.SleepJournalAMWakeState:
-                        if (component.Value.GetType() == typeof(CodeableConcept))
+                        if (component.Value.GetType() == typeof(FhirString))
                         {
                             WakeState wakeState;
-                            var wakeStateValue = (CodeableConcept)component.Value;
+                            var wakeStateValue = (FhirString)component.Value;
 
-                            if (wakeStateValue.Coding.IsNullOrEmpty())
-                            {
-                                break;
-                            }
-
-                            if (Enum.TryParse(wakeStateValue.Coding[0].Code, out wakeState))
+                            if (Enum.TryParse(wakeStateValue.Value, out wakeState))
                             {
                                 sleepJournalAm.WakeState = wakeState;
                             }
@@ -88,32 +83,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     case HealthVaultVocabularies.SleepJournalAMMedication:
                         if (component.Value.GetType() == typeof(CodeableConcept))
                         {
-                            var medicationValue = (CodeableConcept)component.Value;
-                            if (medicationValue.Coding.IsNullOrEmpty())
-                            {
-                                break;
-                            }
 
-                            var coding = medicationValue.Coding[0];
-
-                            var value = coding.Code.Split(':');
-                            var vocabName = value[0];
-                            var vocabCode = value.Length == 2 ? value[1] : null;
-
-                            var codedValue = new CodedValue
-                            {
-                                VocabularyName = vocabName,
-                                Value = vocabCode,
-                                Family = coding.System.Replace(VocabularyUris.HealthVaultVocabulariesUri, ""),
-                                Version = coding.Version
-                            };
-
-                            if (sleepJournalAm.Medications == null)
-                            {
-                                sleepJournalAm.Medications = new CodableValue(coding.Display);
-                            }
-
-                            sleepJournalAm.Medications.Add(codedValue);
+                            sleepJournalAm.Medications = ((CodeableConcept)component.Value).ToCodableValue();
                         }
 
                         break;

@@ -55,12 +55,12 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     frequency.Structured.Add(new StructuredMeasurement
                     {
                         Value = (double)repeat.Period,
-                        Units = FhirCodesToHealthVault.GetRecurrenceIntervalFromPeriodUnit(repeat.PeriodUnit.Value)
+                        Units = CodeToHealthVaultHelper.GetRecurrenceIntervalFromPeriodUnit(repeat.PeriodUnit.Value)
                     });
                     hvMedication.Frequency = frequency;
                 }
 
-                var route = dosage.Route.GetCodableValue();
+                var route = dosage.Route.ToCodableValue();//.GetCodableValue();
                 hvMedication.Route = route;
 
             }

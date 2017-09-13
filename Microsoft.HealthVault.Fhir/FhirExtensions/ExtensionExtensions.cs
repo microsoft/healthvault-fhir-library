@@ -21,12 +21,12 @@ namespace Microsoft.HealthVault.Fhir.FhirExtensions
 
         public static Extension AddFlagsAsExtension(this IExtendable extendable, ThingFlags flags)
         {
-            return extendable.AddStringAsExtension(HealthVaultVocabularies.FlagsFhirExtensionName, flags.ToString());
+            return extendable.AddStringAsExtension(HealthVaultExtensions.FlagsFhirExtensionName, flags.ToString());
         }
 
         public static Extension AddStateAsExtension(this IExtendable extendable, ThingState state)
         {
-            return extendable.AddStringAsExtension(HealthVaultVocabularies.StateFhirExtensionName, state.ToString());
+            return extendable.AddStringAsExtension(HealthVaultExtensions.StateFhirExtensionName, state.ToString());
         }
     }
 }

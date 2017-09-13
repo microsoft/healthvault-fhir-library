@@ -6,45 +6,33 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Collections.Generic;
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Codes.HealthVault;
-using Microsoft.HealthVault.Fhir.Codings;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    public static partial class ThingBaseToFhir
+    internal static class CodedValueToFhir
     {
-        // Register the type on the generic ThingToFhir partial class
-        public static Observation ToFhir(this BodyDimension bodyDimension)
+        public static Coding ToFhir(this CodedValue codedValue)
         {
-            return BodyDimensionToFhir.ToFhirInternal(bodyDimension, ToFhirInternal<Observation>(bodyDimension));
-        }
-    }
-
-    /// <summary>
-    /// An extension class that transforms HealthVault body dimension data types into FHIR Observations
-    /// </summary>
-    internal static class BodyDimensionToFhir
-    {
-        internal static Observation ToFhirInternal(BodyDimension bodyDimension, Observation observation)
-        {
-            observation.Category = new List<CodeableConcept> { FhirCategories.VitalSigns };
-
-            observation.Code = HealthVaultVocabularies.GenerateCodeableConcept(HealthVaultThingTypeNameCodes.BodyDimension);
-
-            if (bodyDimension.MeasurementName != null)
+            return new Coding
             {
-                observation.Method = bodyDimension.MeasurementName.ToFhir();
+                Code = codedValue.Value,
+                System = GetSystemUrl(codedValue),
+                Version = codedValue.Version,
+            };
+        }
+
+        private static string GetSystemUrl(CodedValue codedValue)
+        {
+            // If the coded value family contains a URL, it's not a healvault vocab and we should return it as is
+            if (codedValue.Family.Contains("http"))
+            {
+                return codedValue.Family;
             }
-            
-            observation.Value = new Quantity((decimal)bodyDimension.Value.Meters, UnitAbbreviations.Meter);
 
-            observation.Effective = bodyDimension.When.ToFhir();
-
-            return observation;
+            return HealthVaultVocabularies.GenerateSystemUrl(codedValue.VocabularyName, codedValue.Family);
         }
     }
 }

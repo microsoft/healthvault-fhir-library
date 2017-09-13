@@ -87,7 +87,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     {
                         var instruction = medicationRequest.DosageInstruction.First(
                          dosage => dosage.AdditionalInstruction.Any()).AdditionalInstruction.First();
-                        prescription.Instructions = instruction.GetCodableValue();
+                        prescription.Instructions = instruction.ToCodableValue();//.GetCodableValue();
                     }
                 }
 

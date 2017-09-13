@@ -23,7 +23,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         {
             var hvMedication = new HVMedication();
 
-            hvMedication.Name = fhirMedication.Code.GetCodableValue();
+            hvMedication.Name = fhirMedication.Code.ToCodableValue();//.GetCodableValue();
 
             var hasSingleIngredient = fhirMedication.Ingredient.Count == 1;
             if (hasSingleIngredient)
@@ -36,7 +36,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     var isIngredientItemNotEquivalentToCode = !ingredientItemAsCodeableConcept.Matches(fhirMedication.Code);
                     if (isIngredientItemNotEquivalentToCode)
                     {
-                        hvMedication.GenericName = ingredientItemAsCodeableConcept.GetCodableValue();
+                        hvMedication.GenericName = ingredientItemAsCodeableConcept.ToCodableValue();//.GetCodableValue();
                     }
 
                     var ingredientAmount = ingredientComponent.Amount;

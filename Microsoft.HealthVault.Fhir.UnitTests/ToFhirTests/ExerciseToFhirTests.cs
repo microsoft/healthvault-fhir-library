@@ -8,6 +8,7 @@
 
 using System.Linq;
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Codes.HealthVault;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
@@ -50,18 +51,18 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 
             Assert.IsNotNull(observation);
             Assert.AreEqual(5 ,observation.Extension.Count);
-            Assert.AreEqual(HealthVaultVocabularies.Exercise, observation.Code.Coding[0].Code);
+            Assert.AreEqual(HealthVaultThingTypeNameCodes.Exercise, observation.Code.Coding[0]);
 
             var detailExtensions = observation.Extension.Where(x => x.Url == HealthVaultExtensions.ExerciseDetail).ToList();
             Assert.AreEqual(2, detailExtensions.Count);
             Assert.AreEqual("lap 1", ((FhirString)detailExtensions[0].Extension[0].Value).Value);
-            Assert.AreEqual("exercise-activities:swimming", ((CodeableConcept)detailExtensions[0].Extension[1].Value).Coding[0].Code);
+            Assert.AreEqual("swimming", ((Coding)detailExtensions[0].Extension[1].Value).Code);
             Assert.AreEqual(30, ((Quantity)detailExtensions[0].Extension[2].Value).Value);
             Assert.AreEqual("seconds", ((Quantity)detailExtensions[0].Extension[2].Value).Unit);
 
             var segmentExtensions = observation.Extension.Where(x => x.Url == HealthVaultExtensions.ExerciseSegment).ToList();
             Assert.AreEqual(1, segmentExtensions.Count);
-            Assert.AreEqual("exercise-activities:swimming", ((CodeableConcept)segmentExtensions[0].Extension[0].Value).Coding[0].Code);
+            Assert.AreEqual("swimming", ((CodeableConcept)segmentExtensions[0].Extension[0].Value).Coding[0].Code);
             Assert.AreEqual("Segment 1", ((FhirString)segmentExtensions[0].Extension[1].Value).Value);
             Assert.AreEqual(180, ((FhirDecimal)segmentExtensions[0].Extension[2].Value).Value);
             Assert.AreEqual(31.5m, ((Quantity)segmentExtensions[0].Extension[3].Value).Value);
@@ -69,16 +70,16 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.AreEqual(3, segmentExtensions[0].Extension[5].Extension.Count);
             Assert.AreEqual("segment 1 - lap 1", ((FhirString)segmentExtensions[0].Extension[5].Extension[0].Value).Value);
 
-            Assert.AreEqual($"{HealthVaultVocabularies.Exercise}:{HealthVaultVocabularies.ExerciseDistance}", observation.Component[0].Code.Coding[0].Code);
+            Assert.AreEqual(HealthVaultVocabularies.ExerciseDistance, observation.Component[0].Code.Text);
             Assert.AreEqual(30, ((Quantity)observation.Component[0].Value).Value);
             Assert.AreEqual("m", ((Quantity)observation.Component[0].Value).Unit);
 
-            Assert.AreEqual($"{HealthVaultVocabularies.Exercise}:{HealthVaultVocabularies.ExerciseDuration}", observation.Component[1].Code.Coding[0].Code);
+            Assert.AreEqual(HealthVaultVocabularies.ExerciseDuration, observation.Component[1].Code.Text);
             Assert.AreEqual(10, ((Quantity)observation.Component[1].Value).Value);
             Assert.AreEqual("min", ((Quantity)observation.Component[1].Value).Unit);
 
-            Assert.AreEqual($"{HealthVaultVocabularies.Exercise}:{HealthVaultVocabularies.ExerciseActivity}", observation.Component[2].Code.Coding[0].Code);
-            Assert.AreEqual("exercise-activities:swimming", ((CodeableConcept)observation.Component[2].Value).Coding[0].Code);
+            Assert.AreEqual(HealthVaultVocabularies.ExerciseActivity, observation.Component[2].Code.Text);
+            Assert.AreEqual("swimming", ((CodeableConcept)observation.Component[2].Value).Coding[0].Code);
         }
     }
 }

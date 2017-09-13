@@ -77,11 +77,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
         internal static FhirMedication ToFhirInternal(HVMedication hvMedication, FhirMedication fhirMedication)
         {
-            fhirMedication.Code = HealthVaultCodesToFhir.ConvertCodableValueToFhir(hvMedication.Name);
+            fhirMedication.Code = hvMedication.Name.ToFhir();
 
             if (hvMedication.GenericName != null)
             {
-                var ingredientItem = HealthVaultCodesToFhir.ConvertCodableValueToFhir(hvMedication.GenericName);
+                var ingredientItem = hvMedication.GenericName.ToFhir();
                 fhirMedication.Ingredient = new List<FhirMedication.IngredientComponent> {
                     new FhirMedication.IngredientComponent(){
                         Item= ingredientItem
@@ -92,7 +92,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 if (!fhirMedication.Ingredient.Any())
                 {
-                    var ingredientItem = HealthVaultCodesToFhir.ConvertCodableValueToFhir(hvMedication.Name);
+                    var ingredientItem = hvMedication.Name.ToFhir();
                     fhirMedication.Ingredient = new List<FhirMedication.IngredientComponent> {
                         new FhirMedication.IngredientComponent{
                             Item = ingredientItem
@@ -145,11 +145,10 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             if (prescription.Instructions != null)
             {
                 var dosage = new Dosage();
-                dosage.AdditionalInstruction.Add(
-                    HealthVaultCodesToFhir.ConvertCodableValueToFhir(prescription.Instructions));
+                dosage.AdditionalInstruction.Add(prescription.Instructions.ToFhir());
                 medicationRequest.DosageInstruction.Add(dosage);
             }
-            
+
             return medicationRequest;
         }
 

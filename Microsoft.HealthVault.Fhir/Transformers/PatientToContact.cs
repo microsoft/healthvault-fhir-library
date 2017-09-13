@@ -6,7 +6,6 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Linq;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Support;
 using Microsoft.HealthVault.Fhir.Constants;
@@ -39,7 +38,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     hvAddress.Country = address.Country;
 
                     hvAddress.Description = address.Text;
-                    hvAddress.IsPrimary = address.Extension.Any(x => x.Url == HealthVaultExtensions.IsPrimary);
+                    hvAddress.IsPrimary = address.GetBoolExtension(HealthVaultExtensions.IsPrimary);
 
                     contact.ContactInformation.Address.Add(hvAddress);
                 }
@@ -76,7 +75,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 Address = contactPoint.Value,
                 IsPrimary = contactPoint.Rank.HasValue ? contactPoint.Rank == 1 : (bool?)null,
-                Description = ((FhirString)contactPoint.Extension.FirstOrDefault(x => x.Url == HealthVaultExtensions.Description)?.Value)?.Value
+                Description = contactPoint.GetStringExtension(HealthVaultExtensions.Description),
             };
         }
 
@@ -86,7 +85,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 Number = contactPoint.Value,
                 IsPrimary = contactPoint.Rank.HasValue ? contactPoint.Rank == 1 : (bool?)null,
-                Description = ((FhirString)contactPoint.Extension.FirstOrDefault(x => x.Url == HealthVaultExtensions.Description)?.Value)?.Value
+                Description = contactPoint.GetStringExtension(HealthVaultExtensions.Description),
             };
         }
     }

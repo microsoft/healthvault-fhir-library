@@ -92,9 +92,9 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 First = fhirName.Given.FirstOrDefault() ?? string.Empty,
                 Middle = fhirName.Given.ElementAtOrDefault(1) ?? string.Empty,
                 Suffix = fhirName.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientSuffix)
-                                ?.GetCodableValue(),
+                    ?.ToCodableValue(),//GetCodableValue(),
                 Title = fhirName.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientTitle)
-                                ?.GetCodableValue()
+                    ?.ToCodableValue()//.GetCodableValue()
             };
 
             if (!string.IsNullOrEmpty(fhirName.Text))
@@ -108,7 +108,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             return hvName;
         }
-        
+
         private static Email ConvertContactPointToEmail(ContactPoint contactPoint)
         {
             return new Email

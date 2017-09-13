@@ -160,6 +160,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ToFhirTests\BloodGlucoseToFhirTests.cs" />
     <Compile Include="ToFhirTests\DosageToFhirTests.cs" />
     <Compile Include="ToFhirTests\MedicationToFhirTests.cs" />
     <Compile Include="ToFhirTests\PersonItemToFhirTests.cs" />
@@ -216,6 +217,7 @@
     <EmbeddedResource Include="Samples\FhirBodyDimension.json" />
     <EmbeddedResource Include="Samples\FhirExercise.json" />
     <EmbeddedResource Include="Samples\FhirPatientFull.json" />
+    <EmbeddedResource Include="Samples\HealthVaultToFhirBloodGlucose.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.HealthVault.Fhir\Microsoft.HealthVault.Fhir.csproj">

@@ -10,7 +10,6 @@ namespace Microsoft.HealthVault.Fhir.Constants
 {
     public static class VocabularyUris
     {
-        public const string HealthVaultVocabulariesUri = "http://healthvault.com/vocabularies/";
         public const string Loinc = "http://loinc.org";
         public const string SnomedCd = "http://snomed.info/sct";       
     }
