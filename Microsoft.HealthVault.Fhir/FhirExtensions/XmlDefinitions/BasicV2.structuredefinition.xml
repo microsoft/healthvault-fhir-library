@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <meta>
+    <lastUpdated value="2017-08-24T10:42:40.443-07:00" />
+  </meta>
+  <url value="http://healthvault.com/fhir/stu3/StructureDefinition/basic-v2" />
+  <name value="BasicV2" />
+  <status value="draft" />
+  <date value="2017-08-24T09:32:12.18-07:00" />
+  <publisher value="Microsoft Corporation" />
+  <description value="Extension that encapsulates the additional data found in a BasicV2 thing type." />
+  <copyright value="Copyright (c) Microsoft Corporation.  All rights reserved." />
+  <fhirVersion value="3.0.1" />
+  <kind value="complex-type" />
+  <abstract value="false" />
+  <contextType value="resource" />
+  <context value="Patient" />
+  <type value="Extension" />
+  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Extension" />
+  <derivation value="constraint" />
+  <differential>
+    <element id="Extension">
+      <path value="Extension" />
+      <max value="1" />
+    </element>
+    <element>
+      <path value="Extension.extension" />
+      <slicing>
+        <discriminator>
+          <type value="value" />
+          <path value="url" />
+        </discriminator>
+        <rules value="open" />
+      </slicing>
+    </element>
+    <element id="Extension.extension:birth-year">
+      <path value="Extension.extension" />
+      <sliceName value="birth-year" />
+      <short value="Birth year of patient." />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:birth-year.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="birth-year" />
+    </element>
+    <element id="Extension.extension:birth-year.value[x]:valueInteger">
+      <path value="Extension.extension.valueInteger" />
+      <sliceName value="valueInteger" />
+      <type>
+        <code value="integer" />
+      </type>
+    </element>
+    <element id="Extension.extension:first-day-of-week">
+      <path value="Extension.extension" />
+      <sliceName value="first-day-of-week" />
+      <short value="The first day of the week for the patient." />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:first-day-of-week.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="first-day-of-week" />
+    </element>
+    <element id="Extension.extension:first-day-of-week.value[x]:valueCode">
+      <path value="Extension.extension.valueCode" />
+      <sliceName value="valueCode" />
+      <type>
+        <code value="code" />
+      </type>
+    </element>
+    <element id="Extension.extension:basic-address">
+      <path value="Extension.extension" />
+      <sliceName value="basic-address" />
+      <short value="A basic address of the patient." />
+      <max value="1" />
+    </element>
+    <element>
+      <path value="Extension.extension.extension" />
+      <slicing>
+        <discriminator>
+          <type value="value" />
+          <path value="url" />
+        </discriminator>
+        <rules value="open" />
+      </slicing>
+    </element>
+    <element id="Extension.extension:basic-address.extension:city">
+      <path value="Extension.extension.extension" />
+      <sliceName value="city" />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:basic-address.extension:city.url">
+      <path value="Extension.extension.extension.url" />
+      <fixedUri value="city" />
+    </element>
+    <element id="Extension.extension:basic-address.extension:city.value[x]:valueString">
+      <path value="Extension.extension.extension.valueString" />
+      <sliceName value="valueString" />
+      <type>
+        <code value="string" />
+      </type>
+    </element>
+    <element id="Extension.extension:basic-address.extension:state">
+      <path value="Extension.extension.extension" />
+      <sliceName value="state" />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:basic-address.extension:state.url">
+      <path value="Extension.extension.extension.url" />
+      <fixedUri value="state" />
+    </element>
+    <element id="Extension.extension:basic-address.extension:state.value[x]:valueCodeableConcept">
+      <path value="Extension.extension.extension.valueCodeableConcept" />
+      <sliceName value="valueCodeableConcept" />
+      <type>
+        <code value="CodeableConcept" />
+      </type>
+    </element>
+    <element id="Extension.extension:basic-address.extension:postal-code">
+      <path value="Extension.extension.extension" />
+      <sliceName value="postal-code" />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:basic-address.extension:postal-code.url">
+      <path value="Extension.extension.extension.url" />
+      <fixedUri value="postal-code" />
+    </element>
+    <element id="Extension.extension:basic-address.extension:postal-code.value[x]:valueString">
+      <path value="Extension.extension.extension.valueString" />
+      <sliceName value="valueString" />
+      <type>
+        <code value="string" />
+      </type>
+    </element>
+    <element id="Extension.extension:basic-address.extension:country">
+      <path value="Extension.extension.extension" />
+      <sliceName value="country" />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:basic-address.extension:country.url">
+      <path value="Extension.extension.extension.url" />
+      <fixedUri value="country" />
+    </element>
+    <element id="Extension.extension:basic-address.extension:country.value[x]:valueCodeableConcept">
+      <path value="Extension.extension.extension.valueCodeableConcept" />
+      <sliceName value="valueCodeableConcept" />
+      <type>
+        <code value="CodeableConcept" />
+      </type>
+    </element>
+    <element id="Extension.extension:basic-address.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="basic-address" />
+    </element>
+    <element id="Extension.extension:basic-address.value[x]">
+      <path value="Extension.extension.value[x]" />
+      <max value="0" />
+    </element>
+    <element id="Extension.url">
+      <path value="Extension.url" />
+      <fixedUri value="http://healthvault.com/fhir/stu3/StructureDefinition/basic-v2" />
+    </element>
+    <element id="Extension.value[x]">
+      <path value="Extension.value[x]" />
+      <max value="0" />
+    </element>
+  </differential>
+</StructureDefinition>

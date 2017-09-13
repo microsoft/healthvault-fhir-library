@@ -7,7 +7,6 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Linq;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Support;
 using Microsoft.HealthVault.Fhir.Codings;
@@ -40,32 +39,30 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 }
             }
 
-            if (patient.Extension.Any(x => x.Url == HealthVaultExtensions.PatientBirthYear))
-            {
-                hasValue = true;
-                basicV2.BirthYear = (int?)((FhirDecimal)patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientBirthYear).Value).Value;
-            }
+            var basicV2Extension = patient.GetExtension(HealthVaultExtensions.PatientBasicV2);
 
-            if (patient.Extension.Any(x => x.Url == HealthVaultExtensions.FirstDayOfWeek))
+            if (basicV2Extension != null)
             {
-                hasValue = true;
-                var stringDayOfWeek = ((Coding)patient.Extension.First(x => x.Url == HealthVaultExtensions.FirstDayOfWeek).Value).Display;
+                basicV2.BirthYear = basicV2Extension.GetIntegerExtension(HealthVaultExtensions.PatientBirthYear);
+                hasValue = basicV2.BirthYear.HasValue || hasValue;
 
+                var stringDayOfWeek = basicV2Extension.GetExtensionValue<Coding>(HealthVaultExtensions.PatientFirstDayOfWeek)?.Display;
                 if (Enum.TryParse(stringDayOfWeek, out DayOfWeek dayOfWeek))
                 {
+                    hasValue = true;
                     basicV2.FirstDayOfWeek = dayOfWeek;
                 }
-            }
 
-            if (patient.Extension.Any(x => x.Url == HealthVaultExtensions.PatientBasicAddress))
-            {
-                hasValue = true;
-                var basicAddress = patient.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddress);
-                
-                basicV2.City = ((FhirString)basicAddress.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddressCity)?.Value)?.Value;
-                basicV2.StateOrProvince = ((CodeableConcept)basicAddress.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddressState)?.Value)?.ToCodableValue();
-                basicV2.PostalCode = ((FhirString)basicAddress.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddressPostalCode)?.Value)?.Value;
-                basicV2.Country = ((CodeableConcept)basicAddress.Extension.First(x => x.Url == HealthVaultExtensions.PatientBasicAddressCountry)?.Value)?.ToCodableValue();
+                var basicAddress = basicV2Extension.GetExtension(HealthVaultExtensions.PatientBasicAddress);
+                if (basicAddress != null)
+                {
+                    hasValue = true;
+
+                    basicV2.City = basicAddress.GetStringExtension(HealthVaultExtensions.PatientBasicAddressCity);
+                    basicV2.StateOrProvince = basicAddress.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientBasicAddressState)?.ToCodableValue();
+                    basicV2.PostalCode = basicAddress.GetStringExtension(HealthVaultExtensions.PatientBasicAddressPostalCode);
+                    basicV2.Country = basicAddress.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientBasicAddressCountry)?.ToCodableValue();
+                }
             }
 
             if (!patient.Communication.IsNullOrEmpty())

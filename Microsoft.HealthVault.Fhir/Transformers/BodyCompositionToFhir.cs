@@ -8,11 +8,9 @@
 
 using System.Collections.Generic;
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Codings;
+using Microsoft.HealthVault.Fhir.Codes.HealthVault;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
-using UnitsNet;
-using UnitsNet.Units;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
@@ -33,19 +31,21 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         internal static Observation ToFhirInternal(BodyComposition bodyComposition, Observation observation)
         {
             observation.Category = new List<CodeableConcept> { FhirCategories.VitalSigns };
-            
-            var codings = new List<Coding>();
-            HealthVaultCodesToFhir.ConvertCodableValueToFhir(bodyComposition.MeasurementMethod, codings);
-            HealthVaultCodesToFhir.ConvertCodableValueToFhir(bodyComposition.Site, codings);
-            HealthVaultCodesToFhir.ConvertCodableValueToFhir(bodyComposition.MeasurementName, codings);
 
-            observation.Component = new List<Observation.ComponentComponent>();
+            observation.Effective = bodyComposition.When.ToFhir();
+
+            observation.Code = HealthVaultVocabularies.GenerateCodeableConcept(HealthVaultThingTypeNameCodes.BodyComposition);
+
+            if (bodyComposition.MeasurementName != null)
+            {
+                observation.Component.Add(new Observation.ComponentComponent{Code = bodyComposition.MeasurementName.ToFhir()});
+            }
 
             if (bodyComposition.Value.MassValue != null)
             {
                 var massValue = new Observation.ComponentComponent
                 {
-                    Code = new CodeableConcept { Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(bodyComposition.MeasurementName, null) },
+                    Code = bodyComposition.MeasurementName.ToFhir(),
                     Value = new Quantity((decimal)bodyComposition.Value.MassValue.Kilograms, UnitAbbreviations.Kilogram)
                 };
                 observation.Component.Add(massValue);
@@ -55,18 +55,21 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             { 
                 var percentageValue = new Observation.ComponentComponent
                 {
-                    Code = new CodeableConcept { Coding = HealthVaultCodesToFhir.ConvertCodableValueToFhir(bodyComposition.MeasurementName, null) },
+                    Code = bodyComposition.MeasurementName.ToFhir(),
                     Value = new Quantity((decimal)bodyComposition.Value.PercentValue.Value, UnitAbbreviations.Percent)
                 };
                 observation.Component.Add(percentageValue);
             }
-            
-            observation.Effective = bodyComposition.When.ToFhir();
 
-            observation.Code = new CodeableConcept
+            if (bodyComposition.Site != null)
             {
-                Coding = codings
-            };
+                observation.BodySite = bodyComposition.Site.ToFhir();
+            }
+
+            if (bodyComposition.MeasurementMethod != null)
+            {
+                observation.Method = bodyComposition.MeasurementMethod.ToFhir();
+            }
 
             return observation;
         }

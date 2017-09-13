@@ -1,0 +1,208 @@
+﻿{
+    "resourceType": "Observation",
+    "text": {
+        "div": "New Swim"
+    },
+    "extension": [
+        {
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/thing-flags",
+            "valueString": "None"
+        },
+        {
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/thing-state",
+            "valueString": "Active"
+        },
+        {
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/exercise-detail",
+            "extension": [
+                {
+                    "url": "name",
+                    "valueString": "lap 1"
+                },
+                {
+                    "url": "type",
+                    "valueCoding": {
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/exercise-activities",
+                        "version": "1",
+                        "code": "swimming"
+                    }
+                },
+                {
+                    "url": "value",
+                    "valueQuantity": {
+                        "value": 30,
+                        "unit": "seconds",
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/duration-units",
+                        "code": "s"
+                    }
+                }
+            ]
+        },
+        {
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/exercise-detail",
+            "extension": [
+                {
+                    "url": "name",
+                    "valueString": "lap 2"
+                },
+                {
+                    "url": "type",
+                    "valueCoding": {
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/exercise-activities",
+                        "version": "1",
+                        "code": "swimming"
+                    }
+                },
+                {
+                    "url": "value",
+                    "valueQuantity": {
+                        "value": 28,
+                        "unit": "seconds",
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/duration-units",
+                        "code": "s"
+                    }
+                }
+            ]
+        },
+        {
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/exercise-segment",
+            "extension": [
+                {
+                    "url": "activity",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/exercise-activities",
+                                "version": "1",
+                                "code": "swimming"
+                            }
+                        ],
+                        "text": "Swimming"
+                    }
+                },
+                {
+                    "url": "title",
+                    "valueString": "Segment 1"
+                },
+                {
+                    "url": "duration",
+                    "valueDecimal": 180
+                },
+                {
+                    "url": "distance",
+                    "valueQuantity": {
+                        "value": 31.5,
+                        "unit": "m"
+                    }
+                },
+                {
+                    "url": "offset",
+                    "valueDecimal": 43.3
+                },
+                {
+                    "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/exercise-detail",
+                    "extension": [
+                        {
+                            "url": "name",
+                            "valueString": "segment 1 - lap 1"
+                        },
+                        {
+                            "url": "type",
+                            "valueCoding": {
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/exercise-activities",
+                                "version": "1",
+                                "code": "swimming"
+                            }
+                        },
+                        {
+                            "url": "value",
+                            "valueQuantity": {
+                                "value": 46.2,
+                                "unit": "seconds",
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/duration-units",
+                                "code": "s"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/exercise-detail",
+                    "extension": [
+                        {
+                            "url": "name",
+                            "valueString": "segment 1 - lap 2"
+                        },
+                        {
+                            "url": "type",
+                            "valueCoding": {
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/exercise-activities",
+                                "version": "1",
+                                "code": "swimming"
+                            }
+                        },
+                        {
+                            "url": "value",
+                            "valueQuantity": {
+                                "value": 21,
+                                "unit": "seconds",
+                                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/duration-units",
+                                "code": "s"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "status": "final",
+    "code": {
+        "coding": [
+            {
+                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/thing-type-names",
+                "version": "1",
+                "code": "txtNameexercise",
+                "display": "Exercise"
+            }
+        ]
+    },
+    "effectiveDateTime": "2017-08-25T16:05:54.081-07:00",
+    "component": [
+        {
+            "code": {
+                "text": "exercise-distance"
+            },
+            "valueQuantity": {
+                "value": 30,
+                "unit": "m",
+                "system": "http://unitsofmeasure.org",
+                "code": "m"
+            }
+        },
+        {
+            "code": {
+                "text": "exercise-duration"
+            },
+            "valueQuantity": {
+                "value": 10,
+                "unit": "min",
+                "system": "http://unitsofmeasure.org",
+                "code": "min"
+            }
+        },
+        {
+            "code": {
+                "text": "exercise-activity"
+            },
+            "valueCodeableConcept": {
+                "coding": [
+                    {
+                        "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/exercise-activities",
+                        "version": "1",
+                        "code": "swimming"
+                    }
+                ],
+                "text": "Swimming"
+            }
+        }
+    ]
+}
