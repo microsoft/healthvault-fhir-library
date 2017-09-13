@@ -8,8 +8,10 @@
 
 using System.Collections.Generic;
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Codes.HealthVault;
 using Microsoft.HealthVault.Fhir.Codings;
 using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
@@ -27,121 +29,44 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
                 Text = txt
             };
 
-            var codableValue = codeableConcept.GetCodableValue();
+            var codableValue = codeableConcept.ToCodableValue();
 
             Assert.AreEqual(txt, codableValue.Text);
         }
 
         [TestMethod]
-        public void WhenFhirCodeableConceptConvertedToHealthVault_ThenUniqueDisplayTextIsCopiedToText()
+        public void WhenFhirCodingConvertedToHealthVault_ThenValueIsCopiedFromCode()
         {
-            const string displayText = "DisplayText";
-            var codeableConcept = new CodeableConcept()
-            {
-                Coding = new List<Coding>
-                {
-                    new Coding("system","code",displayText),
-                    new Coding("system1","code2",displayText)
-                }
-            };
-            var codeableConcept2 = new CodeableConcept()
-            {
-                Coding = new List<Coding>
-                {
-                    new Coding("system","code",displayText),
-                    new Coding("system2","code1","displayText2")
-                }
-            };
+            var coding = HealthVaultThingTypeNameCodes.BloodGlucose;
 
-            var codableValue = codeableConcept.GetCodableValue();
-            var codableValue2 = codeableConcept2.GetCodableValue();
-
-
-            Assert.AreEqual(displayText, codableValue.Text);
-            Assert.AreNotEqual(displayText, codableValue2.Text);
+            var codedValue = coding.ToCodedValue();
+            
+            Assert.AreEqual(HealthVaultThingTypeNameCodes.BloodGlucoseCode, codedValue.Value);
         }
 
         [TestMethod]
-        public void WhenFhirCodeableConceptConvertedToHealthVault_AndTextExists_ThenDisplayTextIsNotCopied()
-        {
-            const string displayText = "DisplayText";
-            var codeableConcept = new CodeableConcept()
-            {
-                Text = "SomeText",
-                Coding = new List<Coding>
-                {
-                    new Coding("system","code",displayText),
-                    new Coding("system1","code2",displayText)
-                }
-            };
-
-            var codableValue = codeableConcept.GetCodableValue();
-
-
-            Assert.AreNotEqual(displayText, codableValue.Text);
-        }
-
-        [TestMethod]
-        public void WhenFhirCodingConvertedToHealthVault_ThenValueAndVocabularyIsColonSeperatedFromCode()
+        public void WhenFhirCodingConvertedToHealthVault_ThenSystemIsCopiedAsVocabulary()
         {
             var coding = new Coding
             {
-                Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "wgt"),
-                Version = "1",
-                System = VocabularyUris.HealthVaultVocabulariesUri,
-                Display = "Body Weight",
+                System = FhirCategories.Hl7Observation,
+                Code = "vital-signs",
+                Display = "Vital Signs",
             };
 
-            var codedValue = coding.GetCodedValue();
+            var codedValue = coding.ToCodedValue();
+
+            Assert.AreEqual(FhirCategories.Hl7Observation, codedValue.VocabularyName);
+        }
+
+        [TestMethod]
+        public void WhenFhirCodingConvertedToHealthVault_AndVocabularyIsFromHealthVault_ThenVocabularyIsExtractedFromSystem()
+        {
+            var coding = HealthVaultVitalStatisticsCodes.BodyHeight;
+
+            var codedValue = coding.ToCodedValue();
 
             Assert.AreEqual(HealthVaultVocabularies.VitalStatistics, codedValue.VocabularyName);
-            Assert.AreEqual("wgt", codedValue.Value);
-        }
-
-        [TestMethod]
-        public void WhenFhirCodingConvertedToHealthVault_AndVocabularyIsEmpty_AndSystemIsWellFormedUri_ThenVocabularyIsSetAsFhir()
-        {
-            var coding = new Coding
-            {
-                System = FhirCategories.Hl7Observation,
-                Code = "vital-signs",
-                Display = "Vital Signs",
-            };
-
-            var codedValue = coding.GetCodedValue();
-
-            Assert.AreEqual(HealthVaultVocabularies.Fhir, codedValue.VocabularyName);
-        }
-
-        [TestMethod]
-        public void WhenFhirCodingConvertedToHealthVault_ThenSystemIsCopiedAsFamily()
-        {
-            var coding = new Coding
-            {
-                System = FhirCategories.Hl7Observation,
-                Code = "vital-signs",
-                Display = "Vital Signs",
-            };
-
-            var codedValue = coding.GetCodedValue();
-
-            Assert.AreEqual(FhirCategories.Hl7Observation, codedValue.Family);
-        }
-
-        [TestMethod]
-        public void WhenFhirCodingConvertedToHealthVault_AndSystemIsSetAsHVVocabularyUri_ThenFamilyIsSetAsWC()
-        {
-            var coding = new Coding
-            {
-                Code = string.Format(HealthVaultVocabularies.HealthVaultCodedValueFormat, HealthVaultVocabularies.VitalStatistics, "wgt"),
-                Version = "1",
-                System = VocabularyUris.HealthVaultVocabulariesUri,
-                Display = "Body Weight",
-            };
-
-            var codedValue = coding.GetCodedValue();
-
-            Assert.AreEqual(HealthVaultVocabularies.Wc, codedValue.Family);
         }
     }
 }

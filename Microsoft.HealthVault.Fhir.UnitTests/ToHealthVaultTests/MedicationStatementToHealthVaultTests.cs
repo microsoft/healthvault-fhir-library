@@ -50,7 +50,9 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
                        {
                            Value = dosage,
                            Unit = "Tablets",
-                           System = HealthVaultCodesToFhir.GetVocabularyUrl("medication-dose-units","1"),
+                           System = HealthVaultVocabularies.GenerateSystemUrl
+                                (HealthVaultVocabularies.MedicationDoseUnits,
+                                    HealthVaultVocabularies.Wc),
                            Code = "tablet"
                        },
                        Timing = new Timing
@@ -68,8 +70,10 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
                            {
                                new Coding
                                {
-                                   Code=$"medication-routes:{routeCode}",
-                                   System=VocabularyUris.HealthVaultVocabulariesUri,
+                                   Code=routeCode,
+                                   System = HealthVaultVocabularies.GenerateSystemUrl
+                                        (HealthVaultVocabularies.MedicationRoutes,
+                                            HealthVaultVocabularies.Wc),
                                    Version="2"
                                }
                            }

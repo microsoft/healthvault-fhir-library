@@ -20,9 +20,8 @@ namespace Microsoft.HealthVault.Fhir.Codings
     {
         internal static CodableValue CreateCodableValueFromQuantityValues(string system, string code, string unit)
         {
-            var uri = new Uri(system);
-
-            return new CodableValue(unit, code, GetVocabularyName(uri), GetFamily(uri), null);
+            var familyVocab = HealthVaultVocabularies.ExtractFamilyAndVocabularyFromSystemUrl(system);
+            return new CodableValue(unit, code, familyVocab.vocabulary, familyVocab.family, null);
         }
 
         internal static Type DetectHealthVaultTypeFromObservation(Observation observation)
@@ -53,35 +52,8 @@ namespace Microsoft.HealthVault.Fhir.Codings
             throw new NotSupportedException();
         }
 
-        internal static string GetFamily(Uri uri)
-        {
-            if (HealthVaultVocabularies.SystemContainsHealthVaultUrl(uri.ToString()))
-            {
-                // Expected to cotain 6 if the family is specified in the URL
-                if (uri.Segments.Length == 6)
-                {
-                    return uri.Segments[4].TrimEnd('/');
-                }
-
-                // By default if nothing is specified, then wc is assumed
-                return "wc";
-            }
-
-            return null;
-        }
-
-        internal static string GetVocabularyName(Uri uri)
-        {
-            if (HealthVaultVocabularies.SystemContainsHealthVaultUrl(uri.ToString()))
-            {
-                return uri.Segments.Last();
-            }
-
-            return null;
-        }
-
         private static Type DetectType(Dictionary<string, string> codeDictionary, string code)
-        {            
+        {
             if (codeDictionary != null && codeDictionary.ContainsKey(code))
             {
                 return Type.GetType($"{codeDictionary[code]}, Microsoft.HealthVault");

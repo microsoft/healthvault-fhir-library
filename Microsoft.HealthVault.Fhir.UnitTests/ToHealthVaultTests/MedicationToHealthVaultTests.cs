@@ -51,7 +51,9 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
                     new FhirMedication.IngredientComponent()
                     {
                         Item = new CodeableConcept(system:"http://snomed.info/sct",
-                            code:"386906001",display: ingredientName,text:null)
+                            code:"386906001",
+                            display:null,
+                            text: ingredientName)
                     }
                 }
             };
@@ -103,7 +105,9 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
                     new FhirMedication.IngredientComponent()
                     {
                         Item = new CodeableConcept(system:"http://snomed.info/sct",
-                            code:"386906001",display: "Capecitabine (substance)",text:null),
+                            code:"386906001",
+                            display:null,
+                            text: "Capecitabine (substance)"),
                         Amount = new Ratio
                         {
                             Numerator = new Quantity(ingredientAmount,"mg")

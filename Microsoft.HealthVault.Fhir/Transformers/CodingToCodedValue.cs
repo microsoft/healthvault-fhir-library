@@ -6,9 +6,8 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Codings;
+using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
@@ -17,24 +16,14 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     {
         public static CodedValue ToCodedValue(this Coding coding)
         {
-            var uri = new Uri(coding.System);
+            var familyVocab = HealthVaultVocabularies.ExtractFamilyAndVocabularyFromSystemUrl(coding.System);
             var returnValue = new CodedValue
             {
                 Value = coding.Code,
+                VocabularyName = familyVocab.vocabulary,
+                Family = familyVocab.family,
                 Version = coding.Version,
             };
-
-            var family = CodeToHealthVaultHelper.GetFamily(uri);
-            if (!string.IsNullOrEmpty(family))
-            {
-                returnValue.Family = family;
-            }
-
-            var vocabName = CodeToHealthVaultHelper.GetVocabularyName(uri);
-            if (!string.IsNullOrEmpty(vocabName))
-            {
-                returnValue.VocabularyName = vocabName;
-            }
 
             return returnValue;
         }
