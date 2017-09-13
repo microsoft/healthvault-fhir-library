@@ -27,7 +27,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         {
             Procedure hvProcedure = fhirProcedure.ToThingBase<Procedure>();
 
-            //Populate when if present
+            //Populate when (if present)
             if(fhirProcedure.Performed != null)
             {                
                 hvProcedure.When = fhirProcedure.Performed.ToAproximateDateTime();                
@@ -37,7 +37,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 throw new System.InvalidOperationException($"Can not transform a {typeof(FhirProcedure)} with no code into {typeof(Procedure)}");
 
             hvProcedure.Name = fhirProcedure.Code.ToCodableValue();
-            hvProcedure.AnatomicLocation = fhirProcedure.BodySite?.FirstOrDefault()?.ToCodableValue(); //TODO: Add testing
+            hvProcedure.AnatomicLocation = fhirProcedure.BodySite?.FirstOrDefault()?.ToCodableValue();
             
             if(!fhirProcedure.Performer.IsNullOrEmpty())
             {                

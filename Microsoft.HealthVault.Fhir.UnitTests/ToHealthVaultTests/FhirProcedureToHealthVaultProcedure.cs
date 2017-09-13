@@ -45,8 +45,10 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             Assert.AreEqual("Certified Medical Assistant", hvProcedure.PrimaryProvider.ProfessionalTraining);
 
             //secondary-provider
-            Assert.AreEqual("Dokter Bronsig", hvProcedure.SecondaryProvider.Name.Full);            
+            Assert.AreEqual("Dokter Bronsig", hvProcedure.SecondaryProvider.Name.Full);
 
+            //body-site
+            Assert.AreEqual("Sphenoid bone", hvProcedure.AnatomicLocation.Text);
         }
     }
 }

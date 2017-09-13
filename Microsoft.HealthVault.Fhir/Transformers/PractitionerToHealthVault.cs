@@ -17,7 +17,7 @@ using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    public static partial class FhirToHealthVaultPerson
+    public static partial class PractitionerToHealthVault
     {
         public static ItemTypes.PersonItem ToHealthVault(this Hl7.Fhir.Model.Practitioner fhirPractitioner)
         {
