@@ -25,7 +25,11 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         [TestMethod]
         public void WhenMedicationRequestTransformedToHealthVault_ThenPractitionerIsCopiedToPrescription()
         {
-            Assert.IsTrue(true);
+            MedicationRequest medicationRequest = GetSampleRequest();
+
+            var hvMedication = medicationRequest.ToHealthVault() as HVMedication;
+
+            Assert.IsNotNull(hvMedication.Prescription.PrescribedBy);
         }
 
         [TestMethod]

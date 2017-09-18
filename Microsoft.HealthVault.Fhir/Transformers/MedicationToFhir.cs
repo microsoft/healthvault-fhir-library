@@ -49,8 +49,16 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 var embeddedMedicationRequest = new MedicationRequest();
                 embeddedMedicationRequest.Id = "medReq" + Guid.NewGuid();
 
+                Practitioner prescribedBy = hvMedication.Prescription.PrescribedBy.ToFhir();
+                prescribedBy.Id = "prac" + Guid.NewGuid();
+                medicationStatement.Contained.Add(prescribedBy);
+
                 MedicationRequest request = ToFhirInternal(hvMedication.Prescription, embeddedMedicationRequest);
                 request.Medication = embeddedMedication.GetContainerReference();
+                request.Requester = new MedicationRequest.RequesterComponent
+                {
+                    Agent = prescribedBy.GetContainerReference()
+                };
                 medicationStatement.Contained.Add(request);
                 medicationStatement.BasedOn.Add(embeddedMedicationRequest.GetContainerReference());
             }
@@ -113,7 +121,6 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         internal static MedicationRequest ToFhirInternal(Prescription prescription, MedicationRequest medicationRequest)
         {
             medicationRequest.SetIntentAsInstanceOrder();
-            //hvMedication.PrescribedBy
             medicationRequest.AuthoredOnElement = prescription.DatePrescribed?.ToFhir();
             if (prescription.AmountPrescribed != null
                 || prescription.Refills.HasValue

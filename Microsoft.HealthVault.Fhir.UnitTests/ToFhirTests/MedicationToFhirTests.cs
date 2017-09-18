@@ -191,6 +191,51 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
         }
 
         [TestMethod]
+        public void WhenMedicationWithPrescriptionTransformedToFhir_ThenEmbeddedMedicationRequestHasReferenceToPractitioner()
+        {
+            var hvMedication = getSampleMedication();
+            hvMedication.Prescription = new Prescription
+            {
+                PrescribedBy = new PersonItem
+                {
+                    Name = new Name
+                    {
+                        Full = "John Mc Kense"
+                    }
+                }
+            };
+
+            var fhirMedication = hvMedication.ToFhir() as MedicationStatement;
+
+            Func<Resource, bool> practitionerPredicate = resource
+                => resource.ResourceType == ResourceType.Practitioner;
+            Assert.IsTrue(fhirMedication.Contained.Any(practitionerPredicate)
+                , $"Contained {nameof(Practitioner)} not found");
+
+            var medicationRequest = ExtractEmbeddedMedicationRequest(fhirMedication);
+            var practitioner = medicationRequest.Requester?.Agent;
+
+            Assert.IsNotNull(practitioner);
+            Assert.IsTrue(practitioner.IsContainedReference
+                && practitioner.Matches(fhirMedication.Contained
+                .First(practitionerPredicate).GetContainerReference()));
+        }
+
+        private MedicationRequest ExtractEmbeddedMedicationRequest(MedicationStatement medicationStatement)
+        {
+            foreach (var reference in medicationStatement.BasedOn)
+            {
+                if (reference.IsContainedReference)
+                {
+                    return medicationStatement.Contained.First(resource
+                        => reference.Matches(resource.GetContainerReference())
+                        && resource.ResourceType == ResourceType.MedicationRequest) as MedicationRequest;
+                }
+            }
+            throw new AssertInconclusiveException();
+        }
+
+        [TestMethod]
         public void WhenMedicationWithPrescriptionTransformedToFhir_ThenEmbeddedMedicationRequestHasReferenceToMedication()
         {
             var hvMedication = getSampleMedication();
@@ -406,19 +451,9 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.IsTrue(medicationRequest.DosageInstruction.First().AdditionalInstruction.Any());
         }
 
-        private static MedicationRequest ExtractEmbeddedMedicationRequest(HVMedication hvMedication)
+        private MedicationRequest ExtractEmbeddedMedicationRequest(HVMedication hvMedication)
         {
-            var medicationStatement = hvMedication.ToFhir();
-            foreach (var reference in medicationStatement.BasedOn)
-            {
-                if (reference.IsContainedReference)
-                {
-                    return medicationStatement.Contained.First(resource
-                        => reference.Matches(resource.GetContainerReference())
-                        && resource.ResourceType == ResourceType.MedicationRequest) as MedicationRequest;
-                }
-            }
-            throw new AssertInconclusiveException();
+            return ExtractEmbeddedMedicationRequest(hvMedication.ToFhir());            
         }
     }
 }
