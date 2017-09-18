@@ -89,12 +89,18 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 Last = fhirName.Family,
                 First = fhirName.Given.FirstOrDefault() ?? string.Empty,
-                Middle = fhirName.Given.ElementAtOrDefault(1) ?? string.Empty,
-                Suffix = fhirName.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientSuffix)
-                    ?.ToCodableValue(),//GetCodableValue(),
-                Title = fhirName.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientTitle)
-                    ?.ToCodableValue()//.GetCodableValue()
+                Middle = fhirName.Given.ElementAtOrDefault(1) ?? string.Empty
             };
+
+            if (fhirName.Prefix.Any())
+            {
+                hvName.Title = new CodableValue(fhirName.Prefix.First());
+            }
+
+            if (fhirName.Suffix.Any())
+            {
+                hvName.Suffix = new CodableValue(fhirName.Suffix.First());
+            }
 
             if (!string.IsNullOrEmpty(fhirName.Text))
             {

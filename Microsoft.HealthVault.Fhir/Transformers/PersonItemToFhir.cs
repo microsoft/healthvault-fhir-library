@@ -7,6 +7,7 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
@@ -84,7 +85,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             if (hvName.Title != null)
             {
-                fhirName.AddExtension(HealthVaultExtensions.PatientTitle, hvName.Title.ToFhir());
+                fhirName.Prefix = new List<string> { hvName.Title.Text };
             }
 
             AddGivenName(fhirName, hvName.First);
@@ -92,7 +93,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             if (hvName.Suffix != null)
             {
-                fhirName.AddExtension(HealthVaultExtensions.PatientSuffix, hvName.Suffix.ToFhir());
+                fhirName.Suffix = new List<string> { hvName.Suffix.Text };
             }
 
             return fhirName;

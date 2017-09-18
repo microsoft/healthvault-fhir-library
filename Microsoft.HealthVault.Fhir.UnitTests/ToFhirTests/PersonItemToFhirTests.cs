@@ -32,7 +32,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
         }
 
         [TestMethod]
-        public void WhenPersonItemTransformedToFhir_ThenTitleIsAddedAsAnExtension()
+        public void WhenPersonItemTransformedToFhir_ThenTitleIsAddedToPrefix()
         {
             const string title = "Mr.";
             PersonItem person = GetSamplePerson();
@@ -40,10 +40,8 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 
             var practitioner = person.ToFhir();
 
-            Assert.IsTrue(practitioner.Name.First().Extension.Any(ext
-                => ext.Url == HealthVaultExtensions.PatientTitle));
-            Assert.AreEqual(title, practitioner.Name.First()
-                .GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientTitle).Text);
+            Assert.IsTrue(practitioner.Name.First().Prefix.Any());
+            Assert.AreEqual(title, practitioner.Name.First().Prefix.First());
         }
 
         [TestMethod]
@@ -85,7 +83,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
         }
 
         [TestMethod]
-        public void WhenPersonItemTransformedToFhir_ThenSuffixIsAddedAsAnExtension()
+        public void WhenPersonItemTransformedToFhir_ThenSuffixIsAddedToSuffix()
         {
             const string suffix = "Jr.";
             PersonItem person = GetSamplePerson();
@@ -93,10 +91,8 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 
             var practitioner = person.ToFhir();
 
-            Assert.IsTrue(practitioner.Name.First().Extension.Any(ext
-                    => ext.Url == HealthVaultExtensions.PatientSuffix));
-            Assert.AreEqual(suffix, (practitioner.Name.First()
-                .GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientSuffix).Text));
+            Assert.IsTrue(practitioner.Name.First().Suffix.Any());
+            Assert.AreEqual(suffix, practitioner.Name.First().Suffix.First());
         }
 
         [TestMethod]
@@ -203,11 +199,11 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 
             Assert.IsTrue(practitioner.Telecom.Any());
 
-            ContactPoint fhirEmail = practitioner.Telecom.First();
-            Assert.AreEqual(1, fhirEmail.Rank);
-            Assert.AreEqual(number, fhirEmail.Value);
-            Assert.AreEqual(ContactPoint.ContactPointSystem.Phone, fhirEmail.System);
-            Assert.IsTrue(fhirEmail.Extension.Any(ext => ext.Url == HealthVaultExtensions.Description));
+            ContactPoint fhirPhone = practitioner.Telecom.First();
+            Assert.AreEqual(1, fhirPhone.Rank);
+            Assert.AreEqual(number, fhirPhone.Value);
+            Assert.AreEqual(ContactPoint.ContactPointSystem.Phone, fhirPhone.System);
+            Assert.IsTrue(fhirPhone.Extension.Any(ext => ext.Url == HealthVaultExtensions.Description));
         }
 
         [TestMethod]

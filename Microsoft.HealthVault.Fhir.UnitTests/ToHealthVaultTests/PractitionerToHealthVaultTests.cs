@@ -7,6 +7,7 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
@@ -58,21 +59,12 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         }
 
         [TestMethod]
-        public void WhenPractitionerTransformedToHealthVault_ThenTitleIsCopiedFromExtension()
+        public void WhenPractitionerTransformedToHealthVault_ThenTitleIsCopiedFromPrefix()
         {
             var title = "Mr.";
             var practitioner = GetPractionerWithName(new HumanName
             {
-                Extension = new System.Collections.Generic.List<Extension>
-                    {
-                        new Extension{
-                            Url = HealthVaultExtensions.PatientTitle,
-                            Value = new CodeableConcept
-                            {
-                                Text = title
-                            }
-                        }
-                    }
+                Prefix = new List<string> { title }
             });
 
             var person = practitioner.ToHealthVault();
@@ -131,21 +123,12 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         }
 
         [TestMethod]
-        public void WhenPractitionerTransformedToHealthVault_ThenSuffixIsCopiedFromExtension()
+        public void WhenPractitionerTransformedToHealthVault_ThenSuffixIsCopiedFromSuffix()
         {
             var suffix = "Jr.";
             var practitioner = GetPractionerWithName(new HumanName
             {
-                Extension = new System.Collections.Generic.List<Extension>
-                    {
-                        new Extension{
-                            Url = HealthVaultExtensions.PatientSuffix,
-                            Value = new CodeableConcept
-                            {
-                                Text = suffix
-                            }
-                        }
-                    }
+                Suffix = new List<string> { suffix }
             });
 
             var person = practitioner.ToHealthVault();
