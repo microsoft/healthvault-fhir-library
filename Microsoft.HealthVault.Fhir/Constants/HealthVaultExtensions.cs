@@ -38,7 +38,7 @@ namespace Microsoft.HealthVault.Fhir.Constants
 
         public const string PatientBasicV2 = HealthVaultExtensionsUri + "basic-v2";
         public const string PatientBirthYear = "birth-year";
-        public const string PatientFirstDayOfWeek ="first-day-of-week";
+        public const string PatientFirstDayOfWeek = "first-day-of-week";
         public const string PatientBasicAddress = "basic-address";
         public const string PatientBasicAddressCity = "city";
         public const string PatientBasicAddressState = "state";
@@ -60,6 +60,6 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string PatientTitle = "codable-title";
         public const string PatientSuffix = "codable-suffix";
 
-        public const string PersonOrganisation = "person-organisation";
+        public const string Organisation = HealthVaultExtensionsUri + "Organisation";
     }
 }

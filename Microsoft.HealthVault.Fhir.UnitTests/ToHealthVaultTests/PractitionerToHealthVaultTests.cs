@@ -160,7 +160,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             var practitioner = GetSamplePractitioner();
             practitioner.Extension = new System.Collections.Generic.List<Extension>
             {
-                new Extension(HealthVaultExtensions.PersonOrganisation,new FhirString(organisation))
+                new Extension(HealthVaultExtensions.Organisation,new FhirString(organisation))
             };
 
             var person = practitioner.ToHealthVault();

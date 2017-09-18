@@ -100,7 +100,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
         }
 
         [TestMethod]
-        public void WhenPersonItemTransformedToFhir_ThenOrganisationIsAddedAsAnWorkAddressTest()
+        public void WhenPersonItemTransformedToFhir_ThenOrganisationIsAddedAsAnExtension()
         {
             const string organisation = "Interlake Hospitals";
             PersonItem person = GetSamplePerson();
@@ -108,9 +108,8 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 
             var practitioner = person.ToFhir();
 
-            Assert.IsTrue(practitioner.Address.Any());
-            Assert.AreEqual(organisation, practitioner.Address.First(address 
-                => address.Use == Hl7.Fhir.Model.Address.AddressUse.Work).Text);
+            Assert.IsTrue(practitioner.Extension.Any(ext => ext.Url == HealthVaultExtensions.Organisation));
+            Assert.AreEqual(organisation, practitioner.GetStringExtension(HealthVaultExtensions.Organisation));
         }
 
         [TestMethod]

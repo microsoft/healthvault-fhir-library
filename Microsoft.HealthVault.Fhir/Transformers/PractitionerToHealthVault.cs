@@ -27,8 +27,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
             person.Name = ToHealthVault(practitioner.Name.First());
 
-            person.Organization = practitioner
-                .GetExtensionValue<FhirString>(HealthVaultExtensions.PersonOrganisation)?.Value;
+            person.Organization = practitioner.GetStringExtension(HealthVaultExtensions.Organisation);
 
             if (practitioner.Qualification.Any())
             {
