@@ -55,12 +55,7 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string SleepJournalAMMedication = "sleep-journal-medication";
 
         public const string IrregularHeartBeatExtensionName = BaseUri + "vital-signs/blood-pressure/irregular-heartbeat";
-
-        public const string ConditionOccurrenceExtensionName = BaseUri + ConditionOccurrence;
-        public const string ConditionStopReason = BaseUri + "condition/stop-reason";
-        public const string ConditionStatus = BaseUri + "condition/status";
-        public const string ConditionSource = BaseUri + "condition/source";
-
+ 
         public static CodeableConcept BodyWeight = new CodeableConcept()
         {
             Coding = new List<Coding> { HealthVaultVitalStatisticsCodes.BodyWeight }

@@ -14,16 +14,15 @@
 		"valueString": "Active"
 	},
 	{
-		"url": "http://healthvault.com/fhir/stu3/ValueSet/condition/stop-reason",
-		"valueString": "In Control"
-	},
-    {
-		"url": "http://healthvault.com/fhir/stu3/ValueSet/condition/source",
-		"valueString": "patient via InstantPHR patient portal"
-	},
-    {
-		"url": "http://healthvault.com/fhir/stu3/ValueSet/condition-occurrence",
-		"valueString": "intermittent"
+		"url": "http://healthvault.com/fhir/stu3/StructuredDefinition/condition",
+		"extension": [{
+			"url": "occurrence",
+			"valueString": "intermittent"
+		},
+		{
+			"url": "stop-reason",
+			"valueString": "In Control"
+		}]
 	}],
  
   "verificationStatus": "differential",

@@ -9,13 +9,13 @@
 using System;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Transformers;
-using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NodaTime;
 using NodaTime.Extensions;
 using HVCondition = Microsoft.HealthVault.ItemTypes.Condition;
 using FhirCondition = Hl7.Fhir.Model.Condition;
+using Microsoft.HealthVault.Fhir.Constants;
 
 namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 {
@@ -32,17 +32,19 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             hvCondition.StopDate.ApproximateDate = new ItemTypes.ApproximateDate(2015);
             hvCondition.Status = new ItemTypes.CodableValue("Past: No longer has this", new ItemTypes.CodedValue("intermittent", "condition-occurrence", "wc", "1"));
             hvCondition.CommonData.Note = "condition critical";
-            hvCondition.CommonData.Source = "patient via InstantPHR patient portal";
             hvCondition.StopReason = "In Control";
             hvCondition.Key = new ThingKey(new Guid("1C855AC0-892A-4352-9A82-3DCBD22BF0BC"), new Guid("706CEAFA-D506-43A8-9758-441FD9C3D407"));
 
             var fhirCondition = hvCondition.ToFhir() as FhirCondition;
+            var conditionExtension = fhirCondition.GetExtension(HealthVaultExtensions.Condition);
             Assert.IsNotNull(fhirCondition);
             Assert.IsNotNull(fhirCondition.Code);
             Assert.IsNotNull(fhirCondition.Code.Coding);
             Assert.AreEqual(2, fhirCondition.Code.Coding.Count);
             Assert.AreEqual("2015", fhirCondition.Abatement.ToString());
             Assert.AreEqual("High blood pressure", fhirCondition.Code.Text);
+            Assert.AreEqual("In Control", conditionExtension.GetStringExtension(HealthVaultExtensions.ConditionStopReason));
+            Assert.AreEqual("intermittent", conditionExtension.GetStringExtension(HealthVaultExtensions.ConditionOccurrence));
         }
 
         [TestMethod]

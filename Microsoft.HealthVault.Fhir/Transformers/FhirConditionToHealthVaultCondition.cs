@@ -6,44 +6,41 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Support;
 using Microsoft.HealthVault.Fhir.Constants;
-using Microsoft.HealthVault.Fhir.FhirExtensions;
-using Microsoft.HealthVault.Thing;
 using HVCondition = Microsoft.HealthVault.ItemTypes.Condition;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    public static partial class ConditionToHealthVault
+    public static class ConditionToHealthVault
     {
         public static HVCondition ToHealthVault(this Condition fhirCondition)
         {
-            return fhirCondition.ToCondition();
-        }
-    }
-    internal static class FhirConditionToHealthVaultCondition
-    {
-        internal static HVCondition ToCondition(this Condition fhirCondition)
-        {
             HVCondition hvCondition = fhirCondition.ToThingBase<HVCondition>();
 
-            hvCondition.StopReason = fhirCondition.GetStringExtension(HealthVaultVocabularies.ConditionStopReason);
-            hvCondition.CommonData.Source = fhirCondition.GetStringExtension(HealthVaultVocabularies.ConditionSource);
+            string conditionOccurence = string.Empty;
+            var conditionExtension = fhirCondition.GetExtension(HealthVaultExtensions.Condition);
+            if (conditionExtension != null)
+            {
+                hvCondition.StopReason = conditionExtension.GetStringExtension(HealthVaultExtensions.ConditionStopReason);
+                conditionOccurence = conditionExtension.GetStringExtension(HealthVaultExtensions.ConditionOccurrence);
+            }
+
+
             hvCondition.OnsetDate = fhirCondition.Onset.ToAproximateDateTime();
             hvCondition.StopDate = fhirCondition.Abatement.ToAproximateDateTime();
 
+
             if (fhirCondition.ClinicalStatus.HasValue)
             {
-                hvCondition.Status =  new ItemTypes.CodableValue(fhirCondition.ClinicalStatus.Value.ToString());
-                hvCondition.Status.Add(new ItemTypes.CodedValue(fhirCondition.ClinicalStatus.Value.ToString(), FhirCategories.Hl7Condition,HealthVaultVocabularies.Fhir, ""));
+                hvCondition.Status = new ItemTypes.CodableValue(fhirCondition.ClinicalStatus.Value.ToString());
+                hvCondition.Status.Add(new ItemTypes.CodedValue(fhirCondition.ClinicalStatus.Value.ToString(), FhirCategories.Hl7Condition, HealthVaultVocabularies.Fhir, ""));
             }
-            else
+            else if (!string.IsNullOrWhiteSpace(conditionOccurence))
             {
-                hvCondition.Status = new ItemTypes.CodableValue(fhirCondition.GetStringExtension(HealthVaultVocabularies.ConditionOccurrenceExtensionName));
-                hvCondition.Status.Add(new ItemTypes.CodedValue(fhirCondition.GetStringExtension
-                    (HealthVaultVocabularies.ConditionOccurrenceExtensionName), HealthVaultVocabularies.ConditionOccurrence, HealthVaultVocabularies.Wc, "1"));
+                hvCondition.Status = new ItemTypes.CodableValue(conditionOccurence);
+                hvCondition.Status.Add(new ItemTypes.CodedValue(conditionOccurence, HealthVaultVocabularies.ConditionOccurrence, HealthVaultVocabularies.Wc, "1"));
             }
 
             if (fhirCondition.Code.IsNullOrEmpty())
@@ -56,10 +53,12 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 foreach (Annotation annotation in fhirCondition.Note)
                 {
                     hvCondition.CommonData.Note += annotation.Text;
-                }                
+                }
             }
-            
+
             return hvCondition;
         }
     }
 }
+    
+      

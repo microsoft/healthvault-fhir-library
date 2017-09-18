@@ -32,7 +32,6 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             Assert.AreEqual("intermittent", cd.Status.Text);
             Assert.AreEqual("The patient is anuric.The patient state is critcal.",cd.CommonData.Note);
             Assert.AreEqual(new HVItemTypes.ApproximateDateTime() { ApproximateDate = new HVItemTypes.ApproximateDate(2015)}, cd.StopDate);
-            Assert.AreEqual("patient via InstantPHR patient portal", cd.CommonData.Source);
         }
              
     }

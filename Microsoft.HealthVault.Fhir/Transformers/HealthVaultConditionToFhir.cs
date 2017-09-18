@@ -31,23 +31,24 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     {
         internal static Condition ToFhirInternal(HVCondition cd, Condition fhirCondition)
         {
-            var fhirCodes = new List<Coding>();
+            var conditionExtension = new Extension
+            {
+                Url = HealthVaultExtensions.Condition
+            };
+
             if (cd.CommonData != null)
             {
                 fhirCondition.AddNoteAsText(cd.CommonData.Note);
                 var note = new Annotation();
                 note.Text = cd.CommonData.Note;
                 fhirCondition.Note = new List<Annotation> {note};
-                fhirCondition.AddExtension(HealthVaultVocabularies.ConditionSource, new FhirString(cd.CommonData.Source));
             }
-
-                     
+                    
             fhirCondition.Code = cd.Name.ToFhir();
             
-
             if (cd.Status != null)
             {
-                fhirCondition.SetClinicalStatusCode(cd.Status);
+                fhirCondition.SetClinicalStatusCode(cd.Status,conditionExtension);
             }
 
             if (cd.StopDate != null)
@@ -62,13 +63,15 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             if (cd.StopReason != null)
             {
-                fhirCondition.AddExtension(HealthVaultVocabularies.ConditionStopReason, new FhirString(cd.StopReason));
+                conditionExtension.AddExtension(HealthVaultExtensions.ConditionStopReason, new FhirString(cd.StopReason));
             }
+
+            fhirCondition.Extension.Add(conditionExtension);
 
             return fhirCondition;
         }
 
-        private static void SetClinicalStatusCode(this Condition fhirCondition, ItemTypes.CodableValue status)
+        private static void SetClinicalStatusCode(this Condition fhirCondition, ItemTypes.CodableValue status, Extension conditionExtension)
         {
             foreach (ItemTypes.CodedValue cValue in status)
             {
@@ -82,7 +85,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     }
                     else
                     {
-                        fhirCondition.AddExtension(HealthVaultVocabularies.ConditionOccurrenceExtensionName, new FhirString(cValue.Value));
+                        conditionExtension.AddExtension(HealthVaultExtensions.ConditionOccurrence, new FhirString(cValue.Value));
                         return;
                     }
                 }
