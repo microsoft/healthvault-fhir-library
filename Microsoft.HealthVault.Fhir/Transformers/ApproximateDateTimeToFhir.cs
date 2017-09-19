@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿// Copyright (c) Get Real Health.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 //
@@ -20,24 +20,38 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             return ApproximateDateTimeToFhir.ToFhirInternal(approximateDateTime);
         }
     }
-
-    /// <summary>
-    /// An extension class that transforms HealthVault approximate date times into FHIR date times
-    /// </summary>
-    public class ApproximateDateTimeToFhir
+    internal static class ApproximateDateTimeToFhir
     {
         internal static FhirDateTime ToFhirInternal(ApproximateDateTime approximateDateTime)
         {
-            var dateTime = new DateTime(
-                approximateDateTime.ApproximateDate.Year,
-                approximateDateTime.ApproximateDate.Month ?? 1,
-                approximateDateTime.ApproximateDate.Day ?? 1,
-                approximateDateTime.ApproximateTime?.Hour ?? 0,
-                approximateDateTime.ApproximateTime?.Minute ?? 0,
-                approximateDateTime.ApproximateTime?.Second ?? 0,
-                approximateDateTime.ApproximateTime?.Millisecond ?? 0);
-
-            return new FhirDateTime(dateTime);
+            if (!approximateDateTime.ApproximateDate.Day.HasValue)
+            {
+                if (!approximateDateTime.ApproximateDate.Month.HasValue)
+                {
+                    return new FhirDateTime(approximateDateTime.ApproximateDate.Year);
+                }
+                else
+                {
+                    return new FhirDateTime(approximateDateTime.ApproximateDate.Year, approximateDateTime.ApproximateDate.Month.Value);
+                }
+            }
+            else if (approximateDateTime.ApproximateTime == null || !approximateDateTime.ApproximateTime.HasValue)
+            {
+                return new FhirDateTime(approximateDateTime.ApproximateDate.Year, approximateDateTime.ApproximateDate.Month.Value,
+                    approximateDateTime.ApproximateDate.Day.Value);
+            }
+            else
+            {
+                var dateTime = new DateTime(
+                   approximateDateTime.ApproximateDate.Year,
+                   approximateDateTime.ApproximateDate.Month.Value,
+                   approximateDateTime.ApproximateDate.Day.Value,
+                   approximateDateTime.ApproximateTime.Hour,
+                   approximateDateTime.ApproximateTime.Minute,
+                   approximateDateTime.ApproximateTime?.Second ?? 0,
+                   approximateDateTime.ApproximateTime?.Millisecond ?? 0);
+                return new FhirDateTime(dateTime);
+            }
         }
     }
 }

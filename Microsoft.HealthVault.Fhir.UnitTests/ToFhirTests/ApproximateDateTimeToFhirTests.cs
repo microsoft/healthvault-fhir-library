@@ -37,21 +37,21 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             var expectedDateTime1 = new DateTime(2017,1,1);
             var fhirDateTime1 = approximateDateTime1.ToFhir();
             Assert.IsNotNull(fhirDateTime1);
-            Assert.AreEqual(expectedDateTime1, fhirDateTime1.ToDateTime().Value);
+            Assert.AreEqual(expectedDateTime1.Year.ToString(), fhirDateTime1.Value);
 
             // Year, month only
             var approximateDateTime2 = new ApproximateDateTime(new ApproximateDate(2017, 8));
-            var expectedDateTime2 = new DateTime(2017, 8, 1);
+            var expectedDateTime2 = new DateTime(2017, 08, 1);
             var fhirDateTime2 = approximateDateTime2.ToFhir();
             Assert.IsNotNull(fhirDateTime2);
-            Assert.AreEqual(expectedDateTime2, fhirDateTime2.ToDateTime().Value);
+            Assert.AreEqual(expectedDateTime2.ToString("yyyy-MM"), fhirDateTime2.Value);
 
             // Year, month, day only
             var approximateDateTime3 = new ApproximateDateTime(new ApproximateDate(2017, 8, 3));
             var expectedDateTime3 = new DateTime(2017, 8, 3);
             var fhirDateTime3 = approximateDateTime3.ToFhir();
             Assert.IsNotNull(fhirDateTime3);
-            Assert.AreEqual(expectedDateTime3, fhirDateTime3.ToDateTime().Value);
+            Assert.AreEqual(expectedDateTime3.ToString("yyyy-MM-dd"), fhirDateTime3.Value);
 
             // Year, month, day, hour, minute only
             var approximateDateTime4 = new ApproximateDateTime(new ApproximateDate(2017, 8, 3), new ApproximateTime(10, 15));
