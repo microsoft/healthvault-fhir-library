@@ -45,6 +45,10 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.AreEqual("High blood pressure", fhirCondition.Code.Text);
             Assert.AreEqual("In Control", conditionExtension.GetStringExtension(HealthVaultExtensions.ConditionStopReason));
             Assert.AreEqual("intermittent", conditionExtension.GetStringExtension(HealthVaultExtensions.ConditionOccurrence));
+            Assert.AreEqual("1c855ac0-892a-4352-9a82-3dcbd22bf0bc", fhirCondition.Id);
+            Assert.AreEqual("706ceafa-d506-43a8-9758-441fd9c3d407", fhirCondition.VersionId);
+            Assert.AreEqual("1147", fhirCondition.Code.Coding[0].Code);
+            Assert.AreEqual("1148", fhirCondition.Code.Coding[1].Code);        
         }
 
         [TestMethod]

@@ -17,8 +17,12 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     {
         public static HVCondition ToHealthVault(this Condition fhirCondition)
         {
-            HVCondition hvCondition = fhirCondition.ToThingBase<HVCondition>();
+            if (fhirCondition.Code.IsNullOrEmpty())
+            {
+                throw new System.ArgumentNullException($"Can not transform a {typeof(Condition)} with no code into {typeof(HVCondition)}");
+            }
 
+            HVCondition hvCondition = fhirCondition.ToThingBase<HVCondition>();
             string conditionOccurence = string.Empty;
             var conditionExtension = fhirCondition.GetExtension(HealthVaultExtensions.Condition);
             if (conditionExtension != null)
@@ -27,10 +31,9 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 conditionOccurence = conditionExtension.GetStringExtension(HealthVaultExtensions.ConditionOccurrence);
             }
 
-
+            hvCondition.Name = fhirCondition.Code.ToCodableValue();
             hvCondition.OnsetDate = fhirCondition.Onset.ToAproximateDateTime();
             hvCondition.StopDate = fhirCondition.Abatement.ToAproximateDateTime();
-
 
             if (fhirCondition.ClinicalStatus.HasValue)
             {
@@ -41,12 +44,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 hvCondition.Status = new ItemTypes.CodableValue(conditionOccurence);
                 hvCondition.Status.Add(new ItemTypes.CodedValue(conditionOccurence, HealthVaultVocabularies.ConditionOccurrence, HealthVaultVocabularies.Wc, "1"));
-            }
-
-            if (fhirCondition.Code.IsNullOrEmpty())
-                throw new System.ArgumentNullException($"Can not transform a {typeof(Condition)} with no code into {typeof(HVCondition)}");
-
-            hvCondition.Name = fhirCondition.Code.ToCodableValue();
+            }            
 
             if (fhirCondition.Note != null)
             {

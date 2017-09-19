@@ -29,41 +29,41 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     /// </summary>
     internal static class HealthVaultConditionToFhir
     {
-        internal static Condition ToFhirInternal(HVCondition cd, Condition fhirCondition)
+        internal static Condition ToFhirInternal(HVCondition hvCondition, Condition fhirCondition)
         {
             var conditionExtension = new Extension
             {
                 Url = HealthVaultExtensions.Condition
             };
 
-            if (cd.CommonData != null)
+            if (hvCondition.CommonData != null)
             {
-                fhirCondition.AddNoteAsText(cd.CommonData.Note);
+                fhirCondition.AddNoteAsText(hvCondition.CommonData.Note);
                 var note = new Annotation();
-                note.Text = cd.CommonData.Note;
+                note.Text = hvCondition.CommonData.Note;
                 fhirCondition.Note = new List<Annotation> {note};
             }
                     
-            fhirCondition.Code = cd.Name.ToFhir();
+            fhirCondition.Code = hvCondition.Name.ToFhir();
             
-            if (cd.Status != null)
+            if (hvCondition.Status != null)
             {
-                fhirCondition.SetClinicalStatusCode(cd.Status,conditionExtension);
+                fhirCondition.SetClinicalStatusCode(hvCondition.Status,conditionExtension);
             }
 
-            if (cd.StopDate != null)
+            if (hvCondition.StopDate != null)
             {
-                fhirCondition.SetAbatement(cd.StopDate); 
+                fhirCondition.SetAbatement(hvCondition.StopDate); 
             }
 
-            if (cd.OnsetDate != null)
+            if (hvCondition.OnsetDate != null)
             {
-                fhirCondition.Onset = cd.OnsetDate.ToFhir();
+                fhirCondition.Onset = hvCondition.OnsetDate.ToFhir();
             }
 
-            if (cd.StopReason != null)
+            if (hvCondition.StopReason != null)
             {
-                conditionExtension.AddExtension(HealthVaultExtensions.ConditionStopReason, new FhirString(cd.StopReason));
+                conditionExtension.AddExtension(HealthVaultExtensions.ConditionStopReason, new FhirString(hvCondition.StopReason));
             }
 
             fhirCondition.Extension.Add(conditionExtension);

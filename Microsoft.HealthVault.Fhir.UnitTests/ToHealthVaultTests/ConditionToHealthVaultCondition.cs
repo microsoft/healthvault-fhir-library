@@ -27,6 +27,12 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             var cd = fhirCondition.ToHealthVault();
             Assert.IsNotNull(cd);
             Assert.AreEqual("Acute renal insufficiency specified as due to procedure", cd.Name.Text);
+            Assert.AreEqual(2, cd.Name.Count);
+            Assert.AreEqual("36225005", cd.Name[0].Value);
+            Assert.AreEqual("1148", cd.Name[1].Value);
+            Assert.AreEqual("Mayo", cd.Name[1].Family);
+            Assert.AreEqual("MayoConditions", cd.Name[1].VocabularyName);
+            Assert.AreEqual("1.0", cd.Name[1].Version);
             Assert.AreEqual(new HVItemTypes.ApproximateDateTime() {ApproximateDate = new HVItemTypes.ApproximateDate(2013, 03, 11)}, cd.OnsetDate);
             Assert.AreEqual("In Control", cd.StopReason);
             Assert.AreEqual("intermittent", cd.Status.Text);
