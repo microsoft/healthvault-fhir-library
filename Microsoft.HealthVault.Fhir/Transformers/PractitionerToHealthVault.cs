@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Support;
+using Microsoft.HealthVault.Fhir.Codes.HealthVault;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 
@@ -33,7 +34,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             //name
             var person = new ItemTypes.PersonItem()
             {
-                PersonType = new CodableValue("Provider", new CodedValue("1", "person-types")),
+                PersonType = HealthVaultThingPersonTypesCodes.Provider,
                 Name = practitionerName.ToHealthVault(),
                 ContactInformation = new ContactInfo()
             };                                                      
