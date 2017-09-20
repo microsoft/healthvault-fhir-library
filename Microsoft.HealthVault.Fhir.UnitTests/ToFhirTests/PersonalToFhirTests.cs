@@ -65,7 +65,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.AreEqual("Junior", patient.Name[0].Suffix.ToList()[0]);
             Assert.AreEqual("1975-02-05", patient.BirthDate);
             Assert.AreEqual("000-12-3456", patient.Identifier[0].Value);
-            Assert.AreEqual("2075-05-07T00:00:00", ((FhirDateTime)patient.Deceased).Value.Remove(19));
+            Assert.AreEqual("2075-05-07", ((FhirDateTime)patient.Deceased).Value);
 
             var personalExtension = patient.GetExtension(HealthVaultExtensions.PatientPersonal);
             Assert.AreEqual("A+", personalExtension.GetExtensionValue<CodeableConcept>(HealthVaultExtensions.PatientBloodType).Coding[0].Code);

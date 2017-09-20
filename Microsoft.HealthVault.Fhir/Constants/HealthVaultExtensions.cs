@@ -59,5 +59,8 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string PatientBirthTime = HealthVaultExtensionsUri + "birth-time";
         public const string PatientTitle = "codable-title";
         public const string PatientSuffix = "codable-suffix";
+        public const string Condition = HealthVaultExtensionsUri + "condition";
+        public const string ConditionOccurrence =  "occurrence";
+        public const string ConditionStopReason = "stop-reason";
     }
 }
