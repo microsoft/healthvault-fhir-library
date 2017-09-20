@@ -160,7 +160,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ToFhirTests\AddressToFhirTests.cs" />
     <Compile Include="ToFhirTests\BloodGlucoseToFhirTests.cs" />
+    <Compile Include="ToFhirTests\EmailToFhirTests.cs" />
+    <Compile Include="ToFhirTests\PhoneToFhirTests.cs" />
     <Compile Include="ToFhirTests\ProcedureToFhirTests.cs" />
     <Compile Include="ToFhirTests\ToFhirResourceTests.cs" />
     <EmbeddedResource Include="Samples\FhirSleepJournalAM.json" />
@@ -182,8 +185,12 @@
     <Compile Include="ToFhirTests\PersonalImageToFhirTests.cs" />
     <Compile Include="ToFhirTests\PersonalToFhirTests.cs" />
     <Compile Include="ToFhirTests\SleepJournalAMToFhirTests.cs" />
+    <Compile Include="ToFhirTests\NameToFhirTests.cs" />
     <Compile Include="ToFhirTests\WeightToFhirTests.cs" />
+    <Compile Include="ToHealthVaultTests\AddressToHealthVaultTests.cs" />
+    <Compile Include="ToHealthVaultTests\ContactPointToHealthVaultTests.cs" />
     <Compile Include="ToHealthVaultTests\FhirProcedureToHealthVaultProcedure.cs" />
+    <Compile Include="ToHealthVaultTests\HumanNameToNameTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBloodPressure.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyCompositionTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyDimensionTests.cs" />

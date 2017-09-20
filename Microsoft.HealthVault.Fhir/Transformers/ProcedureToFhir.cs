@@ -40,22 +40,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 fhirProcedure.BodySite.Add(hvProcedure.AnatomicLocation.ToFhir());
             }
-            
-            if(hvProcedure.When?.ApproximateDate?.Day != null)
-            {
-                int hour = hvProcedure.When?.ApproximateTime?.Hour??0;
-                int minute = hvProcedure.When?.ApproximateTime?.Minute ?? 0;
-                int second = hvProcedure.When?.ApproximateTime?.Second ?? 0;
-                int millisecond = hvProcedure.When?.ApproximateTime?.Millisecond ?? 0;
 
-                DateTime dateTime = new DateTime(hvProcedure.When.ApproximateDate.Year, 
-                    hvProcedure.When.ApproximateDate.Month.Value, hvProcedure.When.ApproximateDate.Day.Value, 
-                    hour, minute, second, millisecond);
-
-                fhirProcedure.Performed = new FhirDateTime
-                {
-                    Value = dateTime.ToString("yyyy-MM-ddTHH':'mm':'sszzz")
-                };
+            var fhirDate = hvProcedure.When?.ToFhir();
+            if(fhirDate != null)
+            {                
+                fhirProcedure.Performed = fhirDate;
             }
 
             return fhirProcedure;

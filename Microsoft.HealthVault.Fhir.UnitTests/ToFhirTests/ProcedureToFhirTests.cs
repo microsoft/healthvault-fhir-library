@@ -16,6 +16,7 @@ using FhirProcedure = Hl7.Fhir.Model.Procedure;
 using System.Linq;
 using Hl7.Fhir.Support;
 using Microsoft.HealthVault.Fhir.Transformers;
+using NodaTime;
 
 namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 {
@@ -27,7 +28,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
         public void WhenHealthVaultProcedureTransformedToFhir_ThenValuesAndCodesEqual()
         {
             #region Settingup objects
-            var now = DateTime.Now;
+            var now = new LocalDateTime(2017,09,20,16,30,10,100);            
             var personId = Guid.NewGuid();
             var hvProcedure = new HVProcedure
             {
@@ -99,7 +100,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 
             //Performed
             Assert.IsInstanceOfType(fhirProcedure.Performed, typeof(FhirDateTime));
-            Assert.AreEqual(now.ToString("yyyy-MM-ddTHH':'mm':'sszzz"), ((FhirDateTime)fhirProcedure.Performed).Value);
+            Assert.AreEqual(now.ToDateTimeUnspecified(), ((FhirDateTime)fhirProcedure.Performed).ToDateTimeOffset());
 
             //Performer
             Assert.IsFalse(fhirProcedure.Performer.IsNullOrEmpty());
