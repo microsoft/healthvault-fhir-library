@@ -6,7 +6,7 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
+using System;
 using System.Linq;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Codings;
@@ -23,7 +23,13 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         {
             var hvMedication = new HVMedication();
 
-            hvMedication.Name = fhirMedication.Code.ToCodableValue();//.GetCodableValue();
+            var name = fhirMedication.Code.ToCodableValue();
+            if (name == null)
+            {
+                throw new NotSupportedException($"{nameof(FhirMedication)} should" +
+                    $" have {nameof(fhirMedication.Code)}");
+            }
+            hvMedication.Name = name;
 
             var hasSingleIngredient = fhirMedication.Ingredient.Count == 1;
             if (hasSingleIngredient)
@@ -33,10 +39,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 if (ingredientItemIsCodeableConcept)
                 {
                     var ingredientItemAsCodeableConcept = ingredientComponent.Item as CodeableConcept;
-                    var isIngredientItemNotEquivalentToCode = !ingredientItemAsCodeableConcept.Matches(fhirMedication.Code);
+                    var isIngredientItemNotEquivalentToCode = !ingredientItemAsCodeableConcept
+                        .Matches(fhirMedication.Code);
                     if (isIngredientItemNotEquivalentToCode)
                     {
-                        hvMedication.GenericName = ingredientItemAsCodeableConcept.ToCodableValue();//.GetCodableValue();
+                        hvMedication.GenericName = ingredientItemAsCodeableConcept.ToCodableValue();
                     }
 
                     var ingredientAmount = ingredientComponent.Amount;

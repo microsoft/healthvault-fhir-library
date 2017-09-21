@@ -6,6 +6,8 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
+using System.Linq;
 using Hl7.Fhir.Model;
 
 namespace Microsoft.HealthVault.Fhir.FhirExtensions.Helpers
@@ -16,6 +18,29 @@ namespace Microsoft.HealthVault.Fhir.FhirExtensions.Helpers
         {
             var id = resource.Id;
             return new ResourceReference($"#{id}");
+        }
+
+        public static T GetContainedResource<T>(this DomainResource domainResource, ResourceReference reference) where T : Resource
+        {
+            if (reference.IsContainedReference)
+            {
+                return domainResource.Contained.FirstOrDefault(resource
+                    => reference.Matches(resource.GetContainerReference())) as T;
+            }
+            throw new NotImplementedException();
+        }
+
+        public static T GetReferencedResource<T>(this DomainResource domainResource,
+            ResourceReference reference, Func<ResourceReference, T> resolver) where T : Resource
+        {
+            if (reference.IsContainedReference)
+            {
+                return GetContainedResource<T>(domainResource, reference);
+            }
+            else
+            {
+                return resolver(reference);
+            }
         }
     }
 }

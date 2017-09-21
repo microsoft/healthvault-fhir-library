@@ -6,6 +6,7 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
 using System.Linq;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Codes.HealthVault;
@@ -22,6 +23,20 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
     [TestCategory(nameof(MedicationRequest))]
     public class MedicationRequestToHealthVaultTests
     {
+        [TestMethod]
+        public void WhenMedicationRequestTransformedToHealthVault_ThenPractitionerIsRequired()
+        {
+            var medicationRequest = new MedicationRequest
+            {
+                Medication = new CodeableConcept
+                {
+                    Text = "Amoxicillin 250mg/5ml Suspension"
+                },
+            };
+
+            Assert.ThrowsException<NotSupportedException>(() => medicationRequest.ToHealthVault());
+        }
+
         [TestMethod]
         public void WhenMedicationRequestTransformedToHealthVault_ThenPractitionerIsCopiedToPrescription()
         {
@@ -141,21 +156,26 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         public void WhenMedicationRequestTransformedToHealthVault_ThenDosageInstructionIsCopiedToInstructions()
         {
             MedicationRequest medicationRequest = GetSampleRequest();
+            var dosage = new Dosage();
             medicationRequest.DosageInstruction = new System.Collections.Generic.List<Dosage>
             {
-                new Dosage
-                {
-                    AdditionalInstruction = new System.Collections.Generic.List<CodeableConcept>
-                    {
-                        new CodeableConcept
-                        {
-                            Text = "3 tablets/day, have it after dinner."
-                        }
-                    }
-                }
+                dosage
             };
 
             var hvMedication = medicationRequest.ToHealthVault() as HVMedication;
+
+            Assert.IsNull(hvMedication.Prescription?.Instructions);
+
+            var dosageInstructions = new CodeableConcept
+            {
+                Text = "3 tablets/day, have it after dinner."
+            };
+            dosage.AdditionalInstruction = new System.Collections.Generic.List<CodeableConcept>
+            {
+                dosageInstructions
+            };
+
+            hvMedication = medicationRequest.ToHealthVault() as HVMedication;
 
             Assert.IsNotNull(hvMedication.Prescription?.Instructions);
         }

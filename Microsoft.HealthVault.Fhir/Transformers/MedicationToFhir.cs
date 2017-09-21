@@ -177,9 +177,14 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                         return false;
                     case HealthVaultMedicationSubstitutionCodes.SubstitutionPermittedCode:
                         return true;
+                    default:
+                        return null;
                 }
             }
-            throw new NotImplementedException();
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }
