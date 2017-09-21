@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <StructureDefinition xmlns="http://hl7.org/fhir">
   <meta>
-    <lastUpdated value="2017-09-15T12:42:09.204+05:30" />
+    <lastUpdated value="2017-09-22T16:24:11.265+05:30" />
   </meta>
-  <url value="http://healthvault.com/fhir/stu3/StructureDefinition/Organisation" />
-  <name value="Organisation" />
+  <url value="http://healthvault.com/fhir/stu3/StructureDefinition/organization" />
+  <name value="Organization" />
   <status value="draft" />
   <date value="2017-09-15T12:22:39.109+05:30" />
   <publisher value="Microsoft Corporation" />
-  <description value="Extension to store organisation of a PersonItem from HealthVault." />
+  <description value="Extension to store organization of a PersonItem from HealthVault." />
   <copyright value="Copyright (c) Get Real Health.  All rights reserved." />
   <fhirVersion value="3.0.1" />
   <kind value="complex-type" />
@@ -21,11 +21,12 @@
   <differential>
     <element id="Extension.url">
       <path value="Extension.url" />
-      <fixedUri value="http://healthvault.com/fhir/stu3/StructureDefinition/Organisation" />
+      <fixedUri value="http://healthvault.com/fhir/stu3/StructureDefinition/organization" />
     </element>
     <element id="Extension.value[x]:valueString">
       <path value="Extension.valueString" />
       <sliceName value="valueString" />
+      <min value="1" />
       <type>
         <code value="string" />
       </type>
