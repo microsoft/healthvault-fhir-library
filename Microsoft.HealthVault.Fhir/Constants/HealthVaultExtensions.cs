@@ -60,6 +60,6 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string PatientTitle = "codable-title";
         public const string PatientSuffix = "codable-suffix";
 
-        public const string Organisation = HealthVaultExtensionsUri + "Organisation";
+        public const string Organization = HealthVaultExtensionsUri + "organization";
     }
 }

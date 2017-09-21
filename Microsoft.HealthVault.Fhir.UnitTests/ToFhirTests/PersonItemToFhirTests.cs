@@ -104,8 +104,8 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 
             var practitioner = person.ToFhir();
 
-            Assert.IsTrue(practitioner.Extension.Any(ext => ext.Url == HealthVaultExtensions.Organisation));
-            Assert.AreEqual(organisation, practitioner.GetStringExtension(HealthVaultExtensions.Organisation));
+            Assert.IsTrue(practitioner.Extension.Any(ext => ext.Url == HealthVaultExtensions.Organization));
+            Assert.AreEqual(organisation, practitioner.GetStringExtension(HealthVaultExtensions.Organization));
         }
 
         [TestMethod]
