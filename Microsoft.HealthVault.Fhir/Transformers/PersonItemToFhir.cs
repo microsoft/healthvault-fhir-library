@@ -33,7 +33,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             if (!string.IsNullOrEmpty(person.Organization))
             {
-                practitioner.SetStringExtension(HealthVaultExtensions.Organisation, person.Organization);
+                practitioner.SetStringExtension(HealthVaultExtensions.Organization, person.Organization);
             }
 
             if (!string.IsNullOrEmpty(person.ProfessionalTraining))
