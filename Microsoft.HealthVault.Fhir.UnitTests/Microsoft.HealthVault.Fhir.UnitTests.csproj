@@ -168,6 +168,7 @@
     <Compile Include="ToFhirTests\EmailToFhirTests.cs" />
     <Compile Include="ToFhirTests\PhoneToFhirTests.cs" />
     <Compile Include="ToFhirTests\ProcedureToFhirTests.cs" />
+    <Compile Include="ToFhirTests\LabTestResultsToFhirTests.cs" />
     <Compile Include="ToFhirTests\ToFhirResourceTests.cs" />
     <Compile Include="ToHealthVaultTests\PractitionerToHealthVaultTests.cs" />
     <EmbeddedResource Include="Samples\FhirSleepJournalAM.json" />
