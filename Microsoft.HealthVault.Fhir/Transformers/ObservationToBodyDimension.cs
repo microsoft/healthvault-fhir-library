@@ -18,7 +18,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             var bodyDimension = observation.ToThingBase<BodyDimension>();
 
             bodyDimension.Value = ObservationToHealthVault.GetThingValueFromQuantity<Length>(observation.Value as Quantity);
-            bodyDimension.When = ObservationToHealthVault.GetApproximateDateTimeFromEffectiveDate(observation.Effective);
+
+            bodyDimension.When = observation.Effective?.ToAproximateDateTime();
 
             if (observation.Method != null)
             {

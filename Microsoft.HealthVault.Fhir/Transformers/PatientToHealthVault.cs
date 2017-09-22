@@ -41,35 +41,6 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             resultList.AddRange(patient.ToPersonalImage());
 
             return resultList;
-        }
-
-        internal static T ToThingBase<T>(this Patient patient) where T : ThingBase, new()
-        {
-            T baseThing = new T();
-
-            Guid id;
-            if (Guid.TryParse(patient.Id, out id))
-            {
-                baseThing.Key = new ThingKey(id);
-            }
-
-            Guid version;
-            if (patient.Meta != null && patient.Meta.VersionId != null && Guid.TryParse(patient.Meta.VersionId, out version))
-            {
-                baseThing.Key.VersionStamp = version;
-            }
-
-            ThingFlags flags;
-            var extensionFlag = patient.GetExtension(HealthVaultExtensions.FlagsFhirExtensionName);
-            if (extensionFlag != null)
-            {
-                if (extensionFlag.Value is FhirString && Enum.TryParse<ThingFlags>((extensionFlag.Value as FhirString).ToString(), out flags))
-                {
-                    baseThing.Flags = flags;
-                }
-            }
-
-            return baseThing;
-        }
+        }        
     }
 }

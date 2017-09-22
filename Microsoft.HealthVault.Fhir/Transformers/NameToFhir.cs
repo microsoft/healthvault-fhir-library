@@ -1,37 +1,58 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿// Copyright (c) Get Real Health.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 //
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-using System;
+using System.Collections.Generic;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    internal static class ObservationToHeartRate
+    public static partial class ItemBaseToFhir
     {
-        internal static HeartRate ToHeartRate(this Observation observation)
+        public static HumanName ToFhir(this Name name)
         {
-            var heartRate = observation.ToThingBase<ItemTypes.HeartRate>();
+            return NameToFhir.ToFhirInternal(name);
+        }
+    }
+    internal static class NameToFhir
+    {
+        internal static HumanName ToFhirInternal(Name hvName)
+        {
+            if (hvName == null)
+                return null;
 
-            var observationValue = observation.Value as Quantity;
-            if (observationValue?.Value == null)
+            var fhirName = new HumanName
             {
-                throw new ArgumentException("Value quantity must have a value.");
+                Text = hvName.Full,
+                Family = hvName.Last
+            };
+
+            if (hvName.Title != null)
+            {
+                fhirName.Prefix = new List<string> { hvName.Title.Text };
             }
-            
-            heartRate.Value = (int)observationValue.Value.Value;
 
-            if (observation.Effective == null)
-                throw new ArgumentException("Effective is required");
+            AddGivenName(fhirName, hvName.First);
+            AddGivenName(fhirName, hvName.Middle);
 
-            heartRate.When = observation.Effective.ToHealthServiceDateTime();
+            if (hvName.Suffix != null)
+            {
+                fhirName.Suffix = new List<string> { hvName.Suffix.Text };
+            }
 
-            return heartRate;
+            return fhirName;
+        }
+
+        private static void AddGivenName(HumanName fhirName, string name)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                fhirName.GivenElement.Add(new FhirString(name));
+            }
         }
     }
 }
