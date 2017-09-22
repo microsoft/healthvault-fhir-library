@@ -6,9 +6,8 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System.Collections.Generic;
+using System;
 using System.Linq;
-using System.Text;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Support;
 using Microsoft.HealthVault.Fhir.Codes.HealthVault;
@@ -26,9 +25,14 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
         private static ItemTypes.PersonItem ToPerson(this Hl7.Fhir.Model.Practitioner fhirPractitioner)
         {
-            if (fhirPractitioner == null || fhirPractitioner.Name.IsNullOrEmpty())
+            if (fhirPractitioner == null)
                 return null;
-            
+
+            if (fhirPractitioner.Name.IsNullOrEmpty())
+            {
+                throw new NotSupportedException();
+            }
+
             var practitionerName = fhirPractitioner.Name.First(); // Let's consider just the first item
 
             //name
@@ -37,7 +41,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 PersonType = HealthVaultThingPersonTypesCodes.Provider,
                 Name = practitionerName.ToHealthVault(),
                 ContactInformation = new ContactInfo()
-            };                                                      
+            };
 
             //address
             if (!fhirPractitioner.Address.IsNullOrEmpty())
@@ -49,6 +53,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     person.ContactInformation.Address.Add(hvAddress);
                 }
             }
+
+            person.Organization = fhirPractitioner.GetStringExtension(HealthVaultExtensions.Organization);
 
             //telecom
             if (!fhirPractitioner.Telecom.IsNullOrEmpty())
@@ -71,20 +77,25 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             if (!fhirPractitioner.Qualification.IsNullOrEmpty())
             {
                 var firstQualification = fhirPractitioner.Qualification.First(); //Let's take just the first one
-                if(!string.IsNullOrEmpty(firstQualification.Code.Text))
+                if (!string.IsNullOrEmpty(firstQualification.Code.Text))
                 {
                     person.ProfessionalTraining = firstQualification.Code.Text;
                 }
-                else if(!firstQualification.Code.Coding.IsNullOrEmpty())
+                else if (!firstQualification.Code.Coding.IsNullOrEmpty())
                 {
                     person.ProfessionalTraining = firstQualification.Code.Coding.First().Display;
                 }
             }
-            
+
+            if (fhirPractitioner.Identifier.Any())
+            {
+                person.PersonId = fhirPractitioner.Identifier.First().Value;
+            }
+
             return person;
         }
 
-        
+
 
         private static Phone ConvertContactPointToPhone(ContactPoint contactPoint)
         {
