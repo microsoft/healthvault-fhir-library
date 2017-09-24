@@ -7,9 +7,11 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Linq;
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.Fhir.FhirExtensions.Helpers;
 using Microsoft.HealthVault.ItemTypes;
+using HVOrganization = Microsoft.HealthVault.ItemTypes.Organization;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
@@ -54,16 +56,37 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             ////+value.Flag
             ////result.Status
             ////result.Note
-            ////labTestResults.OrderedBy
 
+            ////labTestResults.OrderedBy
+            AddOrderedBy(diagnosticReport, labTestResults.OrderedBy);
 
             //throw new NotImplementedException();
             return diagnosticReport;
         }
 
+        private static void AddOrderedBy(DiagnosticReport diagnosticReport, HVOrganization orderedBy)
+        {
+            if (orderedBy == null)
+            {
+                return;
+            }
+
+            var orderedByOrganization = orderedBy.ToFhir();
+            orderedByOrganization.Id = "org" + Guid.NewGuid();
+
+            var orderedByReferenceExtension = new Extension
+            {
+                Url = HealthVaultExtensions.LabTestResultOrderBy,
+                Value = orderedByOrganization.GetContainerReference()
+            };
+
+            diagnosticReport.Contained.Add(orderedByOrganization);
+            diagnosticReport.Extension.Add(orderedByReferenceExtension);
+        }
+
         private static void SetIssued(DiagnosticReport diagnosticReport, ApproximateDateTime when)
         {
-            diagnosticReport.Issued = when.ToFhir().ToDateTimeOffset();
+            diagnosticReport.Issued = when?.ToFhir()?.ToDateTimeOffset();
         }
     }
 }
