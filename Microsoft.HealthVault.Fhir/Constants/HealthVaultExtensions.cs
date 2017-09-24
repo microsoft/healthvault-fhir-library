@@ -61,7 +61,7 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string PatientSuffix = "codable-suffix";
         public const string CodableUnit = HealthVaultExtensionsUri + "codable-unit";
         public const string Condition = HealthVaultExtensionsUri + "condition";
-        public const string ConditionOccurrence =  "occurrence";
+        public const string ConditionOccurrence = "occurrence";
         public const string ConditionStopReason = "stop-reason";
 
         public const string Medication = HealthVaultExtensionsUri + "medication";
@@ -71,5 +71,11 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string MedicationStrengthQuantity = "quantity";
 
         public const string Organization = HealthVaultExtensionsUri + "organization";
+
+        public const string LabTestResultOrderBy = HealthVaultExtensionsUri + "lab-test-result-ordered-by";
+        public const string LabTestResultName = HealthVaultExtensionsUri + "lab-test-result-name";
+        public const string LabTestResultValueDetail = HealthVaultExtensionsUri + "lab-test-result-value-detail";
+        public const string LabTestResultValueRangeText = HealthVaultExtensionsUri + "lab-test-result-value-range-text";
+        public const string LabTestResultValueFlag = HealthVaultExtensionsUri + "lab-test-result-value-flag";
     }
 }
