@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <meta>
+    <lastUpdated value="2017-09-22T19:37:32.449+05:30" />
+  </meta>
+  <url value="http://healthvault.com/fhir/stu3/StructuredDefinition/immunization-detail" />
+  <name value="ImmunizationDetail" />
+  <status value="draft" />
+  <experimental value="false" />
+  <date value="2017-09-22T18:58:12.981+05:30" />
+  <publisher value="Get Real Health" />
+  <description value="Extension that encapsulates the additional data found in an HealthVault immunization" />
+  <copyright value="Copyright (c) Get Real Health.  All rights reserved." />
+  <fhirVersion value="3.0.1" />
+  <kind value="complex-type" />
+  <abstract value="false" />
+  <contextType value="resource" />
+  <context value="Immunization" />
+  <type value="Extension" />
+  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Extension" />
+  <derivation value="constraint" />
+  <differential>
+    <element id="Extension.extension">
+      <path value="Extension.extension" />
+      <slicing>
+        <discriminator>
+          <type value="value" />
+          <path value="url" />
+        </discriminator>
+        <rules value="open" />
+      </slicing>
+    </element>
+    <element id="Extension.extension:sequence">
+      <path value="Extension.extension" />
+      <sliceName value="sequence" />
+      <label value="Sequence" />
+      <definition value="Used to represent the sequence field in the HealthVault Immunization that is not part of the basic definition of it's Fhir counterpart." />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:sequence.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="sequence" />
+    </element>
+    <element id="Extension.extension:sequence.value[x]:valueString">
+      <path value="Extension.extension.valueString" />
+      <sliceName value="valueString" />
+      <type>
+        <code value="string" />
+      </type>
+    </element>
+    <element id="Extension.extension:adverse-event">
+      <path value="Extension.extension" />
+      <sliceName value="adverse-event" />
+      <definition value="Used to represent the adverse-event field in the HealthVault Immunization that is not part of the basic definition of it's Fhir counterpart." />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:adverse-event.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="adverse-event" />
+    </element>
+    <element id="Extension.extension:adverse-event.value[x]:valueString">
+      <path value="Extension.extension.valueString" />
+      <sliceName value="valueString" />
+      <type>
+        <code value="string" />
+      </type>
+    </element>
+    <element id="Extension.extension:concent">
+      <path value="Extension.extension" />
+      <sliceName value="concent" />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:concent.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="concent" />
+    </element>
+    <element id="Extension.extension:concent.value[x]:valueString">
+      <path value="Extension.extension.valueString" />
+      <sliceName value="valueString" />
+      <type>
+        <code value="string" />
+      </type>
+    </element>
+    <element id="Extension.url">
+      <path value="Extension.url" />
+      <fixedUri value="http://healthvault.com/fhir/stu3/StructuredDefinition/immunization-detail" />
+    </element>
+    <element id="Extension.value[x]">
+      <path value="Extension.value[x]" />
+      <max value="0" />      
+    </element>
+  </differential>
+</StructureDefinition>

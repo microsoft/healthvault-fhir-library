@@ -62,5 +62,10 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string Condition = HealthVaultExtensionsUri + "condition";
         public const string ConditionOccurrence =  "occurrence";
         public const string ConditionStopReason = "stop-reason";
+
+        public const string ImmunizationDetail = HealthVaultExtensionsUri + "immunization-detail";
+        public const string ImmunizationDetailSequence = "sequence";
+        public const string ImmunizationDetailConcent = "concent";
+        public const string ImmunizationDetailAdverseEvent = "adverse-event";
     }
 }
