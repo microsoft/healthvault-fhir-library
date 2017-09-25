@@ -164,6 +164,7 @@
     <Compile Include="ToFhirTests\BloodGlucoseToFhirTests.cs" />
     <Compile Include="ToFhirTests\DosageToFhirTests.cs" />
     <Compile Include="ToFhirTests\MedicationToFhirTests.cs" />
+    <Compile Include="ToFhirTests\OrganisationToFhirTests.cs" />
     <Compile Include="ToFhirTests\PersonItemToFhirTests.cs" />
     <Compile Include="ToFhirTests\EmailToFhirTests.cs" />
     <Compile Include="ToFhirTests\PhoneToFhirTests.cs" />
