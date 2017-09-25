@@ -21,7 +21,7 @@ using NodaTime;
 namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 {
     [TestClass]
-    [TestCategory("Procedure")]
+    [TestCategory(nameof(HVProcedure))]
     public class ProcedureToFhirTests
     {
         [TestMethod]

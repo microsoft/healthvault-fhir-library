@@ -26,7 +26,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
     internal static class ProcedureToFhir
     {
-       internal static FhirProcedure ToFhirInternal(HVProcedure hvProcedure, FhirProcedure fhirProcedure)
+        internal static FhirProcedure ToFhirInternal(HVProcedure hvProcedure, FhirProcedure fhirProcedure)
         {
             //Status is a required field; however HealthVault doesn't have 
             //an equivalent for this
@@ -42,8 +42,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
 
             var fhirDate = hvProcedure.When?.ToFhir();
-            if(fhirDate != null)
-            {                
+            if (fhirDate != null)
+            {
                 fhirProcedure.Performed = fhirDate;
             }
 
