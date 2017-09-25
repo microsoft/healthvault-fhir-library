@@ -167,13 +167,14 @@
     <Compile Include="ToFhirTests\ToFhirDocumentReferenceTests.cs" />
     <Compile Include="ToFhirTests\AddressToFhirTests.cs" />
     <Compile Include="ToFhirTests\BloodGlucoseToFhirTests.cs" />
+    <Compile Include="ToFhirTests\DosageToFhirTests.cs" />
+    <Compile Include="ToFhirTests\MedicationToFhirTests.cs" />
+    <Compile Include="ToFhirTests\OrganisationToFhirTests.cs" />
+    <Compile Include="ToFhirTests\PersonItemToFhirTests.cs" />
     <Compile Include="ToFhirTests\VitalSignsToFhirTests.cs" />
     <Compile Include="ToFhirTests\EmailToFhirTests.cs" />
     <Compile Include="ToFhirTests\PhoneToFhirTests.cs" />
     <Compile Include="ToFhirTests\ProcedureToFhirTests.cs" />
-    <Compile Include="ToFhirTests\DosageToFhirTests.cs" />
-    <Compile Include="ToFhirTests\MedicationToFhirTests.cs" />
-    <Compile Include="ToFhirTests\PersonItemToFhirTests.cs" />
     <Compile Include="ToFhirTests\LabTestResultsToFhirTests.cs" />
     <Compile Include="ToFhirTests\ToFhirResourceTests.cs" />
     <Compile Include="ToHealthVaultTests\PractitionerToHealthVaultTests.cs" />
