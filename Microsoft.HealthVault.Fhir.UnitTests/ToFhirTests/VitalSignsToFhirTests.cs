@@ -18,14 +18,28 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
     public class VitalSignsToFhirTests
     {
         [TestMethod]
-        public void WhenHealthVaultVitalSignsTransformedToFhir_ThenCodeAndValuesEqual()
+        public void WhenHealthVaultVitalSignsTransformedToFhir_ThenCodeAndContainedResourceEqual()
         {
+            var vitalSignsResult = new VitalSignsResultType(new CodableValue("pls"));
+            vitalSignsResult.Value = 70;
+            vitalSignsResult.Unit = new CodableValue("bpm");
 
             var vitalSigns = new VitalSigns(new HealthServiceDateTime());
+            vitalSigns.VitalSignsResults.Add(vitalSignsResult);
 
             var observation = vitalSigns.ToFhir() as Observation;
             Assert.IsNotNull(observation);
             Assert.AreEqual(HealthVaultVocabularies.VitalSigns, observation.Code);
+            Assert.IsTrue(observation.Category.Contains(FhirCategories.VitalSigns));
+            Assert.AreEqual(vitalSigns.When.ToLocalDateTime().ToDateTimeUnspecified(), observation.Effective);
+
+            Assert.IsNotNull(observation.Contained);
+            Assert.AreEqual(observation.Contained.Count, vitalSigns.VitalSignsResults.Count);
+
+            var observationResult = observation.Contained[0] as Observation;
+            var resultValue = observationResult.Value as Quantity;
+
+            Assert.AreEqual(vitalSignsResult.Value, resultValue.Value);
         }
     }
 }

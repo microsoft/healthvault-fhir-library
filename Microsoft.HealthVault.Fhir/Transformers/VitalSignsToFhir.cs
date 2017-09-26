@@ -6,6 +6,7 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
@@ -35,10 +36,13 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             foreach (VitalSignsResultType vitalSignsResult in vitalSigns.VitalSignsResults)
             {
+                var vitalSign = VitalSignsResultToFhir(vitalSignsResult);
+                vitalSign.Id = $"vitalsign-{Guid.NewGuid()}";
+                observation.Contained.Add(vitalSign);
+
                 var related = new Observation.RelatedComponent();
                 related.Type = Observation.ObservationRelationshipType.HasMember;
-                related.Target = new ResourceReference(VitalSignsResultToFhir(vitalSignsResult).Id);
-                observation.Related.Add(related);
+                related.Target = new ResourceReference(vitalSign.Id);
             }
 
             return observation;
@@ -51,7 +55,20 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             observation.Code = vitalSignsResult.Title.ToFhir();
             observation.Status = ObservationStatus.Final;
 
+            var referenceRangeValue = new Observation.ReferenceRangeComponent();
+            referenceRangeValue.Low = new Quantity((decimal)vitalSignsResult.ReferenceMinimum, vitalSignsResult.Unit.Text) as SimpleQuantity;
+            referenceRangeValue.High = new Quantity((decimal)vitalSignsResult.ReferenceMaximum, vitalSignsResult.Unit.Text) as SimpleQuantity;
+            observation.ReferenceRange.Add(referenceRangeValue);
+
             var quantity = new Quantity((decimal)vitalSignsResult.Value, vitalSignsResult.Unit.Text);
+
+            var codableUnitExtension = new Extension
+            {
+                Url = HealthVaultExtensions.CodableUnit
+            };
+
+            codableUnitExtension.Value = vitalSignsResult.Unit.ToFhir();
+            quantity.Extension.Add(codableUnitExtension);
             observation.Value = quantity;
 
             return observation;

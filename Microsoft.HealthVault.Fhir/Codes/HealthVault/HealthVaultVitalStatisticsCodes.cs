@@ -69,7 +69,7 @@ namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
             Code = VitalSignsCode,
             Version = "1",
             System = System,
-            Display = " Vital Signs Panel "
+            Display = "Vital Signs Panel"
         };
     }
 }
