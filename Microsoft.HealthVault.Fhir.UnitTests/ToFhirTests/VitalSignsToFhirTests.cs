@@ -23,6 +23,8 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             var vitalSignsResult = new VitalSignsResultType(new CodableValue("pls"));
             vitalSignsResult.Value = 70;
             vitalSignsResult.Unit = new CodableValue("bpm");
+            vitalSignsResult.ReferenceMinimum = 0;
+            vitalSignsResult.ReferenceMaximum = 150;
 
             var vitalSigns = new VitalSigns(new HealthServiceDateTime());
             vitalSigns.VitalSignsResults.Add(vitalSignsResult);
@@ -40,6 +42,9 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             var resultValue = observationResult.Value as Quantity;
 
             Assert.AreEqual(vitalSignsResult.Value, resultValue.Value);
+            Assert.AreEqual(vitalSignsResult.ReferenceMinimum, observationResult.ReferenceRange[0].Low);
+            Assert.AreEqual(vitalSignsResult.ReferenceMaximum, observationResult.ReferenceRange[0].High);
+
         }
     }
 }
