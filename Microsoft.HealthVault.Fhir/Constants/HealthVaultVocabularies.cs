@@ -56,6 +56,8 @@ namespace Microsoft.HealthVault.Fhir.Constants
 
         public const string RecurrenceIntervals = "recurrence-intervals";
 
+        public const string LabStatus = "lab-status";
+
         public const string MedicationDoseUnits = "medication-dose-units";
         public const string MedicationRoutes = "medication-routes";
         public const string MedicationSubstitution = "medication-substitution";
