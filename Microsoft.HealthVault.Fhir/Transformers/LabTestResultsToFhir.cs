@@ -7,10 +7,14 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Linq;
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Codes.HealthVault;
 using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.Fhir.FhirExtensions;
 using Microsoft.HealthVault.Fhir.FhirExtensions.Helpers;
 using Microsoft.HealthVault.ItemTypes;
+using FhirOrganization = Hl7.Fhir.Model.Organization;
 using HVOrganization = Microsoft.HealthVault.ItemTypes.Organization;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
@@ -28,40 +32,194 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     {
         internal static DiagnosticReport ToFhirInternal(LabTestResults labTestResults, DiagnosticReport diagnosticReport)
         {
-            ////labTestResults.When
             SetIssued(diagnosticReport, labTestResults.When);
-            ////*+labTestResults.Groups
-            //var grp = labTestResults.Groups.First();
-            ////*grp.GroupName
-            ////grp.LaboratoryName
-            ////grp.Status
-            ////+grp.SubGroups -=> grp 
-            ////+grp.Results
-            //var result = grp.Results.First();
-            ////result.When
-            ////result.Name
-            ////result.Substance
-            ////result.CollectionMethod
-            ////result.ClinicalCode
-            //var value = result.Value;
-            ////*value.Measurement
-            ////+value.Ranges
-            //var range = value.Ranges.First();
-            ////*range.RangeType
-            ////*range.Text
-            ////range.Value
-            //var rValue = range.Value;
-            ////rValue.Minimum
-            ////rValue.Maximum
-            ////+value.Flag
-            ////result.Status
-            ////result.Note
 
-            ////labTestResults.OrderedBy
+            foreach (LabTestResultGroup labTestResultGroup in labTestResults.Groups)
+            {
+                AddLabTestResultGroup(diagnosticReport, labTestResultGroup);
+            }
+
             AddOrderedBy(diagnosticReport, labTestResults.OrderedBy);
 
-            //throw new NotImplementedException();
             return diagnosticReport;
+        }
+
+        private static void AddLabTestResultGroup(DiagnosticReport diagnosticReport,
+            LabTestResultGroup labTestResultGroup)
+        {
+            var observation = new Observation
+            {
+                Id = "obs" + Guid.NewGuid()
+            };
+            ToFhirInternal(labTestResultGroup, observation);
+            diagnosticReport.AddDomainResourceToContainer(observation);
+            diagnosticReport.Result.Add(observation.GetContainerReference());
+        }
+
+        private static void ToFhirInternal(LabTestResultGroup labTestResultGroup, Observation observation)
+        {
+            if (labTestResultGroup.GroupName == null)
+            {
+                throw new ArgumentException($"{nameof(LabTestResultGroup)} should " +
+                    $"have a {nameof(LabTestResultGroup.GroupName)}");
+            }
+            observation.Code = labTestResultGroup.GroupName.ToFhir();
+
+            if (labTestResultGroup.LaboratoryName != null)
+            {
+                FhirOrganization fhirOrganization = labTestResultGroup.LaboratoryName.ToFhir();
+                observation.Contained.Add(fhirOrganization);
+                observation.Performer.Add(fhirOrganization.GetContainerReference());
+            }
+
+            observation.Status = GetStatus(labTestResultGroup.Status);
+
+            foreach (var subGroup in labTestResultGroup.SubGroups)
+            {
+                var subObservation = new Observation() { Id = "subObs" + Guid.NewGuid() };
+                ToFhirInternal(subGroup, subObservation);
+                observation.AddDomainResourceToContainer(subObservation);
+                observation.Related.Add(new Observation.RelatedComponent
+                {
+                    Type = Observation.ObservationRelationshipType.HasMember,
+                    Target = subObservation.GetContainerReference()
+                });
+            }
+
+            foreach (var resultDetail in labTestResultGroup.Results)
+            {
+                var resultObservation = new Observation() { Id = "resultObs" + Guid.NewGuid() };
+                ToFhirInternal(resultDetail, resultObservation);
+                observation.AddDomainResourceToContainer(resultObservation);
+                observation.Related.Add(new Observation.RelatedComponent
+                {
+                    Type = Observation.ObservationRelationshipType.DerivedFrom,
+                    Target = resultObservation.GetContainerReference()
+                });
+            }
+        }
+
+        private static void ToFhirInternal(LabTestResultDetails resultDetail, Observation resultObservation)
+        {
+            resultObservation.Effective = resultDetail.When?.ToFhir();
+
+            if (!string.IsNullOrEmpty(resultDetail.Name))
+            {
+                resultObservation.SetStringExtension(HealthVaultExtensions.LabTestResultName, resultDetail.Name);
+            }
+
+            if (resultDetail.Substance != null || resultDetail.CollectionMethod != null)
+            {
+                var specimen = new Specimen
+                {
+                    Id = "specimen" + Guid.NewGuid(),
+                    Type = resultDetail.Substance?.ToFhir(),
+                    Collection = resultDetail.CollectionMethod == null ? null : new Specimen.CollectionComponent
+                    {
+                        Method = resultDetail.CollectionMethod.ToFhir()
+                    }
+                };
+                resultObservation.AddDomainResourceToContainer(specimen);
+                resultObservation.Specimen = specimen.GetContainerReference();
+            }
+
+            if (resultDetail.ClinicalCode != null)
+            {
+                resultObservation.Code = resultDetail.ClinicalCode.ToFhir();
+            }
+
+            LabTestResultValue labTestResultValue = resultDetail.Value;
+            if (labTestResultValue != null)
+            {
+
+                resultObservation.Value = new FhirString(labTestResultValue.Measurement.Display);
+
+                foreach (var structuredMesurement in labTestResultValue.Measurement.Structured)
+                {
+                    var quantity = new Quantity
+                    {
+                        Value = (decimal)structuredMesurement.Value,
+                        Unit = structuredMesurement.Units.Text
+                    };
+                    if (structuredMesurement.Units.Any())
+                    {
+                        var codedUnit = structuredMesurement.Units.First();
+                        quantity.Code = codedUnit.Value;
+                        quantity.System = HealthVaultVocabularies.GenerateSystemUrl(codedUnit.VocabularyName, codedUnit.Family);
+                    }
+                    var valueDetailExtension = new Extension
+                    {
+                        Url = HealthVaultExtensions.LabTestResultValueDetail,
+                        Value = quantity
+                    };
+                    resultObservation.Value.AddExtension(HealthVaultExtensions.LabTestResultValueDetail, quantity);
+                }
+
+                foreach (var range in labTestResultValue.Ranges)
+                {
+
+                    var rangeComponent = new Observation.ReferenceRangeComponent
+                    {
+                        Type = range.RangeType.ToFhir(),
+                        Text = range.Text.Text
+                    };
+                    rangeComponent.TextElement.AddExtension(HealthVaultExtensions.LabTestResultValueRangeText, range.Text.ToFhir());
+
+                    if (range.Value != null)
+                    {
+                        rangeComponent.Low = GetSimpleQuantity(range.Value.Minimum);
+                        rangeComponent.High = GetSimpleQuantity(range.Value.Maximum);
+
+                        SimpleQuantity GetSimpleQuantity(double? value)
+                        {
+                            return value == null ? null : new SimpleQuantity() { Value = (decimal)value };
+                        }
+                    }
+
+                    resultObservation.ReferenceRange.Add(rangeComponent);
+                }
+
+                foreach (var flag in labTestResultValue.Flag)
+                {
+                    resultObservation.AddExtension(HealthVaultExtensions.LabTestResultValueFlag, flag.ToFhir());
+                }
+            }
+
+            if (resultDetail.Status != null)
+            {
+                resultObservation.Status = GetStatus(resultDetail.Status);
+            }
+
+            resultObservation.Comment = resultDetail.Note;
+        }
+
+        private static ObservationStatus? GetStatus(CodableValue status)
+        {
+            if (status == null)
+            {
+                return ObservationStatus.Unknown;
+            }
+
+            Func<CodedValue, bool> labStatusPredicate =
+                coded => coded.VocabularyName == HealthVaultVocabularies.LabStatus;
+            if (status.Any(labStatusPredicate))
+            {
+                CodedValue coded = status.First(labStatusPredicate);
+                switch (coded.Value)
+                {
+                    case HealthVaultLabStatusCodes.CompleteCode:
+                        return ObservationStatus.Final;
+                    case HealthVaultLabStatusCodes.PendingCode:
+                        return ObservationStatus.Registered;
+                    case HealthVaultLabStatusCodes.PatientRefusedTestCode:
+                        return ObservationStatus.Cancelled;
+                    case HealthVaultLabStatusCodes.QuantityNotSufficientCode:
+                        return ObservationStatus.Unknown;
+                    default:
+                        throw new ArgumentException($"Unknown Lab-status code");
+                }
+            }
+            return ObservationStatus.Unknown;
         }
 
         private static void AddOrderedBy(DiagnosticReport diagnosticReport, HVOrganization orderedBy)

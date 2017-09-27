@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <meta>
+    <lastUpdated value="2017-09-27T16:29:57.188+05:30" />
+  </meta>
+  <url value="http://healthvault.com/fhir/stu3/StructureDefinition/lab-test-result-value-detail" />
+  <name value="LabTestResultValueDetail" />
+  <status value="draft" />
+  <date value="2017-09-27T13:25:12.354+05:30" />
+  <publisher value="Microsoft Corporation" />
+  <description value="Extension to store lab test result value details from HealthVault." />
+  <copyright value="Copyright (c) Get Real Health.  All rights reserved." />
+  <fhirVersion value="3.0.1" />
+  <kind value="complex-type" />
+  <abstract value="false" />
+  <contextType value="resource" />
+  <context value="Observation.value[x]" />
+  <contextInvariant value="valueType='string'" />
+  <type value="Extension" />
+  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Extension" />
+  <derivation value="constraint" />
+  <differential>
+    <element id="Extension.url">
+      <path value="Extension.url" />
+      <fixedUri value="http://healthvault.com/fhir/stu3/StructureDefinition/lab-test-result-value-detail" />
+    </element>
+    <element id="Extension.value[x]:valueQuantity">
+      <path value="Extension.valueQuantity" />
+      <sliceName value="valueQuantity" />
+      <min value="1" />
+      <type>
+        <code value="Quantity" />
+      </type>
+    </element>
+  </differential>
+</StructureDefinition>
