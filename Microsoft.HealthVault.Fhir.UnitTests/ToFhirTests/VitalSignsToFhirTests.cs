@@ -44,7 +44,6 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
             Assert.AreEqual(vitalSignsResult.Value, resultValue.Value);
             Assert.AreEqual(vitalSignsResult.ReferenceMinimum, observationResult.ReferenceRange[0].Low);
             Assert.AreEqual(vitalSignsResult.ReferenceMaximum, observationResult.ReferenceRange[0].High);
-
         }
     }
 }
