@@ -25,6 +25,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.Helpers
             {
                 xpNav.WriteSubtree(xmlWriter);
             }
+
             return sb.ToString();
         }
 
@@ -42,7 +43,9 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.Helpers
 
         public static byte[] StreamToByteArray(System.IO.Stream stream)
         {
-            byte[] buffer = new byte[stream.Length];
+            byte[] buffer = new byte[1048576]; // Chunks of 1 MB
+
+            byte[] result;
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 int read;
@@ -50,11 +53,12 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.Helpers
                 {
                     memoryStream.Write(buffer, 0, read);
                 }
-                buffer = memoryStream.ToArray();
+                result = memoryStream.ToArray();
             }
 
-            return buffer;
+            return result;
         }
+
 
         public static void WriteByteArrayToHealthVaultFile(ItemTypes.File file, byte[] bytesArray)
         {

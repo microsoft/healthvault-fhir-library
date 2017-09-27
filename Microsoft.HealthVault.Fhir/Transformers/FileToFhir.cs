@@ -31,7 +31,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             content.Attachment = new Attachment();
 
-            content.Attachment.ContentType = file.ContentType.ToString();
+            content.Attachment.ContentType = (file.ContentType == null) ? "application/octet-stream" : file.ContentType.ToString();
 
             content.Attachment.Data = new byte[file.Content.Length];
             file.Content.CopyTo(content.Attachment.Data, 0);

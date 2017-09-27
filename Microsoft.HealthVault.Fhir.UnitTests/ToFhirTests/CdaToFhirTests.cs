@@ -27,7 +27,8 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
         {
             string cdaXmlRaw = SampleUtil.GetSampleContent("CDA.xml");
 
-            XPathDocument xpDoc = DocumentReferenceHelper.GetXPathDocumentFromXml(cdaXmlRaw) ?? throw new Exception("Invalid XML");
+            XPathDocument xpDoc = DocumentReferenceHelper.GetXPathDocumentFromXml(cdaXmlRaw);
+            Assert.IsNotNull(xpDoc);
 
             CDA cda = new CDA();
             cda.TypeSpecificData = xpDoc;

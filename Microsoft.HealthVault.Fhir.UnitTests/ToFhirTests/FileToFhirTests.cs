@@ -24,13 +24,13 @@ namespace Microsoft.HealthVault.Fhir.ToFhirTests.UnitTests
         {
             File file = new File();
 
-            string resourceName = "Microsoft.HealthVault.Fhir.UnitTests.Samples.image.jpg";
+            string resourceName = "Microsoft.HealthVault.Fhir.UnitTests.Samples.HealthVaultIcon.png";
             using (System.IO.Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
             {
                 DocumentReferenceHelper.WriteByteArrayToHealthVaultFile(file, DocumentReferenceHelper.StreamToByteArray(stream));
             }
 
-            file.ContentType = new CodableValue("image/jpeg");
+            file.ContentType = new CodableValue("image/png");
 
             var documentReference = file.ToFhir() as DocumentReference;
 
