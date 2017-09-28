@@ -44,6 +44,12 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 foreach (var address in fhirPractitioner.Address)
                 {
+                    if ((string.IsNullOrEmpty(address.City))||(string.IsNullOrWhiteSpace(address.Line.ToString()))||(string.IsNullOrWhiteSpace(address.PostalCode))
+                    ||(string.IsNullOrWhiteSpace(address.Country)))
+                    {
+                        continue;
+                    }
+
                     ItemTypes.Address hvAddress = address.ToHealthVault();
 
                     person.ContactInformation.Address.Add(hvAddress);

@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <meta>
+    <lastUpdated value="2017-09-26T20:28:26.204+05:30" />
+  </meta>
+  <url value="http://healthvault.com/fhir/stu3/StructureDefinition/allergy" />
+  <name value="allergy" />
+  <status value="draft" />
+  <date value="2017-09-26T19:41:08.054+05:30" />
+  <publisher value="Get Real Health" />
+  <description value="Extension that encapsulates the additional data found in a Allergy thing type." />
+  <copyright value=" Copyright(c) Get Real Health.All rights reserved." />
+  <fhirVersion value="3.0.1" />
+  <kind value="complex-type" />
+  <abstract value="false" />
+  <type value="Extension" />
+  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Extension" />
+  <derivation value="constraint" />
+  <differential>
+    <element id="Extension.extension">
+      <path value="Extension.extension" />
+      <slicing>
+        <discriminator>
+          <type value="value" />
+          <path value="url" />
+        </discriminator>
+        <rules value="open" />
+      </slicing>
+    </element>
+    <element id="Extension.extension:allergenType">
+      <path value="Extension.extension" />
+      <sliceName value="allergenType" />
+      <short value="The allergen type provides a general category of the source of the allergic reaction." />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:allergenType.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="allergenType" />
+    </element>
+    <element id="Extension.extension:allergenType.value[x]:valueString">
+      <path value="Extension.extension.valueString" />
+      <sliceName value="valueString" />
+      <type>
+        <code value="string" />
+      </type>
+    </element>
+    <element id="Extension.extension:allergyTreatment">
+      <path value="Extension.extension" />
+      <sliceName value="allergyTreatment" />
+      <short value="The possible treatment description for this allergy." />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:allergyTreatment.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="allergyTreatment" />
+    </element>
+    <element id="Extension.extension:allergyTreatment.value[x]:valueCodeableConcept">
+      <path value="Extension.extension.valueCodeableConcept" />
+      <sliceName value="valueCodeableConcept" />
+      <type>
+        <code value="CodeableConcept" />
+      </type>
+    </element>
+    <element id="Extension.extension:allergenCode">
+      <path value="Extension.extension" />
+      <sliceName value="allergenCode" />
+      <short value="The clinical allergen code." />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:allergenCode.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="allergenCode" />
+    </element>
+    <element id="Extension.extension:allergenCode.value[x]:valueCodeableConcept">
+      <path value="Extension.extension.valueCodeableConcept" />
+      <sliceName value="valueCodeableConcept" />
+      <type>
+        <code value="CodeableConcept" />
+      </type>
+    </element>
+    <element id="Extension.url">
+      <path value="Extension.url" />
+      <fixedUri value="http://healthvault.com/fhir/stu3/StructureDefinition/allergy" />
+    </element>
+    <element id="Extension.value[x]">
+      <path value="Extension.value[x]" />
+      <max value="0" />
+    </element>
+  </differential>
+</StructureDefinition>

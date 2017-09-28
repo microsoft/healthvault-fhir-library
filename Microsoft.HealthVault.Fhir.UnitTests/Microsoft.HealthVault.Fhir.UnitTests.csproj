@@ -161,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ToFhirTests\AddressToFhirTests.cs" />
+    <Compile Include="ToFhirTests\AllergyToFhirTests.cs" />
     <Compile Include="ToFhirTests\BloodGlucoseToFhirTests.cs" />
     <Compile Include="ToFhirTests\EmailToFhirTests.cs" />
     <Compile Include="ToFhirTests\PhoneToFhirTests.cs" />
@@ -191,6 +192,7 @@
     <Compile Include="ToHealthVaultTests\ContactPointToHealthVaultTests.cs" />
     <Compile Include="ToHealthVaultTests\FhirProcedureToHealthVaultProcedure.cs" />
     <Compile Include="ToHealthVaultTests\HumanNameToNameTests.cs" />
+    <Compile Include="ToHealthVaultTests\AllergyInToleranceToHealthVault.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBloodPressure.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyCompositionTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyDimensionTests.cs" />
@@ -223,6 +225,7 @@
     <EmbeddedResource Include="Samples\FhirPatientFull.json" />
     <EmbeddedResource Include="Samples\FhirProcedure.json" />
     <EmbeddedResource Include="Samples\HealthVaultToFhirBloodGlucose.json" />
+    <EmbeddedResource Include="Samples\FhirAllergy.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.HealthVault.Fhir\Microsoft.HealthVault.Fhir.csproj">
