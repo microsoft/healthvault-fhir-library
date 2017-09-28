@@ -41,18 +41,20 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
 
             return hvProcedure;
-        }    
+        }
 
         private static PersonItem getProvider(FhirProcedure fhirProcedure, int index)
         {
             var performerComponent = fhirProcedure.Performer[index];
             if (performerComponent.Actor.IsContainedReference)
             {
-                var containedReference = fhirProcedure.Contained.SingleOrDefault(resouce => 
+                var containedReference = fhirProcedure.Contained.SingleOrDefault(resouce =>
                     resouce.Id.Equals(performerComponent.Actor.Reference) && resouce.GetType().Equals(typeof(Hl7.Fhir.Model.Practitioner)));
 
                 if (containedReference == null)
+                {
                     return null;
+                }
 
                 return (containedReference as Hl7.Fhir.Model.Practitioner).ToHealthVault();
             }
