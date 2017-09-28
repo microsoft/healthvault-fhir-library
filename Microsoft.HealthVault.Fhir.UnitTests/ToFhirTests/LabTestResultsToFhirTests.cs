@@ -389,11 +389,11 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
                 Measurement = new GeneralMeasurement("221 mg/dL")
             };
             const string rangeTypeText = "Result Range";
-            const string RangeTextText = "100-199";
+            const string rangeTextText = "100-199";
             labTestResultValue.Ranges.Add(new TestResultRange
             {
                 RangeType = new CodableValue(rangeTypeText),
-                Text = new CodableValue(RangeTextText)
+                Text = new CodableValue(rangeTextText)
             });
             var resultDetail = new LabTestResultDetails()
             {
@@ -406,7 +406,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 
             Assert.IsNotNull(rangeComponent, "Range component missing");
             Assert.AreEqual(rangeTypeText, rangeComponent.Type?.Text);
-            Assert.AreEqual(RangeTextText, rangeComponent.Text);
+            Assert.AreEqual(rangeTextText, rangeComponent.Text);
         }
 
         [TestMethod]
