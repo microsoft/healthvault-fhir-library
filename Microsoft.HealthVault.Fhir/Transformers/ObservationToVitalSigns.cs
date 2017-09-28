@@ -9,6 +9,7 @@
 using System;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.Fhir.Exceptions;
 using Microsoft.HealthVault.ItemTypes;
 
 // Converts FHIR Observation to HealthVault Vital Sign
@@ -27,13 +28,13 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 var vitalSignsResult = new VitalSignsResultType();
                 vitalSignsResult.Title = vitalSignObservation.Code.ToCodableValue();
 
-                if (vitalSignObservation.ReferenceRange.Count != 0)
+                if (vitalSignObservation.ReferenceRange?.Count != 0)
                 {
                     var referenceRangeValue = vitalSignObservation.ReferenceRange[0];
 
                     if (referenceRangeValue == null)
                     {
-                        throw new Exception("Reference Range object must have a range");
+                        throw new ReferenceRangeNullException("Reference Range object must have a range");
                     }
 
                     if (referenceRangeValue.Low != null)
