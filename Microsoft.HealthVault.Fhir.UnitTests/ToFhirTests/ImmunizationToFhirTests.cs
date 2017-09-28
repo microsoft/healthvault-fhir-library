@@ -14,6 +14,7 @@ using NodaTime;
 using Hl7.Fhir.Model;
 using FhirOrganization = Hl7.Fhir.Model.Organization;
 using Microsoft.HealthVault.Fhir.Constants;
+using Hl7.Fhir.Support;
 
 namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 {
@@ -69,7 +70,9 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
                 Consent = "A concent from parent goes here"
             };
 
-            Hl7.Fhir.Model.Immunization fhirImmunization = immunization.ToFhir();
+            immunization.CommonData.Note = "Some note goes here";
+
+            Hl7.Fhir.Model.Immunization fhirImmunization = immunization.ToFhir();            
 
             Assert.IsNotNull(fhirImmunization);
             Assert.AreEqual(immunization.Name.Text, fhirImmunization.VaccineCode.Text);
@@ -92,6 +95,9 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.AreEqual(immunization.AdverseEvent, immunizationExtension.GetStringExtension(HealthVaultExtensions.ImmunizationDetailAdverseEvent));
             Assert.AreEqual(immunization.Consent, immunizationExtension.GetStringExtension(HealthVaultExtensions.ImmunizationDetailConcent));
             Assert.AreEqual(immunization.Sequence, immunizationExtension.GetStringExtension(HealthVaultExtensions.ImmunizationDetailSequence));
+
+            Assert.IsFalse(fhirImmunization.Note.IsNullOrEmpty());
+            Assert.AreEqual(immunization.CommonData.Note, fhirImmunization.Note.First().Text);
         }
     }
 }

@@ -72,6 +72,17 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
 
             fhirImmunization.Site = hvImmunization.AnatomicSurface.ToFhir();
+
+            fhirImmunization.Note.Add(new Hl7.Fhir.Model.Annotation {
+                Text = hvImmunization.CommonData.Note
+            });
+
+            //Setting default values that is not available in HealthVault. Let's revisit when a good
+            //approach is found for better fidelity between Fhir & HV
+            fhirImmunization.Status = Hl7.Fhir.Model.Immunization.ImmunizationStatusCodes.Completed;
+            fhirImmunization.NotGiven = false;
+            fhirImmunization.PrimarySource = true;
+
             return fhirImmunization;
         }
 

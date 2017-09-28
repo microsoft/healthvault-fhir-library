@@ -27,6 +27,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     return processDate(fhirDateTime);
                 case Period fhirPeriod:
                     return processDate(fhirPeriod.StartElement ?? fhirPeriod.EndElement);
+                case Date fhirDate:
+                    return processDate(new FhirDateTime(fhirDate.Value));
                 default:
                     throw new NotSupportedException($"Conversion from {fhirElement.GetType()} to {typeof(ApproximateDateTime)} is not supported");
             }
