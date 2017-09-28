@@ -12,7 +12,6 @@ using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FhirOrganization = Hl7.Fhir.Model.Organization;
-using HVOrganization = Microsoft.HealthVault.ItemTypes.Organization;
 
 namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
 {
