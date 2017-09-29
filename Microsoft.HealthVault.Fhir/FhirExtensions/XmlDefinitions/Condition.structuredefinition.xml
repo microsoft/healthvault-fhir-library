@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <meta>
+    <lastUpdated value="2017-09-15T17:17:33.699+05:30" />
+  </meta>
+  <url value="http://healthvault.com/fhir/stu3/StructureDefinition/condition" />
+  <name value="Condition" />
+  <status value="draft" />
+  <date value="2017-09-15T15:42:32.624+05:30" />
+  <publisher value="Get Real Health" />
+  <description value="Extension that encapsulates the additional data found in a Condition thing type." />
+  <copyright value=" Copyright(c) Get Real Health.All rights reserved." />
+  <fhirVersion value="3.0.1" />
+  <kind value="complex-type" />
+  <abstract value="false" />
+  <type value="Extension" />
+  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Extension" />
+  <derivation value="constraint" />
+  <differential>
+    <element id="Extension.extension">
+      <path value="Extension.extension" />
+      <slicing>
+        <discriminator>
+          <type value="value" />
+          <path value="url" />
+        </discriminator>
+        <rules value="open" />
+      </slicing>
+    </element>
+    <element id="Extension.extension:occurrence">
+      <path value="Extension.extension" />
+      <sliceName value="occurrence" />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:occurrence.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="occurrence" />
+    </element>
+    <element id="Extension.extension:occurrence.value[x]:valueString">
+      <path value="Extension.extension.valueString" />
+      <sliceName value="valueString" />
+      <type>
+        <code value="string" />
+      </type>
+    </element>
+    <element id="Extension.extension:stop-reason">
+      <path value="Extension.extension" />
+      <sliceName value="stop-reason" />
+      <short value="A statement of how the condition was resolved" />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:stop-reason.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="stop-reason" />
+    </element>
+    <element id="Extension.extension:stop-reason.value[x]:valueString">
+      <path value="Extension.extension.valueString" />
+      <sliceName value="valueString" />
+      <type>
+        <code value="string" />
+      </type>
+    </element>
+    <element id="Extension.url">
+      <path value="Extension.url" />
+      <fixedUri value="http://healthvault.com/fhir/stu3/StructureDefinition/condition" />
+    </element>
+    <element id="Extension.value[x]">
+      <path value="Extension.value[x]" />
+      <max value="0" />
+    </element>
+  </differential>
+</StructureDefinition>

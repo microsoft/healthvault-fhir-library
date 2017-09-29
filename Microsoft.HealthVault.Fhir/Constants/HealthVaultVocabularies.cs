@@ -35,6 +35,9 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string BodyCompositionSites = "body-composition-sites";
         public const string BodyCompositionMeasurementNames = "body-composition-measurement-names";
 
+        public const string ConditionOccurrence = "condition-occurrence";
+
+
         public const string BodyDimensionMeasurementNames = "body-dimension-measurement-names";
 
         public const string Exercise = "exercise";
@@ -52,7 +55,7 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string SleepJournalAMMedication = "sleep-journal-medication";
 
         public const string IrregularHeartBeatExtensionName = BaseUri + "vital-signs/blood-pressure/irregular-heartbeat";
-     
+ 
         public static CodeableConcept BodyWeight = new CodeableConcept()
         {
             Coding = new List<Coding> { HealthVaultVitalStatisticsCodes.BodyWeight }
