@@ -15,6 +15,19 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 {
     public static class ContactPointToHealthVault
     {
+        public static ItemBase ToHealthVault(this ContactPoint contactPoint)
+        {
+            switch (contactPoint.System)
+            {
+                case ContactPoint.ContactPointSystem.Phone:
+                    return contactPoint.ToHealthVault<Phone>();
+                case ContactPoint.ContactPointSystem.Email:
+                    return contactPoint.ToHealthVault<Email>();
+                default:
+                    return null;
+            }
+        }
+
         public static T ToHealthVault<T>(this ContactPoint contactPoint) where T : new()
         {
             var result = new T();
