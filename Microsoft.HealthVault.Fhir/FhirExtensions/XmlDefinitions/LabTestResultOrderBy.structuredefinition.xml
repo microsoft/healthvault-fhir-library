@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <meta>
+    <lastUpdated value="2017-09-28T12:08:18.285+05:30" />
+  </meta>
+  <url value="http://healthvault.com/fhir/stu3/StructureDefinition/lab-test-result-ordered-by" />
+  <name value="LabTestResultOrderBy" />
+  <status value="draft" />
+  <date value="2017-09-15T12:22:39.109+05:30" />
+  <publisher value="Microsoft Corporation" />
+  <description value="Extension to store orderby organization of a lab test result from HealthVault." />
+  <copyright value="Copyright (c) Get Real Health.  All rights reserved." />
+  <fhirVersion value="3.0.1" />
+  <kind value="complex-type" />
+  <abstract value="false" />
+  <contextType value="resource" />
+  <context value="DiagnosticReport" />
+  <type value="Extension" />
+  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Extension" />
+  <derivation value="constraint" />
+  <differential>
+    <element id="Extension.url">
+      <path value="Extension.url" />
+      <fixedUri value="http://healthvault.com/fhir/stu3/StructureDefinition/lab-test-result-ordered-by" />
+    </element>
+    <element id="Extension.value[x]:valueReference">
+      <path value="Extension.valueReference" />
+      <sliceName value="valueReference" />
+      <min value="1" />
+      <type>
+        <code value="Reference" />
+        <targetProfile value="http://hl7.org/fhir/StructureDefinition/Organization" />
+        <aggregation value="contained" />
+      </type>
+    </element>
+  </differential>
+</StructureDefinition>

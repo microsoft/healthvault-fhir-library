@@ -160,8 +160,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ToFhirTests\AddressToFhirTests.cs" />
     <Compile Include="ToFhirTests\BloodGlucoseToFhirTests.cs" />
+    <Compile Include="ToFhirTests\DosageToFhirTests.cs" />
+    <Compile Include="ToFhirTests\MedicationToFhirTests.cs" />
+    <Compile Include="ToFhirTests\OrganisationToFhirTests.cs" />
+    <Compile Include="ToFhirTests\PersonItemToFhirTests.cs" />
+    <Compile Include="ToFhirTests\EmailToFhirTests.cs" />
+    <Compile Include="ToFhirTests\PhoneToFhirTests.cs" />
+    <Compile Include="ToFhirTests\ProcedureToFhirTests.cs" />
+    <Compile Include="ToFhirTests\LabTestResultsToFhirTests.cs" />
     <Compile Include="ToFhirTests\ToFhirResourceTests.cs" />
+    <Compile Include="ToHealthVaultTests\DiagnosticReportToHealthVaultTests.cs" />
+    <Compile Include="ToHealthVaultTests\OrganizationToHealthVaultTests.cs" />
+    <Compile Include="ToHealthVaultTests\PractitionerToHealthVaultTests.cs" />
     <EmbeddedResource Include="Samples\FhirSleepJournalAM.json" />
     <Compile Include="Samples\SampleUtil.cs" />
     <Compile Include="ToFhirTests\ApproximateDateTimeToFhirTests.cs" />
@@ -181,7 +193,16 @@
     <Compile Include="ToFhirTests\PersonalImageToFhirTests.cs" />
     <Compile Include="ToFhirTests\PersonalToFhirTests.cs" />
     <Compile Include="ToFhirTests\SleepJournalAMToFhirTests.cs" />
+    <Compile Include="ToFhirTests\NameToFhirTests.cs" />
     <Compile Include="ToFhirTests\WeightToFhirTests.cs" />
+    <Compile Include="ToHealthVaultTests\AddressToHealthVaultTests.cs" />
+    <Compile Include="ToHealthVaultTests\ContactPointToHealthVaultTests.cs" />
+    <Compile Include="ToHealthVaultTests\FhirProcedureToHealthVaultProcedure.cs" />
+    <Compile Include="ToHealthVaultTests\HumanNameToNameTests.cs" />
+    <Compile Include="ToHealthVaultTests\FhirCodesToHealthVaultTests.cs" />
+    <Compile Include="ToHealthVaultTests\MedicationRequestToHealthVaultTests.cs" />
+    <Compile Include="ToHealthVaultTests\MedicationStatementToHealthVaultTests.cs" />
+    <Compile Include="ToHealthVaultTests\MedicationToHealthVaultTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBloodPressure.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyCompositionTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyDimensionTests.cs" />
@@ -212,6 +233,7 @@
     <EmbeddedResource Include="Samples\FhirCondition.json" />
     <EmbeddedResource Include="Samples\FhirExercise.json" />
     <EmbeddedResource Include="Samples\FhirPatientFull.json" />
+    <EmbeddedResource Include="Samples\FhirProcedure.json" />
     <EmbeddedResource Include="Samples\HealthVaultToFhirBloodGlucose.json" />
   </ItemGroup>
   <ItemGroup>

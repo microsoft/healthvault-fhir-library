@@ -27,13 +27,13 @@ namespace Microsoft.HealthVault.Fhir.FhirExtensions
             Year = 4,       //2017
             Month = 7,      //2017-02
             Day = 10,       //2017-02-21
-            Minute = 15,    //2017-02-21T13:45
-            Second = 18    //2017-02-21T13:45:21
+            Minute = 16,    //2017-02-21T13:45
+            Second = 19    //2017-02-21T13:45:21
         }
 
         public static FhirDateTimePrecision Precision(this FhirDateTime fdt)
         {
-            return (FhirDateTimePrecision)Math.Min(fdt.Value.Length, 18); 
+            return (FhirDateTimePrecision)fdt.Value.Length; 
         }
     }
 }

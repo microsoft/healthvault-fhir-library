@@ -26,10 +26,10 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
         private static string GetSystemUrl(CodedValue codedValue)
         {
-            // If the coded value family contains a URL, it's not a healvault vocab and we should return it as is
-            if (codedValue.Family.Contains("http"))
+            bool isNonHealthVaultVocabulary = codedValue.VocabularyName.Contains("http");
+            if (isNonHealthVaultVocabulary)
             {
-                return codedValue.Family;
+                return codedValue.VocabularyName;
             }
 
             return HealthVaultVocabularies.GenerateSystemUrl(codedValue.VocabularyName, codedValue.Family);
