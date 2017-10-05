@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <meta>
+    <lastUpdated value="2017-09-22T09:44:41.783-07:00" />
+  </meta>
+  <url value="http://healthvault.com/fhir/stu3/StructureDefinition/codable-unit" />
+  <name value="CodableUnit" />
+  <title value="CodableUnit" />
+  <status value="draft" />
+  <experimental value="false" />
+  <date value="2017-09-21T11:20:50.758-07:00" />
+  <description value="Contains a codeable concept to hold a unit for vital signs transferred from HealthVault" />
+  <purpose value="To store HealthVault vital signs units" />
+  <fhirVersion value="3.0.1" />
+  <kind value="resource" />
+  <abstract value="false" />
+  <contextType value="datatype" />
+  <context value="Quantity" />
+  <type value="Extension" />
+  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Extension" />
+  <derivation value="constraint" />
+  <differential>
+    <element id="Extension.url">
+      <path value="Extension.url" />
+      <fixedUri value="http://healthvault.com/fhir/stu3/StructureDefinition/codable-unit" />
+    </element>
+    <element id="Extension.value[x]:valueCodeableConcept">
+      <path value="Extension.valueCodeableConcept" />
+      <sliceName value="valueCodeableConcept" />
+      <type>
+        <code value="CodeableConcept" />
+      </type>
+    </element>
+  </differential>
+</StructureDefinition>

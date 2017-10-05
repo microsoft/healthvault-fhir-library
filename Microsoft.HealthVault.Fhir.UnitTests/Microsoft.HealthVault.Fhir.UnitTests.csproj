@@ -161,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ToFhirTests\BloodGlucoseToFhirTests.cs" />
+    <Compile Include="ToFhirTests\VitalSignsToFhirTests.cs" />
     <Compile Include="ToFhirTests\ToFhirResourceTests.cs" />
     <EmbeddedResource Include="Samples\FhirSleepJournalAM.json" />
     <Compile Include="Samples\SampleUtil.cs" />
