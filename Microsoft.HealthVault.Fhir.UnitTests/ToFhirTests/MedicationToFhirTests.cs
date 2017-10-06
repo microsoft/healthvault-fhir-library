@@ -373,7 +373,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 
             var medicationRequest = ExtractEmbeddedMedicationRequest(hvMedication);
 
-            Assert.IsNull(medicationRequest.DispenseRequest?.NumberOfRepeatsAllowed);
+            Assert.AreEqual(0, medicationRequest.DispenseRequest?.NumberOfRepeatsAllowed);
 
             const int refillsAllowed = 3;
             hvMedication.Prescription.Refills = refillsAllowed;
@@ -453,7 +453,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 
         private MedicationRequest ExtractEmbeddedMedicationRequest(HVMedication hvMedication)
         {
-            return ExtractEmbeddedMedicationRequest(hvMedication.ToFhir());            
+            return ExtractEmbeddedMedicationRequest(hvMedication.ToFhir());
         }
     }
 }

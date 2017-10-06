@@ -97,7 +97,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
 
             var hvMedication = medicationRequest.ToHealthVault() as HVMedication;
 
-            Assert.AreEqual(0, hvMedication.Prescription?.Refills);
+            Assert.IsNull(hvMedication.Prescription?.Refills);
 
             const int refillsAllowed = 3;
             medicationRequest.DispenseRequest = new MedicationRequest.DispenseRequestComponent

@@ -130,7 +130,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 medicationRequest.DispenseRequest = new MedicationRequest.DispenseRequestComponent
                 {
                     Quantity = HealthVaultCodesToFhir.GetSimpleQuantity(prescription.AmountPrescribed),
-                    NumberOfRepeatsAllowed = prescription.Refills == 0 ? null : prescription.Refills,
+                    NumberOfRepeatsAllowed = prescription.Refills,
                     ExpectedSupplyDuration = new Duration()
                     {
                         Value = prescription.DaysSupply,

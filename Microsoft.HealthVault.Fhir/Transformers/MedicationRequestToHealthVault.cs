@@ -64,14 +64,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     prescription.AmountPrescribed.Structured.Add(structuredMeasurement);
                 }
 
-                if (dispenseRequest.NumberOfRepeatsAllowed.HasValue)
-                {
-                    prescription.Refills = dispenseRequest.NumberOfRepeatsAllowed;
-                }
-                else
-                {
-                    prescription.Refills = 0;
-                }
+                prescription.Refills = dispenseRequest.NumberOfRepeatsAllowed;
 
                 prescription.DaysSupply = GetDaysFromDuration(dispenseRequest.ExpectedSupplyDuration);
 
