@@ -90,5 +90,60 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             Assert.AreEqual(period, hvMedication?.Frequency?.Structured?.First()?.Value);
             Assert.AreEqual(routeCode, hvMedication?.Route?.First()?.Value);
         }
+
+        [TestMethod]
+        public void WhenMedicationStatementTransformedToHealthVault_MedicationReferenceWillThrowIfNotContained()
+        {
+            var medicationStatement = new MedicationStatement()
+            {
+                Medication = new ResourceReference("medciation/832475"),
+            };
+
+            Assert.ThrowsException<NotImplementedException>(() => medicationStatement.ToHealthVault());
+        }
+
+        [TestMethod]
+        public void WhenMedicationStatementTransformedToHealthVault_MedicationReferenceWillThrowIfNull()
+        {
+            var medicationStatement = new MedicationStatement();
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => medicationStatement.ToHealthVault());
+        }
+
+        [TestMethod]
+        public void WhenMedicationStatementTransformedToHealthVault_MedicationReferenceReturnsNullIfContainedMedicationIsMissing()
+        {
+            var medicationStatement = new MedicationStatement()
+            {
+                Medication = new ResourceReference("#med"),
+            };
+
+            Assert.IsNull(medicationStatement.ToHealthVault());
+        }
+
+        [TestMethod]
+        public void WhenMedicationStatementTransformedToHealthVault_MedicationCodeableConceptIsUsed()
+        {
+            const string medicationName = "Amoxicillin 250mg/5ml Suspension";
+            var medicationStatement = new MedicationStatement()
+            {
+                Medication = new CodeableConcept() { Text = medicationName }
+            };
+
+            var hvMedication = medicationStatement.ToHealthVault() as HVMedication;
+
+            Assert.AreEqual(medicationName, hvMedication.Name.Text);
+        }
+
+        [TestMethod]
+        public void WhenMedicationStatementTransformedToHealthVault_MedicationShouldBeEitherCodeableOrReference()
+        {
+            var medicationStatement = new MedicationStatement()
+            {
+                Medication = new Quantity() { Value = 10 }
+            };
+
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => medicationStatement.ToHealthVault());
+        }
     }
 }

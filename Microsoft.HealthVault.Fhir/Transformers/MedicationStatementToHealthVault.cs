@@ -23,7 +23,12 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     {
         public static ThingBase ToHealthVault(this MedicationStatement medicationStatement)
         {
-            var fhirMedication = ExtractEmbeddedMedication(medicationStatement);
+            var fhirMedication = MedicationStatementHelper.ExtractEmbeddedMedication(medicationStatement);
+
+            if (fhirMedication == null)
+            {
+                return null;
+            }
 
             var hvMedication = fhirMedication.ToHealthVault() as HVMedication;
 
@@ -65,28 +70,6 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             }
             return hvMedication;
-        }
-
-        private static FhirMedication ExtractEmbeddedMedication(MedicationStatement medicationStatement)
-        {
-            switch (medicationStatement.Medication)
-            {
-                case ResourceReference medicationReference:
-                    if (!medicationReference.IsContainedReference)
-                    {
-                        throw new NotImplementedException();
-                    }
-                    var fhirMedication = medicationStatement.Contained.First(domainResource
-                             => medicationReference.Matches(domainResource.GetContainerReference())) as FhirMedication;
-                    return fhirMedication ?? new FhirMedication();
-                case CodeableConcept medicationCodeableConcept:
-                    return new FhirMedication
-                    {
-                        Code = medicationCodeableConcept
-                    };
-                default:
-                    throw new NotImplementedException();
-            }
         }
     }
 }
