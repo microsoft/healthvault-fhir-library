@@ -14,12 +14,26 @@ namespace Microsoft.HealthVault.Fhir.FhirExtensions.Helpers
 {
     public static class DomainResourceHelper
     {
+        /// <summary>
+        /// Returns a reference to a contained resource
+        /// </summary>
+        /// <see cref="http://hl7.org/fhir/references.html#contained"/>
+        /// <param name="resource">Contained resource with an id</param>
+        /// <returns>Reference to contained resource</returns>
         public static ResourceReference GetContainerReference(this Resource resource)
         {
             var id = resource.Id;
             return new ResourceReference($"#{id}");
         }
 
+        /// <summary>
+        /// Returns contained resource from given domain resource and reference
+        /// </summary>
+        /// <typeparam name="T">Type of resource</typeparam>
+        /// <param name="domainResource">Container domain resource</param>
+        /// <param name="reference">Reference to contained resource</param>
+        /// <returns>Contained resource</returns>
+        /// <exception cref="NotImplementedException">Thrown when reference is not internal/contained</exception>
         public static T GetContainedResource<T>(this DomainResource domainResource, ResourceReference reference) where T : Resource
         {
             if (reference.IsContainedReference)
@@ -30,6 +44,16 @@ namespace Microsoft.HealthVault.Fhir.FhirExtensions.Helpers
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Returns referenced resource from given domain resource and reference.
+        /// The resolver is called when reference is not internal/contained.
+        /// </summary>
+        /// <typeparam name="T">Type of resource</typeparam>
+        /// <param name="domainResource">Container domain resource</param>
+        /// <param name="reference">Reference to contained resource</param>
+        /// <param name="resolver">A function which returns a resource from external reference
+        /// (possibly temperory dummy resource or resource resolved using external endpoints)</param>
+        /// <returns>Referenced resource</returns>
         public static T GetReferencedResource<T>(this DomainResource domainResource,
             ResourceReference reference, Func<ResourceReference, T> resolver) where T : Resource
         {
