@@ -10,6 +10,7 @@ using System;
 using System.Linq;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.Fhir.Codings;
+using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 using Microsoft.HealthVault.Thing;
 using FhirMedication = Hl7.Fhir.Model.Medication;
@@ -31,35 +32,35 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
             hvMedication.Name = name;
 
-            var hasSingleIngredient = fhirMedication.Ingredient.Count == 1;
-            if (hasSingleIngredient)
+            var medicationExtension = fhirMedication.GetExtension(HealthVaultExtensions.Medication);
+
+            if (medicationExtension != null)
             {
-                var ingredientComponent = fhirMedication.Ingredient.Single();
-                var ingredientItemIsCodeableConcept = ingredientComponent.Item is CodeableConcept;
-                if (ingredientItemIsCodeableConcept)
+                var genericName = medicationExtension
+                    .GetExtensionValue<CodeableConcept>(HealthVaultExtensions.MedicationGenericName);
+                hvMedication.GenericName = genericName?.ToCodableValue();
+
+                var strengthExtension = medicationExtension.GetExtension(HealthVaultExtensions.MedicationStrength);
+                if (strengthExtension != null)
                 {
-                    var ingredientItemAsCodeableConcept = ingredientComponent.Item as CodeableConcept;
-                    var isIngredientItemNotEquivalentToCode = !ingredientItemAsCodeableConcept
-                        .Matches(fhirMedication.Code);
-                    if (isIngredientItemNotEquivalentToCode)
+                    string display = strengthExtension.GetStringExtension(HealthVaultExtensions.MedicationStrengthDisplay);
+                    var strength = new GeneralMeasurement(display);
+                    foreach (var quantityExtension
+                        in strengthExtension.GetExtensions(HealthVaultExtensions.MedicationStrengthQuantity))
                     {
-                        hvMedication.GenericName = ingredientItemAsCodeableConcept.ToCodableValue();
-                    }
-
-                    var ingredientAmount = ingredientComponent.Amount;
-                    if (ingredientAmount != null)
-                    {
-                        var numerator = ingredientAmount.Numerator;
-
-                        var structuredMeasurement = new StructuredMeasurement
+                        var quantity = quantityExtension.Value as Quantity;
+                        if (quantity == null)
                         {
-                            Value = (double)numerator.Value,
-                            Units = CodeToHealthVaultHelper.CreateCodableValueFromQuantityValues(numerator.System,
-                        numerator.Code, numerator.Unit)
-                        };
-                        hvMedication.Strength = new GeneralMeasurement();
-                        hvMedication.Strength.Structured.Add(structuredMeasurement);
+                            continue;
+                        }
+                        strength.Structured.Add(new StructuredMeasurement
+                        {
+                            Value = (double)quantity.Value,
+                            Units = CodeToHealthVaultHelper.CreateCodableValueFromQuantityValues(
+                                quantity.System,quantity.Code,quantity.Unit)
+                        });
                     }
+                    hvMedication.Strength = strength;
                 }
             }
 

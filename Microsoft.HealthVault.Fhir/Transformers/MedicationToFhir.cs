@@ -87,32 +87,48 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         {
             fhirMedication.Code = hvMedication.Name.ToFhir();
 
-            if (hvMedication.GenericName != null)
+            if (hvMedication.GenericName != null || hvMedication.Strength != null)
             {
-                var ingredientItem = hvMedication.GenericName.ToFhir();
-                fhirMedication.Ingredient = new List<FhirMedication.IngredientComponent> {
-                    new FhirMedication.IngredientComponent(){
-                        Item= ingredientItem
-                }};
-            }
+                var medicationExtension = new Extension { Url = HealthVaultExtensions.Medication };
 
-            if (hvMedication.Strength != null)
-            {
-                if (!fhirMedication.Ingredient.Any())
+                if (hvMedication.GenericName != null)
                 {
-                    var ingredientItem = hvMedication.Name.ToFhir();
-                    fhirMedication.Ingredient = new List<FhirMedication.IngredientComponent> {
-                        new FhirMedication.IngredientComponent{
-                            Item = ingredientItem
-                    }};
+                    var genericName = hvMedication.GenericName?.ToFhir();
+
+                    medicationExtension.AddExtension(HealthVaultExtensions.MedicationGenericName,
+                        genericName);
                 }
 
-                if (hvMedication.Strength.Structured.Any())
+                if (hvMedication.Strength != null)
                 {
-                    var amount = HealthVaultCodesToFhir.GetSimpleQuantity(hvMedication.Strength);
+                    var strengthExtension = new Extension { Url = HealthVaultExtensions.MedicationStrength };
 
-                    fhirMedication.Ingredient.First().Amount = new Ratio() { Numerator = amount };
+                    strengthExtension.AddExtension(HealthVaultExtensions.MedicationStrengthDisplay,
+                       new FhirString(hvMedication.Strength.Display));
+
+                    foreach (var structuredMeasurement in hvMedication.Strength.Structured)
+                    {
+                        var simpleQuantity = new SimpleQuantity()
+                        {
+                            Value = new decimal(structuredMeasurement.Value),
+                            Unit = structuredMeasurement.Units.Text
+                        };
+
+                        if (structuredMeasurement.Units.Any())
+                        {
+                            CodedValue measurementUnit = structuredMeasurement.Units.First();
+
+                            simpleQuantity.Code = measurementUnit.Value;
+                            simpleQuantity.System = HealthVaultVocabularies.GenerateSystemUrl(measurementUnit.VocabularyName, measurementUnit.Family);
+                        }
+
+                        strengthExtension.AddExtension(HealthVaultExtensions.MedicationStrengthQuantity, simpleQuantity);
+                    }
+
+                    medicationExtension.Extension.Add(strengthExtension);
                 }
+
+                fhirMedication.Extension.Add(medicationExtension);
             }
 
             return fhirMedication;

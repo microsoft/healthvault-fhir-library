@@ -8,6 +8,7 @@
 
 using System.Linq;
 using Hl7.Fhir.Model;
+using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FhirMedication = Hl7.Fhir.Model.Medication;
@@ -37,7 +38,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         }
 
         [TestMethod]
-        public void WhenMedicationTransformedToHealthVault_AndOnlyIngredientItemIsCodeableConcept_AndIsDifferentFromCode_ThenGenericNameIsCopiedFromIngredientItemCodeableConcept()
+        public void WhenMedicationTransformedToHealthVault_ThenGenericNameIsCopiedFromExtension()
         {
             const string ingredientName = "Capecitabine (substance)";
             var fhirMedication = new FhirMedication()
@@ -46,14 +47,22 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
                 {
                     Text = "Capecitabine 500mg oral tablet (Xeloda)"
                 },
-                Ingredient = new System.Collections.Generic.List<FhirMedication.IngredientComponent>
+                Extension = new System.Collections.Generic.List<Extension>
                 {
-                    new FhirMedication.IngredientComponent()
+                    new Extension
                     {
-                        Item = new CodeableConcept(system:"http://snomed.info/sct",
-                            code:"386906001",
-                            display:null,
-                            text: ingredientName)
+                        Url = HealthVaultExtensions.Medication,
+                        Extension = new System.Collections.Generic.List<Extension>
+                        {
+                            new Extension
+                            {
+                                Url = HealthVaultExtensions.MedicationGenericName,
+                                Value = new CodeableConcept(system:"http://snomed.info/sct",
+                                                code:"386906001",
+                                                display:null,
+                                                text: ingredientName)
+                            }
+                        }
                     }
                 }
             };
@@ -64,53 +73,40 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         }
 
         [TestMethod]
-        public void WhenMedicationTransformedToHealthVault_AndOnlyIngredientItemIsCodeableConcept_AndIsSameAsCode_ThenGenericNameIsNotCopied()
-        {
-            const string name = "Capecitabine (substance)";
-            var fhirMedication = new FhirMedication()
-            {
-                Code = new CodeableConcept()
-                {
-                    Text = name
-                },
-                Ingredient = new System.Collections.Generic.List<FhirMedication.IngredientComponent>
-                {
-                    new FhirMedication.IngredientComponent()
-                    {
-                        Item = new CodeableConcept()
-                        {
-                            Text= name
-                        }
-                    }
-                }
-            };
-
-            var hvMedication = fhirMedication.ToHealthVault() as HVMedication;
-
-            Assert.IsNull(hvMedication.GenericName);
-        }
-
-        [TestMethod]
-        public void WhenMedicationTransformedToHealthVault_AndOnlyIngredientItemIsCodeableConcept_ThenStrengthIsCopiedFromIngredientAmountNumerator()
+        public void WhenMedicationTransformedToHealthVault_ThenStrengthIsCopiedFromExtension()
         {
             const int ingredientAmount = 500;
+            const string ingredientDisplay = "500mg";
             var fhirMedication = new FhirMedication()
             {
                 Code = new CodeableConcept()
                 {
                     Text = "Capecitabine 500mg oral tablet (Xeloda)"
                 },
-                Ingredient = new System.Collections.Generic.List<FhirMedication.IngredientComponent>
+                Extension = new System.Collections.Generic.List<Extension>
                 {
-                    new FhirMedication.IngredientComponent()
+                    new Extension
                     {
-                        Item = new CodeableConcept(system:"http://snomed.info/sct",
-                            code:"386906001",
-                            display:null,
-                            text: "Capecitabine (substance)"),
-                        Amount = new Ratio
+                        Url = HealthVaultExtensions.Medication,
+                        Extension = new System.Collections.Generic.List<Extension>
                         {
-                            Numerator = new Quantity(ingredientAmount,"mg")
+                            new Extension
+                            {
+                                Url = HealthVaultExtensions.MedicationStrength,
+                                Extension = new System.Collections.Generic.List<Extension>
+                                {
+                                    new Extension
+                                    {
+                                        Url = HealthVaultExtensions.MedicationStrengthDisplay,
+                                        Value = new FhirString(ingredientDisplay)
+                                    },
+                                    new Extension
+                                    {
+                                        Url = HealthVaultExtensions.MedicationStrengthQuantity,
+                                        Value = new Quantity(ingredientAmount,"mg")
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -118,6 +114,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
 
             var hvMedication = fhirMedication.ToHealthVault() as HVMedication;
 
+            Assert.AreEqual(ingredientDisplay, hvMedication.Strength?.Display);
             Assert.AreEqual(ingredientAmount, hvMedication.Strength?.Structured?.First()?.Value);
         }
     }

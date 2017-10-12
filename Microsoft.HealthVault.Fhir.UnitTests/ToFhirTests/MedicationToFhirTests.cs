@@ -11,6 +11,7 @@ using System.Linq;
 using Hl7.Fhir.Model;
 using Hl7.Fhir.Validation;
 using Microsoft.HealthVault.Fhir.Codes.HealthVault;
+using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.Fhir.FhirExtensions.Helpers;
 using Microsoft.HealthVault.Fhir.Transformers;
 using Microsoft.HealthVault.ItemTypes;
@@ -46,7 +47,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
         }
 
         [TestMethod]
-        public void WhenHealthVaultMedicationTransformedToFhir_ThenGenericNameIsCopiedToIngredient()
+        public void WhenHealthVaultMedicationTransformedToFhir_ThenGenericNameIsCopiedAsExtension()
         {
             const string medicationName = "Ibuprofen / Tolperisone Oral Tablet";
             var hvMedication = new HVMedication()
@@ -61,24 +62,28 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 
             var fhirMedication = ExtractEmbeddedMedication(hvMedication);
 
-            Assert.IsTrue(fhirMedication.Ingredient.Any());
+            Assert.IsTrue(((IExtendable)fhirMedication).HasExtensions());
 
-            var ingredient = fhirMedication.Ingredient.First().Item as CodeableConcept;
+            var medicationExtension = fhirMedication.GetExtension(HealthVaultExtensions.Medication);
+            var genericName = medicationExtension?
+                .GetExtensionValue<CodeableConcept>(HealthVaultExtensions.MedicationGenericName);
 
-            Assert.AreEqual(medicationName, ingredient?.Text);
+            Assert.AreEqual(medicationName, genericName?.Text);
         }
 
         [TestMethod]
-        public void WhenHealthVaultMedicationTransformedToFhir_ThenStrengthIsCopiedToIngredientAmount()
+        public void WhenHealthVaultMedicationTransformedToFhir_ThenStrengthIsCopiedAsExtension()
         {
+            const string strengthDisplay = "600mg";
             var hvMedication = new HVMedication()
             {
                 Name = new CodableValue("Ibuprofen"),
-                Strength = new GeneralMeasurement("600mg")
+                Strength = new GeneralMeasurement(strengthDisplay)
             };
 
+            const int strengthValue = 600;
             hvMedication.Strength.Structured.Add(
-                  new StructuredMeasurement(600,
+                  new StructuredMeasurement(strengthValue,
                       new CodableValue("Milligrams (mg)",
                           new CodedValue("mg",
                               family: "wc",
@@ -87,11 +92,16 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 
             var fhirMedication = ExtractEmbeddedMedication(hvMedication);
 
-            Assert.IsTrue(fhirMedication.Ingredient.Any());
+            Assert.IsTrue(((IExtendable)fhirMedication).HasExtensions());
 
-            var ingredient = fhirMedication.Ingredient.First();
+            var medicationExtension = fhirMedication.GetExtension(HealthVaultExtensions.Medication);
+            var strength = medicationExtension?.GetExtension(HealthVaultExtensions.MedicationStrength);
 
-            Assert.AreEqual(600, ingredient?.Amount?.Numerator?.Value);
+            Assert.AreEqual(strengthDisplay, strength?
+                .GetStringExtension(HealthVaultExtensions.MedicationStrengthDisplay));
+            Assert.AreEqual(strengthValue, (strength?
+                .GetExtensions(HealthVaultExtensions.MedicationStrengthQuantity)
+                .FirstOrDefault()?.Value as Quantity)?.Value);
         }
 
         private static FhirMedication ExtractEmbeddedMedication(HVMedication hvMedication)
