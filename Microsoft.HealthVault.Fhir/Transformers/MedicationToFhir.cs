@@ -160,10 +160,14 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
             if (prescription.Substitution != null)
             {
-                medicationRequest.Substitution = new MedicationRequest.SubstitutionComponent
+                bool? isAllowed = IsAllowed(prescription.Substitution);
+                if (isAllowed.HasValue)
                 {
-                    Allowed = IsAllowed(prescription.Substitution)
-                };
+                    medicationRequest.Substitution = new MedicationRequest.SubstitutionComponent
+                    {
+                        Allowed = isAllowed
+                    };
+                }
             }
             if (prescription.Instructions != null)
             {
@@ -184,23 +188,19 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         {
             Func<CodedValue, bool> medicationSubstitutionPredicate =
                 coded => coded.VocabularyName == HealthVaultVocabularies.MedicationSubstitution;
-            if (substitution.Any(medicationSubstitutionPredicate))
+
+            var codedValue = substitution.FirstOrDefault(medicationSubstitutionPredicate);
+            switch (codedValue?.Value)
             {
-                var coded = substitution.First(medicationSubstitutionPredicate);
-                switch (coded.Value)
-                {
-                    case HealthVaultMedicationSubstitutionCodes.DispenseAsWrittenCode:
-                        return false;
-                    case HealthVaultMedicationSubstitutionCodes.SubstitutionPermittedCode:
-                        return true;
-                    default:
-                        return null;
-                }
+                case HealthVaultMedicationSubstitutionCodes.DispenseAsWrittenCode:
+                    return false;
+                case HealthVaultMedicationSubstitutionCodes.SubstitutionPermittedCode:
+                    return true;
+                case null:
+                default:
+                    return null;
             }
-            else
-            {
-                throw new NotImplementedException();
-            }
+
         }
     }
 }

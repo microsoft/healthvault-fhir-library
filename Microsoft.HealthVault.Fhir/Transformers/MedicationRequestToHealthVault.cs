@@ -118,7 +118,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                         return Convert.ToInt32(unitsNetDuration.Days);
                 }
             }
-            throw new NotImplementedException();
+            return null;
         }
 
         private static CodableValue GetSubstitutionCode(MedicationRequest medicationRequest, Prescription prescription)
