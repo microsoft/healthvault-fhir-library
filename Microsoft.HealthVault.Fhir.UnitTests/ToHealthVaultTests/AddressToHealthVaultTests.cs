@@ -46,5 +46,4 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             Assert.AreEqual(fhirAddress.District, hvAddress.County);
         }
     }
-
 }

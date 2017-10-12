@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 Suffix = fhirName.Suffix.Any() ? new ItemTypes.CodableValue(fhirName.Suffix.First()) : null,
                 Title = fhirName.Prefix.Any() ? new ItemTypes.CodableValue(fhirName.Prefix.First()) : null,
                 First = fhirName.Given.FirstOrDefault() ?? string.Empty,
-                Middle = fhirName.Given.ElementAtOrDefault(1) ?? string.Empty                
+                Middle = fhirName.Given.ElementAtOrDefault(1)                
             };
             if (!string.IsNullOrEmpty(fhirName.Text))
             {

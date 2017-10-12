@@ -20,9 +20,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             height.Value = ObservationToHealthVault.GetThingValueFromQuantity<Length>(observation.Value as Quantity);
 
-            if (observation.Effective == null)
-                throw new ArgumentException("Effective is required");
-            height.When = observation.Effective.ToHealthServiceDateTime();
+            height.When = ObservationToHealthVault.GetWhenFromEffective(observation.Effective);
 
             return height;
         }

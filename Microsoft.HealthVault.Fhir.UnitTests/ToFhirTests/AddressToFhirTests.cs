@@ -47,6 +47,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.IsNotNull(extensionValue);
             Assert.AreEqual(true, extensionValue);
         }
+
         [TestMethod]
         public void WhenMinimumAddressTransformedToFhir_ThenValuesEqual()
         {

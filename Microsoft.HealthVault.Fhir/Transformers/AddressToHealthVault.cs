@@ -29,7 +29,6 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 hvAddress.Country = address.Country;
             }
-            hvAddress.County = address.District;
 
             hvAddress.Description = address.Text;
             hvAddress.IsPrimary = address.GetBoolExtension(HealthVaultExtensions.IsPrimary);
