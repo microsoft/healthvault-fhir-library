@@ -230,6 +230,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 return observation.ToExercise();
             }
 
+            if (type == typeof(VitalSigns))
+            {
+                return observation.ToVitalSigns();
+            }
+
             return null;
         }
     }

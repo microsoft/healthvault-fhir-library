@@ -86,6 +86,11 @@ namespace Microsoft.HealthVault.Fhir.Constants
             }
         };
 
+        public static CodeableConcept VitalSigns = new CodeableConcept
+        {
+            Coding = new List<Coding> { HealthVaultVitalStatisticsCodes.VitalSigns }
+        };
+
         /// <summary>
         /// Helper to transform a coding into a codeable concept
         /// </summary>
