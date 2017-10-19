@@ -7,122 +7,95 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Codings;
+using Hl7.Fhir.Support;
+using Microsoft.HealthVault.Fhir.Codes.HealthVault;
 using Microsoft.HealthVault.Fhir.Constants;
 using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    public static class PractitionerToHealthVault
+    public static partial class PractitionerToHealthVault
     {
-        public static PersonItem ToHealthVault(this Practitioner practitioner)
+        public static ItemTypes.PersonItem ToHealthVault(this Hl7.Fhir.Model.Practitioner fhirPractitioner)
         {
-            var person = new PersonItem();
+            return fhirPractitioner.ToPerson();
+        }
 
-            if (!practitioner.Name.Any())
+        private static ItemTypes.PersonItem ToPerson(this Hl7.Fhir.Model.Practitioner fhirPractitioner)
+        {
+
+            if (!fhirPractitioner.Name.Any())
             {
-                throw new NotSupportedException($"{practitioner} needs to have a {nameof(HumanName)}");
-            }
-            person.Name = ToHealthVault(practitioner.Name.First());
-
-            person.Organization = practitioner.GetStringExtension(HealthVaultExtensions.Organization);
-
-            if (practitioner.Qualification.Any())
-            {
-                var qualification = practitioner.Qualification.First();
-                person.ProfessionalTraining = qualification.Code.Text
-                    ?? qualification.Code.Coding.First(coding => string.IsNullOrEmpty(coding.Display))?.Display;
+                throw new NotSupportedException($"{fhirPractitioner} needs to have a {nameof(HumanName)}");
             }
 
-            if (practitioner.Identifier.Any())
-            {
-                person.PersonId = practitioner.Identifier.First().Value;
-            }
+            var practitionerName = fhirPractitioner.Name.First(); // Let's consider just the first item
 
-            if (practitioner.Telecom.Any() || practitioner.Address.Any())
+            //name
+            var person = new ItemTypes.PersonItem()
             {
-                var contactInfo = new ContactInfo();
+                PersonType = HealthVaultThingPersonTypesCodes.Provider,
+                Name = practitionerName.ToHealthVault(),
+                ContactInformation = new ContactInfo()
+            };                                                      
 
-                foreach (var fhirAddress in practitioner.Address)
+            //address
+            if (!fhirPractitioner.Address.IsNullOrEmpty())
+            {
+                foreach (var address in fhirPractitioner.Address)
                 {
-                    var address = new ItemTypes.Address
-                    {
-                        Description = fhirAddress.Text,
-                        City = fhirAddress.City,
-                        State = fhirAddress.State,
-                        County = fhirAddress.District,
-                        Country = fhirAddress.Country,
-                        PostalCode = fhirAddress.PostalCode,
-                        IsPrimary = fhirAddress.GetBoolExtension(HealthVaultExtensions.IsPrimary),
-                    };
-                    foreach (var line in fhirAddress.Line)
-                    {
-                        address.Street.Add(line);
-                    }
-                    contactInfo.Address.Add(address);
-                }
+                    ItemTypes.Address hvAddress = address.ToHealthVault();
 
-                foreach (var contactPoint in practitioner.Telecom)
+                    person.ContactInformation.Address.Add(hvAddress);
+                }
+            }
+
+            //telecom
+            if (!fhirPractitioner.Telecom.IsNullOrEmpty())
+            {
+                foreach (var contactPoint in fhirPractitioner.Telecom)
                 {
                     switch (contactPoint.System)
                     {
                         case ContactPoint.ContactPointSystem.Email:
-                            contactInfo.Email.Add(ConvertContactPointToEmail(contactPoint));
+                            person.ContactInformation.Email.Add(contactPoint.ToHealthVault<Email>());
                             break;
                         case ContactPoint.ContactPointSystem.Phone:
-                            contactInfo.Phone.Add(ConvertContactPointToPhone(contactPoint));
+                            person.ContactInformation.Phone.Add(contactPoint.ToHealthVault<Phone>());
                             break;
                     }
                 }
+            }
 
-                person.ContactInformation = contactInfo;
+            //qualification               
+            if (!fhirPractitioner.Qualification.IsNullOrEmpty())
+            {
+                var firstQualification = fhirPractitioner.Qualification.First(); //Let's take just the first one
+                if(!string.IsNullOrEmpty(firstQualification.Code.Text))
+                {
+                    person.ProfessionalTraining = firstQualification.Code.Text;
+                }
+                else if(!firstQualification.Code.Coding.IsNullOrEmpty())
+                {
+                    person.ProfessionalTraining = firstQualification.Code.Coding.First().Display;
+                }
+            }
+
+            person.Organization = fhirPractitioner.GetStringExtension(HealthVaultExtensions.Organization);
+
+            if (fhirPractitioner.Identifier.Any())
+            {
+                person.PersonId = fhirPractitioner.Identifier.First().Value;
             }
 
             return person;
         }
 
-        private static Name ToHealthVault(HumanName fhirName)
-        {
-            var hvName = new Name
-            {
-                Last = fhirName.Family,
-                First = fhirName.Given.FirstOrDefault() ?? string.Empty,
-                Middle = fhirName.Given.ElementAtOrDefault(1) ?? string.Empty
-            };
-
-            if (fhirName.Prefix.Any())
-            {
-                hvName.Title = new CodableValue(fhirName.Prefix.First());
-            }
-
-            if (fhirName.Suffix.Any())
-            {
-                hvName.Suffix = new CodableValue(fhirName.Suffix.First());
-            }
-
-            if (!string.IsNullOrEmpty(fhirName.Text))
-            {
-                hvName.Full = fhirName.Text;
-            }
-            else
-            {
-                //TODO Calculate Full Name
-            }
-
-            return hvName;
-        }
-
-        private static Email ConvertContactPointToEmail(ContactPoint contactPoint)
-        {
-            return new Email
-            {
-                Address = contactPoint.Value,
-                IsPrimary = contactPoint.Rank.HasValue ? contactPoint.Rank == 1 : (bool?)null,
-                Description = contactPoint.GetStringExtension(HealthVaultExtensions.Description),
-            };
-        }
+        
 
         private static Phone ConvertContactPointToPhone(ContactPoint contactPoint)
         {

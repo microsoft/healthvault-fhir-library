@@ -6,6 +6,7 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System.Linq;
 using Hl7.Fhir.Model;
 using Microsoft.HealthVault.ItemTypes;
 
@@ -20,10 +21,22 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 return null;
             }
 
-            var codableValue = new CodableValue
+
+            var codableValue = new CodableValue();
+
+            if(!string.IsNullOrEmpty(codeableConcept.Text))
             {
-                Text = codeableConcept.Text,
-            };
+                codableValue.Text = codeableConcept.Text;
+            }
+            else
+            {
+                var firstCodingWithDisplayValue = codeableConcept.Coding
+                    .FirstOrDefault(coding => !string.IsNullOrWhiteSpace(coding.Display));
+                if(firstCodingWithDisplayValue != null)
+                {
+                    codableValue.Text = firstCodingWithDisplayValue.Display;
+                }
+            }
 
             foreach (var coding in codeableConcept.Coding)
             {

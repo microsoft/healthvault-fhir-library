@@ -19,8 +19,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         internal static BloodPressure ToBloodPressure(this Observation observation)
         {
             var bloodPressure = observation.ToThingBase<BloodPressure>();
-            
-            bloodPressure.When = ObservationToHealthVault.GetHealthVaultTimeFromEffectiveDate(observation.Effective);
+
+            bloodPressure.When = ObservationToHealthVault.GetWhenFromEffective(observation.Effective);
 
             bloodPressure.IrregularHeartbeatDetected = observation.GetBoolExtension(HealthVaultVocabularies.IrregularHeartBeatExtensionName);
 

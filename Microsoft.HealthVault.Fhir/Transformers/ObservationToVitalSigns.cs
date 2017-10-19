@@ -21,7 +21,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         internal static VitalSigns ToVitalSigns(this Observation observation)
         {
             var vitalSigns = observation.ToThingBase<VitalSigns>();
-            vitalSigns.When = ObservationToHealthVault.GetHealthVaultTimeFromEffectiveDate(observation.Effective);
+            vitalSigns.When = ObservationToHealthVault.GetWhenFromEffective(observation.Effective);
 
             foreach (Observation vitalSignObservation in observation.Contained)
             {
