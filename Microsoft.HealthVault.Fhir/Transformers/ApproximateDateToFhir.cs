@@ -18,6 +18,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             return ApproximateDateToFhir.ToFhirInternal(approximateDate);
         }
     }
+
     internal class ApproximateDateToFhir
     {
         internal static Date ToFhirInternal(ApproximateDate approximateDate)

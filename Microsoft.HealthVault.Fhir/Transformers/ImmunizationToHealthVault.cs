@@ -22,7 +22,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             ItemTypes.Immunization hvImmunization = fhirImmunization.ToThingBase<ItemTypes.Immunization>();
 
             hvImmunization.Name = fhirImmunization.VaccineCode.ToCodableValue();
-            hvImmunization.DateAdministrated = fhirImmunization.DateElement.ToAproximateDateTime();
+
+            if (!fhirImmunization.DateElement.IsNullOrEmpty())
+            {
+                hvImmunization.DateAdministrated = fhirImmunization.DateElement.ToAproximateDateTime();
+            }            
 
             if (!fhirImmunization.Practitioner.IsNullOrEmpty())
             {
@@ -49,20 +53,20 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 hvImmunization.Consent = immunizationExtension.GetStringExtension(HealthVaultExtensions.ImmunizationDetailConcent);
                 hvImmunization.AdverseEvent = immunizationExtension.GetStringExtension(HealthVaultExtensions.ImmunizationDetailAdverseEvent);
             }
+
             if (!fhirImmunization.Note.IsNullOrEmpty())
             {
                 fhirImmunization.Note.ForEach(note =>
                 {
-                    string sepearator = string.Empty;
+                    string separator = string.Empty;
                     if (!string.IsNullOrEmpty(hvImmunization.CommonData.Note))
                     {
-                        sepearator = "\n"; //Let's seperate each note with new line
+                        separator = Environment.NewLine; //Let's seperate each note with new line
                     }
 
                     hvImmunization.CommonData.Note += $"{note.Text}";
                 });
             }
-
 
             return hvImmunization;
         }

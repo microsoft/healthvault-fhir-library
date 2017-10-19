@@ -20,6 +20,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             return ImmunizationToFhir.ToFhirInternal(hvImmunization, hvImmunization.ToFhirInternal<Hl7.Fhir.Model.Immunization>());
         }
     }
+
     internal static class ImmunizationToFhir
     {
         internal static Hl7.Fhir.Model.Immunization ToFhirInternal(ItemTypes.Immunization hvImmunization, Hl7.Fhir.Model.Immunization fhirImmunization)
@@ -60,10 +61,12 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 {
                     immunizationExtension.AddExtension(HealthVaultExtensions.ImmunizationDetailSequence, new FhirString(hvImmunization.Sequence));
                 }
+
                 if (!string.IsNullOrEmpty(hvImmunization.Consent))
                 {
                     immunizationExtension.AddExtension(HealthVaultExtensions.ImmunizationDetailConcent, new FhirString(hvImmunization.Consent));
                 }
+
                 if (!string.IsNullOrEmpty(hvImmunization.AdverseEvent))
                 {
                     immunizationExtension.AddExtension(HealthVaultExtensions.ImmunizationDetailAdverseEvent, new FhirString(hvImmunization.AdverseEvent));
