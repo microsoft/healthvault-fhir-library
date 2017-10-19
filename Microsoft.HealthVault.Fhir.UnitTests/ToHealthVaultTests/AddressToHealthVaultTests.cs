@@ -21,17 +21,17 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         [TestMethod]
         public void WhenAddressTransformedToHealthVault_ThenValueEqual()
         {
-            string[] lines = { "3804 Lakeland ", "Terrace" };
+            string[] lines = { "1", "Microsoft Way" };
             var fhirAddress = new Hl7.Fhir.Model.Address
             {
                 Type = Hl7.Fhir.Model.Address.AddressType.Postal,
                 Text = "John's Postal Address",
                 Line = lines.ToList(),
-                City = "KEENE",
-                District = "NorthWest",
-                State = "California",
+                City = "Redmond",
+                District = "King County",
+                State = "WA",
                 Country = "US",
-                PostalCode = "93531"
+                PostalCode = "98052"
             };
 
             var hvAddress = fhirAddress.ToHealthVault();
