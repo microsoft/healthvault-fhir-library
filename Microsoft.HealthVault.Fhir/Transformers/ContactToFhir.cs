@@ -44,7 +44,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 foreach (var address in contact.ContactInformation.Address)
                 {
-                    patient.Address.Add(ConvertAddress(address));
+                    patient.Address.Add(address.ToFhir());
                 }
             }
 
@@ -52,7 +52,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 foreach (var email in contact.ContactInformation.Email)
                 {
-                    patient.Telecom.Add(ConvertEmail(email));
+                    patient.Telecom.Add(email.ToFhir());
                 }
             }
 
@@ -60,66 +60,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 foreach (var phone in contact.ContactInformation.Phone)
                 {
-                    patient.Telecom.Add(ConvertPhone(phone));
+                    patient.Telecom.Add(phone.ToFhir());
                 }
             }
 
             return patient;
-        }
-
-        private static Hl7.Fhir.Model.Address ConvertAddress(ItemTypes.Address hvAddress)
-        {
-            var address = new Hl7.Fhir.Model.Address
-            {
-                Text = hvAddress.Description,
-                Line = hvAddress.Street,
-                City = hvAddress.City,
-                PostalCode = hvAddress.PostalCode,
-                District = hvAddress.County,
-                State = hvAddress.State,
-                Country = hvAddress.Country,
-            };
-
-            if (hvAddress.IsPrimary.HasValue && hvAddress.IsPrimary.Value)
-            {
-                address.AddExtension(HealthVaultExtensions.IsPrimary, new FhirBoolean(true));
-            }
-
-            return address;
-        }
-
-        private static ContactPoint ConvertEmail(Email email)
-        {
-            var contactPoint = new ContactPoint
-            {
-                System = ContactPoint.ContactPointSystem.Email,
-                Value = email.Address,
-                Rank = email.IsPrimary.HasValue && email.IsPrimary.Value ? 1 : (int?)null,
-            };
-
-            if (!string.IsNullOrEmpty(email.Description))
-            {
-                contactPoint.AddExtension(HealthVaultExtensions.Description, new FhirString(email.Description));
-            }
-
-            return contactPoint;
-        }
-
-        private static ContactPoint ConvertPhone(Phone phone)
-        {
-            var contactPoint = new ContactPoint
-            {
-                System = ContactPoint.ContactPointSystem.Phone,
-                Value = phone.Number,
-                Rank = phone.IsPrimary.HasValue && phone.IsPrimary.Value ? 1 : (int?)null,
-            };
-
-            if (!string.IsNullOrEmpty(phone.Description))
-            {
-                contactPoint.AddExtension(HealthVaultExtensions.Description, new FhirString(phone.Description));
-            }
-
-            return contactPoint;
-        }
+        }        
     }
 }

@@ -41,36 +41,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         {
             return observation.ToHealthVault(CodeToHealthVaultHelper.DetectHealthVaultTypeFromObservation(observation));
         }
-
-        internal static T ToThingBase<T>(this Observation observation) where T : ThingBase, new()
-        {
-            T baseThing = new T();
-
-            Guid id;
-            if (Guid.TryParse(observation.Id, out id))
-            {
-                baseThing.Key = new ThingKey(id);
-            }
-
-            Guid version;
-            if (observation.Meta != null && observation.Meta.VersionId != null && Guid.TryParse(observation.Meta.VersionId, out version))
-            {
-                baseThing.Key.VersionStamp = version;
-            }
-
-            ThingFlags flags;
-            var extensionFlag = observation.GetExtension(HealthVaultExtensions.FlagsFhirExtensionName);
-            if (extensionFlag != null)
-            {
-                if (extensionFlag.Value is FhirString && Enum.TryParse<ThingFlags>((extensionFlag.Value as FhirString).ToString(), out flags))
-                {
-                    baseThing.Flags = flags;
-                }
-            }
-
-            return baseThing;
-        }
-
+        
         internal static T GetThingValueFromQuantity<T>(Quantity quantityValue) where T : Measurement<double>, new()
         {
             if (quantityValue?.Value == null)
@@ -94,6 +65,16 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             };
         }
 
+        internal static HealthServiceDateTime GetWhenFromEffective(Element effectiveDate)
+        {
+            if (effectiveDate == null)
+            {
+                throw new ArgumentException("Effective date is required");
+            }
+
+            return effectiveDate.ToHealthServiceDateTime();
+        }
+
         internal static double? GetValueFromQuantity(Quantity value)
         {
             if (value != null && value.Value.HasValue)
@@ -104,55 +85,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
 
             return null;
-        }
-
-        internal static HealthServiceDateTime GetHealthVaultTimeFromEffectiveDate(Element effectiveDate)
-        {
-            var dateTime = GetFhirDateTime(effectiveDate);
-
-            if (dateTime != null)
-            {
-                var dt = dateTime.ToDateTimeOffset();
-                return new HealthServiceDateTime(
-                    new HealthServiceDate(dt.Year, dt.Month, dt.Day),
-                    new ApproximateTime(dt.Hour, dt.Minute, dt.Second, dt.Millisecond));
-            }
-
-            return null;
-        }
-
-        internal static ApproximateDateTime GetApproximateDateTimeFromEffectiveDate(Element effectiveDate)
-        {
-            var dateTime = GetFhirDateTime(effectiveDate);
-
-            if (dateTime != null)
-            {
-                var dt = dateTime.ToDateTimeOffset();
-                return new ApproximateDateTime(
-                    new ApproximateDate(dt.Year, dt.Month, dt.Day),
-                    new ApproximateTime(dt.Hour, dt.Minute, dt.Second, dt.Millisecond));
-            }
-
-            return null;
-        }
-
-        private static FhirDateTime GetFhirDateTime(Element effectiveDate)
-        {
-            FhirDateTime dateTime = null;
-
-            /* Per Spec DSTU3 Effective Date in an observation can only be of type FhirDateTime or FhirPeriod
-             * in this transformation if we have a period we will map it to the start time
-             */
-            if (effectiveDate is FhirDateTime)
-            {
-                dateTime = effectiveDate as FhirDateTime;
-            }
-            else if (effectiveDate is Period && ((Period) effectiveDate).Start != null)
-            {
-                dateTime = new FhirDateTime(((Period) effectiveDate).Start);
-            }
-            return dateTime;
-        }
+        }               
 
         private static double GetQuantityInUnit(Quantity quantityValue, Units.UnitConversion unitConversion)
         {

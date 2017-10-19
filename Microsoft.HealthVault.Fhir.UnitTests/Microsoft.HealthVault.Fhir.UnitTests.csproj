@@ -165,8 +165,12 @@
     <Compile Include="ToFhirTests\CdaToFhirTests.cs" />
     <Compile Include="ToFhirTests\FileToFhirTests.cs" />
     <Compile Include="ToFhirTests\ToFhirDocumentReferenceTests.cs" />
+    <Compile Include="ToFhirTests\AddressToFhirTests.cs" />
     <Compile Include="ToFhirTests\BloodGlucoseToFhirTests.cs" />
     <Compile Include="ToFhirTests\VitalSignsToFhirTests.cs" />
+    <Compile Include="ToFhirTests\EmailToFhirTests.cs" />
+    <Compile Include="ToFhirTests\PhoneToFhirTests.cs" />
+    <Compile Include="ToFhirTests\ProcedureToFhirTests.cs" />
     <Compile Include="ToFhirTests\ToFhirResourceTests.cs" />
     <EmbeddedResource Include="Samples\FhirSleepJournalAM.json" />
     <Compile Include="Samples\SampleUtil.cs" />
@@ -187,11 +191,16 @@
     <Compile Include="ToFhirTests\PersonalImageToFhirTests.cs" />
     <Compile Include="ToFhirTests\PersonalToFhirTests.cs" />
     <Compile Include="ToFhirTests\SleepJournalAMToFhirTests.cs" />
+    <Compile Include="ToFhirTests\NameToFhirTests.cs" />
     <Compile Include="ToFhirTests\WeightToFhirTests.cs" />
     <Compile Include="ToHealthVaultTests\DocumentReferenceToFileTests.cs" />
     <Compile Include="ToHealthVaultTests\DocumentReferenceToHealthVaultCcrTests.cs" />
     <Compile Include="ToHealthVaultTests\DocumentReferenceToHealthVaultCdaTests.cs" />
     <Compile Include="ToHealthVaultTests\DocumentReferenceToHealthVaultTests.cs" />
+    <Compile Include="ToHealthVaultTests\AddressToHealthVaultTests.cs" />
+    <Compile Include="ToHealthVaultTests\ContactPointToHealthVaultTests.cs" />
+    <Compile Include="ToHealthVaultTests\FhirProcedureToHealthVaultProcedure.cs" />
+    <Compile Include="ToHealthVaultTests\HumanNameToNameTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBloodPressure.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyCompositionTests.cs" />
     <Compile Include="ToHealthVaultTests\ObservationToHealthVaultBodyDimensionTests.cs" />
@@ -225,6 +234,7 @@
     <EmbeddedResource Include="Samples\FhirCCR.json" />
     <EmbeddedResource Include="Samples\FhirCDA.json" />
     <EmbeddedResource Include="Samples\FhirFile.json" />
+    <EmbeddedResource Include="Samples\FhirProcedure.json" />
     <EmbeddedResource Include="Samples\HealthVaultToFhirBloodGlucose.json" />
   </ItemGroup>
   <ItemGroup>

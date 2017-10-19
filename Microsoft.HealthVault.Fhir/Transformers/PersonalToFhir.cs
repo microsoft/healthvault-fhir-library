@@ -58,35 +58,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             if (personal.Name != null)
             {
-                var humanName = new HumanName
-                {
-                    Family = personal.Name.Last,
-                    Text = personal.Name.Full,
-                };
-
-                var givenNames = new List<string>();
-                if (!string.IsNullOrEmpty(personal.Name.First))
-                {
-                    givenNames.Add(personal.Name.First);
-                }
-
-                if (!string.IsNullOrEmpty(personal.Name.Middle))
-                {
-                    givenNames.Add(personal.Name.Middle);
-                }
-                humanName.Given = givenNames;
-
-                if (personal.Name.Title != null)
-                {
-                    humanName.Prefix = new List<string>{ personal.Name.Title.Text };
-                }
-
-                if (personal.Name.Suffix != null)
-                {
-                    humanName.Suffix = new List<string>{ personal.Name.Suffix.Text };
-                }
-
-                patient.Name.Add(humanName);
+                patient.Name.Add(personal.Name.ToFhir());
             }
 
             if (!string.IsNullOrEmpty(personal.SocialSecurityNumber))

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation.  All rights reserved.
+﻿// Copyright (c) Get Real Health.  All rights reserved.
 // MIT License
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the ""Software""), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 //
@@ -6,29 +6,33 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using System;
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.ItemTypes;
+using Microsoft.HealthVault.Fhir.Constants;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    internal static class ObservationToHeartRate
+    public static class AddressToHealthVault
     {
-        internal static HeartRate ToHeartRate(this Observation observation)
+        public static ItemTypes.Address ToHealthVault(this Hl7.Fhir.Model.Address address)
         {
-            var heartRate = observation.ToThingBase<ItemTypes.HeartRate>();
+            var hvAddress = new ItemTypes.Address();
 
-            var observationValue = observation.Value as Quantity;
-            if (observationValue?.Value == null)
+            foreach (var line in address.Line)
             {
-                throw new ArgumentException("Value quantity must have a value.");
+                hvAddress.Street.Add(line);
             }
-            
-            heartRate.Value = (int)observationValue.Value.Value;
+            hvAddress.City = address.City;
+            hvAddress.State = address.State;
+            hvAddress.County = address.District;
+            hvAddress.PostalCode = address.PostalCode;
+            if (!string.IsNullOrEmpty(address.Country))
+            {
+                hvAddress.Country = address.Country;
+            }
 
-            heartRate.When = ObservationToHealthVault.GetWhenFromEffective(observation.Effective);
-
-            return heartRate;
+            hvAddress.Description = address.Text;
+            hvAddress.IsPrimary = address.GetBoolExtension(HealthVaultExtensions.IsPrimary);
+            return hvAddress;
         }
     }
 }

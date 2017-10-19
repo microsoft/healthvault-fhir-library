@@ -24,23 +24,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 hasValue = true;
                 foreach (var address in patient.Address)
-                {
-                    var hvAddress = new ItemTypes.Address();
-
-                    foreach (var line in address.Line)
-                    {
-                        hvAddress.Street.Add(line);
-                    }
-                    hvAddress.City = address.City;
-                    hvAddress.State = address.State;
-                    hvAddress.County = address.District;
-                    hvAddress.PostalCode = address.PostalCode;
-                    hvAddress.Country = address.Country;
-
-                    hvAddress.Description = address.Text;
-                    hvAddress.IsPrimary = address.GetBoolExtension(HealthVaultExtensions.IsPrimary);
-
-                    contact.ContactInformation.Address.Add(hvAddress);
+                {                    
+                    contact.ContactInformation.Address.Add(address.ToHealthVault());
                 }
             }
 
@@ -52,10 +37,10 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     switch (contactPoint.System)
                     {
                         case ContactPoint.ContactPointSystem.Email:
-                            contact.ContactInformation.Email.Add(ConvertContactPointToEmail(contactPoint));
+                            contact.ContactInformation.Email.Add(contactPoint.ToHealthVault<Email>());
                             break;
                         case ContactPoint.ContactPointSystem.Phone:
-                            contact.ContactInformation.Phone.Add(ConvertContactPointToPhone(contactPoint));
+                            contact.ContactInformation.Phone.Add(contactPoint.ToHealthVault<Phone>());
                             break;
                     }
                 }

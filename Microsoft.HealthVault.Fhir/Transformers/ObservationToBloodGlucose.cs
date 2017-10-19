@@ -20,7 +20,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             var bloodGlucose = observation.ToThingBase<BloodGlucose>();
 
             bloodGlucose.Value = ObservationToHealthVault.GetThingValueFromQuantity<BloodGlucoseMeasurement>(observation.Value as Quantity);
-            bloodGlucose.When = ObservationToHealthVault.GetHealthVaultTimeFromEffectiveDate(observation.Effective);
+
+            bloodGlucose.When = ObservationToHealthVault.GetWhenFromEffective(observation.Effective);
 
             var bloodGlucoseExtension = observation.GetExtension(HealthVaultExtensions.BloodGlucose);
 
