@@ -19,10 +19,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             var weight = observation.ToThingBase<ItemTypes.Weight>();
 
             weight.Value = ObservationToHealthVault.GetThingValueFromQuantity<WeightValue>(observation.Value as Quantity);
-            if (observation.Effective == null)
-                throw new ArgumentException("Effective is required");
 
-            weight.When = observation.Effective.ToHealthServiceDateTime();
+            weight.When = ObservationToHealthVault.GetWhenFromEffective(observation.Effective);
 
             return weight;
         }

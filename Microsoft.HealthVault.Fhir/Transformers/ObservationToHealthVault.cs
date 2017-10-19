@@ -65,6 +65,16 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             };
         }
 
+        internal static HealthServiceDateTime GetWhenFromEffective(Element effectiveDate)
+        {
+            if (effectiveDate == null)
+            {
+                throw new ArgumentException("Effective date is required");
+            }
+
+            return effectiveDate.ToHealthServiceDateTime();
+        }
+
         internal static double? GetValueFromQuantity(Quantity value)
         {
             if (value != null && value.Value.HasValue)
@@ -151,6 +161,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             if (type == typeof(Exercise))
             {
                 return observation.ToExercise();
+            }
+
+            if (type == typeof(VitalSigns))
+            {
+                return observation.ToVitalSigns();
             }
 
             return null;

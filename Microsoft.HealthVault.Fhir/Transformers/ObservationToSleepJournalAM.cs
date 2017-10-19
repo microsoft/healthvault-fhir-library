@@ -19,13 +19,10 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         internal static SleepJournalAM ToSleepJournalAM(this Observation observation)
         {
             var sleepJournalAm = observation.ToThingBase<SleepJournalAM>();
+            
+            sleepJournalAm.When = ObservationToHealthVault.GetWhenFromEffective(observation.Effective);
 
-            if (observation.Effective == null)
-                throw new ArgumentException("Effective is required");
-
-            sleepJournalAm.When = observation.Effective.ToHealthServiceDateTime();
-
-            foreach(var component in observation.Component)
+            foreach (var component in observation.Component)
             {
                 if (string.IsNullOrEmpty(component.Code?.Text) || component.Value == null)
                 {

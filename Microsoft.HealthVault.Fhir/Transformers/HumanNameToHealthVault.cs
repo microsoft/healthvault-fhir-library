@@ -5,34 +5,29 @@
 // The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+using System.Linq;
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    public static class AddressToHealthVault
+    public static class HumanNameToHealthVault
     {
-        public static ItemTypes.Address ToHealthVault(this Hl7.Fhir.Model.Address address)
+        public static Name ToHealthVault(this HumanName fhirName)
         {
-            var hvAddress = new ItemTypes.Address();
-
-            foreach (var line in address.Line)
+            var name = new ItemTypes.Name()
             {
-                hvAddress.Street.Add(line);
-            }
-            hvAddress.City = address.City;
-            hvAddress.State = address.State;
-            hvAddress.County = address.District;
-            hvAddress.PostalCode = address.PostalCode;
-            if (!string.IsNullOrEmpty(address.Country))
+                Last = fhirName.Family,
+                Suffix = fhirName.Suffix.Any() ? new ItemTypes.CodableValue(fhirName.Suffix.First()) : null,
+                Title = fhirName.Prefix.Any() ? new ItemTypes.CodableValue(fhirName.Prefix.First()) : null,
+                First = fhirName.Given.FirstOrDefault() ?? string.Empty,
+                Middle = fhirName.Given.ElementAtOrDefault(1)
+            };
+            if (!string.IsNullOrEmpty(fhirName.Text))
             {
-                hvAddress.Country = address.Country;
+                name.Full = fhirName.Text;
             }
-
-            hvAddress.Description = address.Text;
-            hvAddress.IsPrimary = address.GetBoolExtension(HealthVaultExtensions.IsPrimary);
-            return hvAddress;
+            return name;
         }
     }
 }

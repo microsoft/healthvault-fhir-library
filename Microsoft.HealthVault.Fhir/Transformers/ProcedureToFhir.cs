@@ -33,8 +33,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             fhirProcedure.Status = EventStatus.Unknown;
             fhirProcedure.Code = hvProcedure.Name.ToFhir();
 
-            addPerformer(fhirProcedure, hvProcedure.PrimaryProvider?.ToFhir());
-            addPerformer(fhirProcedure, hvProcedure.SecondaryProvider?.ToFhir());
+            AddPerformer(fhirProcedure, hvProcedure.PrimaryProvider?.ToFhir());
+            AddPerformer(fhirProcedure, hvProcedure.SecondaryProvider?.ToFhir());
 
             if (hvProcedure.AnatomicLocation != null)
             {
@@ -50,7 +50,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             return fhirProcedure;
         }
 
-        private static void addPerformer(FhirProcedure fhirProcedure, Practitioner practitioner)
+        private static void AddPerformer(FhirProcedure fhirProcedure, Practitioner practitioner)
         {
             if (practitioner != null)
             {

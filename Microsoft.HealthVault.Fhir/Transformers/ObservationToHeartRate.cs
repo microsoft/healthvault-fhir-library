@@ -26,10 +26,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             
             heartRate.Value = (int)observationValue.Value.Value;
 
-            if (observation.Effective == null)
-                throw new ArgumentException("Effective is required");
-
-            heartRate.When = observation.Effective.ToHealthServiceDateTime();
+            heartRate.When = ObservationToHealthVault.GetWhenFromEffective(observation.Effective);
 
             return heartRate;
         }

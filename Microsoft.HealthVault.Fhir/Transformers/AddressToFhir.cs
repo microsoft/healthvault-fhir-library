@@ -17,6 +17,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             return AddressToFhir.ToFhirInternal(hvAddress);
         }
     }
+
     internal class AddressToFhir
     {
         internal static Hl7.Fhir.Model.Address ToFhirInternal(ItemTypes.Address hvAddress)

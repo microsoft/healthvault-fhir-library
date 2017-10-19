@@ -27,8 +27,10 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         private static ItemTypes.PersonItem ToPerson(this Hl7.Fhir.Model.Practitioner fhirPractitioner)
         {
             if (fhirPractitioner == null || fhirPractitioner.Name.IsNullOrEmpty())
+            {
                 return null;
-            
+            }
+
             var practitionerName = fhirPractitioner.Name.First(); // Let's consider just the first item
 
             //name

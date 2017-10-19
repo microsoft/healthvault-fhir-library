@@ -7,32 +7,38 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    public static class AddressToHealthVault
+    public static partial class ThingBaseToFhir
     {
-        public static ItemTypes.Address ToHealthVault(this Hl7.Fhir.Model.Address address)
+        // Register the type on the generic ThingToFhir partial class
+        public static DocumentReference ToFhir(this File file)
         {
-            var hvAddress = new ItemTypes.Address();
+            return FileToFhir.ToFhirInternal(file, ToFhirInternal<DocumentReference>(file));
+        }
+    }
 
-            foreach (var line in address.Line)
-            {
-                hvAddress.Street.Add(line);
-            }
-            hvAddress.City = address.City;
-            hvAddress.State = address.State;
-            hvAddress.County = address.District;
-            hvAddress.PostalCode = address.PostalCode;
-            if (!string.IsNullOrEmpty(address.Country))
-            {
-                hvAddress.Country = address.Country;
-            }
+    /// <summary>
+    /// An extension class that transforms HealthVault file data types into FHIR DocumentReferences
+    /// </summary>
+    internal static class FileToFhir
+    {
+        internal static DocumentReference ToFhirInternal(File file, DocumentReference documentReference)
+        {
+            var content = new DocumentReference.ContentComponent();
 
-            hvAddress.Description = address.Text;
-            hvAddress.IsPrimary = address.GetBoolExtension(HealthVaultExtensions.IsPrimary);
-            return hvAddress;
+            content.Attachment = new Attachment();
+
+            content.Attachment.ContentType = (file.ContentType == null) ? "application/octet-stream" : file.ContentType.ToString();
+
+            content.Attachment.Data = new byte[file.Content.Length];
+            file.Content.CopyTo(content.Attachment.Data, 0);
+
+            documentReference.Content.Add(content);
+
+            return documentReference;
         }
     }
 }

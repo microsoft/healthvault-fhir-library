@@ -24,7 +24,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             var phone = new Phone
             {
                 Description = "John's work phone",
-                Number = "734-316-7039",
+                Number = "555-1212",
                 IsPrimary = true
             };
 
@@ -42,12 +42,13 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.IsNotNull(extensionValue);
             Assert.AreEqual(phone.Description, extensionValue);
         }
+
         [TestMethod]
         public void WhenMinimumPhoneTransformedToFhir_ThenValuesEqual()
         {
             var phone = new Phone
             {
-                Number = "734-316-7039",
+                Number = "555-1212",
             };
 
             var fhirPhone = phone.ToFhir();

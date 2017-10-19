@@ -17,7 +17,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
     [TestClass]
     public class FhirProcedureToHealthVaultProcedure
     {
-        [TestCategory("Procedure")]
+        [TestCategory(nameof(Procedure))]
         [TestMethod]
         public void WhenFhirProcedureToHealthVaultProcedure_ThenValuesEqual()
         {

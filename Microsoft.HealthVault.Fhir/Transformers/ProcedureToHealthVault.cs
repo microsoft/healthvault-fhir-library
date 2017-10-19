@@ -34,25 +34,27 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             if (!fhirProcedure.Performer.IsNullOrEmpty())
             {
-                hvProcedure.PrimaryProvider = getProvider(fhirProcedure, 0);
+                hvProcedure.PrimaryProvider = GetProvider(fhirProcedure, 0);
 
                 if (fhirProcedure.Performer.Count > 1)
-                    hvProcedure.SecondaryProvider = getProvider(fhirProcedure, 1);
+                    hvProcedure.SecondaryProvider = GetProvider(fhirProcedure, 1);
             }
 
             return hvProcedure;
-        }    
+        }
 
-        private static PersonItem getProvider(FhirProcedure fhirProcedure, int index)
+        private static PersonItem GetProvider(FhirProcedure fhirProcedure, int index)
         {
             var performerComponent = fhirProcedure.Performer[index];
             if (performerComponent.Actor.IsContainedReference)
             {
-                var containedReference = fhirProcedure.Contained.SingleOrDefault(resouce => 
+                var containedReference = fhirProcedure.Contained.SingleOrDefault(resouce =>
                     resouce.Id.Equals(performerComponent.Actor.Reference) && resouce.GetType().Equals(typeof(Hl7.Fhir.Model.Practitioner)));
 
                 if (containedReference == null)
+                {
                     return null;
+                }
 
                 return (containedReference as Hl7.Fhir.Model.Practitioner).ToHealthVault();
             }
