@@ -62,5 +62,14 @@ namespace Microsoft.HealthVault.Fhir.Codes.HealthVault
             System = System,
             Display = " Blood Pressure - Systolic",
         };
+
+        public const string VitalSignsCode = "vitals-panel";
+        public static readonly Coding VitalSigns = new Coding
+        {
+            Code = VitalSignsCode,
+            Version = "1",
+            System = System,
+            Display = "Vital Signs Panel"
+        };
     }
 }
