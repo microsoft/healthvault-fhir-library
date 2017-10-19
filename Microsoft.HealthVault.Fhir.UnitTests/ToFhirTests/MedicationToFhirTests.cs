@@ -127,7 +127,6 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             }
         }
 
-
         [TestMethod]
         public void WhenMedicationTransformedToFhir_ThenMedicationStatementHasStatus()
         {

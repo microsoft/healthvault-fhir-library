@@ -22,8 +22,7 @@ namespace Microsoft.HealthVault.Fhir.FhirExtensions.Helpers
         /// <returns>Reference to contained resource</returns>
         public static ResourceReference GetContainerReference(this Resource resource)
         {
-            var id = resource.Id;
-            return new ResourceReference($"#{id}");
+            return new ResourceReference($"#{resource.Id}");
         }
 
         /// <summary>

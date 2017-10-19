@@ -243,14 +243,14 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         public void WhenPractitionerTransformedToHealthVault_ThenTelecomPhoneIsCopiedToContactPhone()
         {
             var description = "Office";
-            var isPrimary = true;
             var number = "4254485432";
+            int? contactPointRank = 1;
             var practitioner = GetSamplePractitioner();
             practitioner.Telecom = new System.Collections.Generic.List<ContactPoint>
             {
                 new ContactPoint
                 {
-                    Rank = isPrimary?1:(int?)null,
+                    Rank = contactPointRank,
                     Value = number,
                     System = ContactPoint.ContactPointSystem.Phone,
                     Extension = new System.Collections.Generic.List<Extension>
@@ -268,21 +268,21 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
 
             Assert.AreEqual(description, phone.Description);
             Assert.AreEqual(number, phone.Number);
-            Assert.AreEqual(isPrimary, phone.IsPrimary);
+            Assert.AreEqual(contactPointRank == 1, phone.IsPrimary);
         }
 
         [TestMethod]
         public void WhenPractitionerTransformedToHealthVault_ThenTelecomEmailIsCopiedToContactEmail()
         {
             var description = "Mail ID";
-            var isPrimary = true;
             var address = "john@live.com";
+            int? contactPointRank = 1;
             var practitioner = GetSamplePractitioner();
             practitioner.Telecom = new System.Collections.Generic.List<ContactPoint>
             {
                 new ContactPoint
                 {
-                    Rank = isPrimary?1:(int?)null,
+                    Rank = contactPointRank,
                     Value = address,
                     System = ContactPoint.ContactPointSystem.Email,
                     Extension = new System.Collections.Generic.List<Extension>
@@ -300,7 +300,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
 
             Assert.AreEqual(description, email.Description);
             Assert.AreEqual(address, email.Address);
-            Assert.AreEqual(isPrimary, email.IsPrimary);
+            Assert.AreEqual(contactPointRank == 1, email.IsPrimary);
         }
     }
 }
