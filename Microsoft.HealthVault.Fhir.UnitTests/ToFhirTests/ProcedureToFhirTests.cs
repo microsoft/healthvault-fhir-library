@@ -6,22 +6,22 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-using Hl7.Fhir.Model;
-using Microsoft.HealthVault.ItemTypes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using HVAddress = Microsoft.HealthVault.ItemTypes.Address;
-using HVProcedure = Microsoft.HealthVault.ItemTypes.Procedure;
-using FhirProcedure = Hl7.Fhir.Model.Procedure;
 using System.Linq;
+using Hl7.Fhir.Model;
 using Hl7.Fhir.Support;
 using Microsoft.HealthVault.Fhir.Transformers;
+using Microsoft.HealthVault.ItemTypes;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NodaTime;
+using FhirProcedure = Hl7.Fhir.Model.Procedure;
+using HVAddress = Microsoft.HealthVault.ItemTypes.Address;
+using HVProcedure = Microsoft.HealthVault.ItemTypes.Procedure;
 
 namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
 {
     [TestClass]
-    [TestCategory("Procedure")]
+    [TestCategory(nameof(Hl7.Fhir.Model.Procedure))]
     public class ProcedureToFhirTests
     {
         [TestMethod]
@@ -90,7 +90,6 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.IsFalse(fhirProcedure.Code.IsNullOrEmpty());
             Assert.AreEqual("Operative procedure on fingers", fhirProcedure.Code.Text);
             Assert.IsNotNull(fhirProcedure.Code.Coding.FirstOrDefault());
-            //Assert.AreEqual("Operative procedure on fingers", fhirProcedure.Code.Coding[0].Display);
             Assert.AreEqual("215000", fhirProcedure.Code.Coding[0].Code);
             Assert.IsTrue(fhirProcedure.Code.Coding[0].System.EndsWith("Snomed/SnomedProcedures"));
             Assert.AreEqual("Jan2008", fhirProcedure.Code.Coding[0].Version);
@@ -113,7 +112,6 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.IsFalse(fhirProcedure.BodySite.IsNullOrEmpty());            
             Assert.AreEqual("Metacarpophalangeal joint structure of index finger", fhirProcedure.BodySite[0].Text);
             Assert.IsNotNull(fhirProcedure.BodySite[0].Coding.FirstOrDefault());
-            //Assert.AreEqual("Metacarpophalangeal joint structure of index finger", fhirProcedure.BodySite[0].Coding[0].Display);
             Assert.AreEqual("289002", fhirProcedure.BodySite[0].Coding[0].Code);
             Assert.IsTrue(fhirProcedure.BodySite[0].Coding[0].System.EndsWith("Snomed/SnomedBodyLocation"));
             Assert.AreEqual("Jan2008", fhirProcedure.BodySite[0].Coding[0].Version);

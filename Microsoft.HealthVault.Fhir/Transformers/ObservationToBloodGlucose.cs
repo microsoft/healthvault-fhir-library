@@ -21,10 +21,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             bloodGlucose.Value = ObservationToHealthVault.GetThingValueFromQuantity<BloodGlucoseMeasurement>(observation.Value as Quantity);
 
-            if (observation.Effective == null)
-                throw new ArgumentException("Effective is required");
-
-            bloodGlucose.When = observation.Effective.ToHealthServiceDateTime();
+            bloodGlucose.When = ObservationToHealthVault.GetWhenFromEffective(observation.Effective);
 
             var bloodGlucoseExtension = observation.GetExtension(HealthVaultExtensions.BloodGlucose);
 

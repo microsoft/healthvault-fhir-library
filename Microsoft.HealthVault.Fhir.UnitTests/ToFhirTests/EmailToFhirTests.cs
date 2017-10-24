@@ -42,6 +42,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.IsFalse(string.IsNullOrEmpty(extensionValue));
             Assert.AreEqual(email.Description, extensionValue);
         }
+
         [TestMethod]
         public void WhenMinimumEmailTransformedToFhir_ThenValuesEqual()
         {

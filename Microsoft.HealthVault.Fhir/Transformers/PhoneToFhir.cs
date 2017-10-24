@@ -18,6 +18,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             return PhoneToFhir.ToFhirInternal(phone);
         }
     }
+
     internal class PhoneToFhir
     {
         internal static ContactPoint ToFhirInternal(Phone phone)

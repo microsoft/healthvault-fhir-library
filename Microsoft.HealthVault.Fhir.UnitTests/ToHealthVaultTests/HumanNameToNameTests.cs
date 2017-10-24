@@ -43,6 +43,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             Assert.AreEqual(fhirName.Given.ElementAt(1), hvName.Middle);
             Assert.AreEqual(fhirName.Text, hvName.Full);
         }
+
         [TestMethod]
         public void WhenMinimumHumanNameTransformedToHealthVault_ThenValuesEqual()
         {

@@ -20,10 +20,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         {
             var bloodPressure = observation.ToThingBase<BloodPressure>();
 
-            if (observation.Effective == null)
-                throw new ArgumentException("Effective is required");
-
-            bloodPressure.When = observation.Effective.ToHealthServiceDateTime();
+            bloodPressure.When = ObservationToHealthVault.GetWhenFromEffective(observation.Effective);
 
             bloodPressure.IrregularHeartbeatDetected = observation.GetBoolExtension(HealthVaultVocabularies.IrregularHeartBeatExtensionName);
 

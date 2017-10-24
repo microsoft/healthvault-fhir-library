@@ -30,8 +30,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
             else
             {
-                //Oh boy! there is no text available; Let's see if we can get it from the children
-                var firstCodingWithDisplayValue = codeableConcept.Coding.FirstOrDefault(coding => !string.IsNullOrWhiteSpace(coding.Display));
+                var firstCodingWithDisplayValue = codeableConcept.Coding
+                    .FirstOrDefault(coding => !string.IsNullOrWhiteSpace(coding.Display));
                 if(firstCodingWithDisplayValue != null)
                 {
                     codableValue.Text = firstCodingWithDisplayValue.Display;

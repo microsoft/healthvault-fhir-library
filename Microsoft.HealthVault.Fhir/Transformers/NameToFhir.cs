@@ -23,7 +23,9 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         internal static HumanName ToFhirInternal(Name hvName)
         {
             if (hvName == null)
+            {
                 return null;
+            }
 
             var fhirName = new HumanName
             {
