@@ -96,7 +96,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
         {
             var medicationStatement = new MedicationStatement()
             {
-                Medication = new ResourceReference("medciation/832475"),
+                Medication = new ResourceReference("medication/832475"),
             };
 
             Assert.ThrowsException<NotImplementedException>(() => medicationStatement.ToHealthVault());

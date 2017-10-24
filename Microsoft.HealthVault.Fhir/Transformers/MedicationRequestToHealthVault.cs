@@ -103,6 +103,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 return null;
             }
+            
             if (duration.Value.HasValue)
             {
                 switch (duration.Code)
@@ -152,7 +153,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     {
                         new HumanName
                         {
-                            Text=agentReference.Display
+                            Text = agentReference.Display
                         }
                     }
                 });

@@ -158,6 +158,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     }
                 };
             }
+
             if (prescription.Substitution != null)
             {
                 bool? isAllowed = IsAllowed(prescription.Substitution);
@@ -169,6 +170,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     };
                 }
             }
+            
             if (prescription.Instructions != null)
             {
                 var dosage = new Dosage();
