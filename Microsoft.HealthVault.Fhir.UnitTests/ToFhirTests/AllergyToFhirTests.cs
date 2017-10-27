@@ -83,8 +83,10 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             Assert.AreEqual("John Doe",(((Practitioner)((DomainResource)allergyIntolerance.Contained[0])).Name[0].Text));
             Assert.AreEqual("Doe", (((Practitioner)((DomainResource)allergyIntolerance.Contained[0])).Name[0].Family));
             Assert.IsNotNull(((Practitioner)((DomainResource)allergyIntolerance.Contained[0])).Address);
-            Assert.AreEqual("Care Hospitals Inc",((Practitioner)((DomainResource)allergyIntolerance.Contained[0])).Address[0].Text);
-            Assert.AreEqual("work", ((Practitioner)((DomainResource)allergyIntolerance.Contained[0])).Address[0].Use.ToString().ToLower());
+            Assert.AreEqual("business address", ((Practitioner)((DomainResource)allergyIntolerance.Contained[0])).Address[0].Text);
+            Assert.AreEqual("Holmfirth", ((Practitioner)((DomainResource)allergyIntolerance.Contained[0])).Address[0].City);
+            Assert.AreEqual("HD7 1HQ", ((Practitioner)((DomainResource)allergyIntolerance.Contained[0])).Address[0].PostalCode);
+            Assert.AreEqual("UK", ((Practitioner)((DomainResource)allergyIntolerance.Contained[0])).Address[0].Country);
             Assert.AreEqual("Certified Medical Assistant", ((Practitioner)((DomainResource)allergyIntolerance.Contained[0])).Qualification[0].Code.Text.ToString());
             Assert.AreEqual("allergy other than medicinal agents", allergyIntolerance.Note[0].Text);
             Assert.AreEqual(AllergyIntoleranceClinicalStatus.Resolved, allergyIntolerance.ClinicalStatus);

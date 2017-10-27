@@ -23,30 +23,31 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             return AllergyToFhir.ToFhirInternal(allergy, ToFhirInternal<AllergyIntolerance>(allergy));
         }
     }
+
     internal static class AllergyToFhir
     {
-        internal static AllergyIntolerance ToFhirInternal(Allergy allergy, AllergyIntolerance allergyInTolerance)
+        internal static AllergyIntolerance ToFhirInternal(Allergy allergy, AllergyIntolerance allergyIntolerance)
         {
             var allergyExtension = new Extension
             {
                 Url = HealthVaultExtensions.Allergy
             };
 
-            allergyInTolerance.Code = allergy.Name.ToFhir();
-            
+            allergyIntolerance.Code = allergy.Name.ToFhir();
+
             if (allergy.FirstObserved != null)
             {
-                allergyInTolerance.Onset = allergy.FirstObserved.ToFhir();
+                allergyIntolerance.Onset = allergy.FirstObserved.ToFhir();
             }
 
             if (allergy.AllergenType != null)
             {
-                allergyInTolerance.SetAllergyIntoleranceCategory(allergy.AllergenType, allergyExtension);
+                allergyIntolerance.SetAllergyIntoleranceCategory(allergy.AllergenType, allergyExtension);
             }
 
             if (allergy.Reaction != null)
             {
-                allergyInTolerance.Reaction = new List<AllergyIntolerance.ReactionComponent>
+                allergyIntolerance.Reaction = new List<AllergyIntolerance.ReactionComponent>
                 {
                      new AllergyIntolerance.ReactionComponent {
                          Manifestation = new List<CodeableConcept>{ allergy.Reaction.ToFhir() },
@@ -57,7 +58,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             if (allergy.TreatmentProvider != null)
             {
-                allergyInTolerance.AddAsserter(allergy.TreatmentProvider.ToFhir());
+                allergyIntolerance.AddAsserter(allergy.TreatmentProvider.ToFhir());
             }
 
             if (allergy.Treatment != null)
@@ -74,47 +75,47 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             {
                 if (allergy.IsNegated.Value)
                 {
-                    allergyInTolerance.ClinicalStatus = AllergyIntoleranceClinicalStatus.Resolved;
+                    allergyIntolerance.ClinicalStatus = AllergyIntoleranceClinicalStatus.Resolved;
                 }
                 else
                 {
-                    allergyInTolerance.ClinicalStatus = AllergyIntoleranceClinicalStatus.Active;
+                    allergyIntolerance.ClinicalStatus = AllergyIntoleranceClinicalStatus.Active;
                 }
             }
 
-            if (allergy.CommonData != null)
+            if (allergy.CommonData != null && allergy.CommonData.Note != null)
             {
                 var note = new Hl7.Fhir.Model.Annotation();
                 note.Text = allergy.CommonData.Note;
-                allergyInTolerance.Note = new List<Hl7.Fhir.Model.Annotation> { note };
+                allergyIntolerance.Note = new List<Hl7.Fhir.Model.Annotation> { note };
             }
 
-            allergyInTolerance.Type = AllergyIntoleranceType.Allergy;
-            allergyInTolerance.Extension.Add(allergyExtension);
-
-            return allergyInTolerance;
-
+            allergyIntolerance.Type = AllergyIntoleranceType.Allergy;
+            allergyIntolerance.Extension.Add(allergyExtension);
+            return allergyIntolerance;
         }
 
         private static void SetAllergyIntoleranceCategory(this AllergyIntolerance allergyIntolerance, CodableValue allergenType, Extension allergyExtension)
         {
-            foreach (CodedValue aValue in allergenType)
+            List<AllergyIntoleranceCategory?> lstAllergyIntoleranceCategory = new List<AllergyIntoleranceCategory?>();
+            string aValue = allergenType.FirstOrDefault().Value;
+            AllergyIntoleranceCategory allergyIntoleranceCategory;
+
+            if (aValue != null)
             {
-                List<AllergyIntoleranceCategory?> lstAllergyIntoleranceCategory = new List<AllergyIntoleranceCategory?>();
-                AllergyIntoleranceCategory allergyIntoleranceCategory;
-                if (aValue.Value != null)
+                if (Enum.TryParse(aValue, true, out allergyIntoleranceCategory))
                 {
-                    if (Enum.TryParse(aValue.Value, true, out allergyIntoleranceCategory))
-                    {
-                        lstAllergyIntoleranceCategory.Add(allergyIntoleranceCategory);
-                    }
-                    else
-                    {
-                        allergyExtension.AddExtension(HealthVaultExtensions.AllergenType, new FhirString(aValue.Value));
-                    }
+                    lstAllergyIntoleranceCategory.Add(allergyIntoleranceCategory);
                 }
-                if (lstAllergyIntoleranceCategory.Count > 0)
-                    allergyIntolerance.Category = lstAllergyIntoleranceCategory;
+                else
+                {
+                    allergyExtension.AddExtension(HealthVaultExtensions.AllergenType, new FhirString(aValue));
+                }
+            }
+
+            if (lstAllergyIntoleranceCategory.Count > 0)
+            {
+                allergyIntolerance.Category = lstAllergyIntoleranceCategory;
             }
         }
 
@@ -125,8 +126,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 practitioner.Id = $"#practitioner-{Guid.NewGuid()}";
                 allergyIntolerance.Contained.Add(practitioner);
                 allergyIntolerance.Asserter = new ResourceReference
-                {                    
-                  Reference = practitioner.Id
+                {
+                    Reference = practitioner.Id
                 };
             }
         }

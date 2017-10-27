@@ -55,6 +55,12 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string SleepJournalAMWakeState = "sleep-journal-wake-state";
         public const string SleepJournalAMMedication = "sleep-journal-medication";
 
+        public const string RecurrenceIntervals = "recurrence-intervals";
+
+        public const string MedicationDoseUnits = "medication-dose-units";
+        public const string MedicationRoutes = "medication-routes";
+        public const string MedicationSubstitution = "medication-substitution";
+
         public const string IrregularHeartBeatExtensionName = BaseUri + "vital-signs/blood-pressure/irregular-heartbeat";
  
         public static CodeableConcept BodyWeight = new CodeableConcept()
@@ -93,7 +99,7 @@ namespace Microsoft.HealthVault.Fhir.Constants
         /// <returns>A codeable concept containing the passed in coding</returns>
         public static CodeableConcept GenerateCodeableConcept(Coding coding)
         {
-            return new CodeableConcept{ Coding = new List<Coding> { coding }};
+            return new CodeableConcept { Coding = new List<Coding> { coding } };
         }
 
         /// <summary>
@@ -119,6 +125,18 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public static bool SystemContainsHealthVaultUrl(string system)
         {
             return system?.IndexOf(BaseUri, StringComparison.OrdinalIgnoreCase) > -1;
+        }
+
+        public static (string family, string vocabulary) ExtractFamilyAndVocabularyFromSystemUrl(string system)
+        {
+            if (SystemContainsHealthVaultUrl(system))
+            {
+                var familyVocabPair = new Uri(BaseUri).MakeRelativeUri(new Uri(system)).ToString().Split('/');
+                if (familyVocabPair.Length == 2)
+                    return (familyVocabPair[0], familyVocabPair[1]);
+                return (null, familyVocabPair[0]);
+            }
+            return (null, system);
         }
     }
 }

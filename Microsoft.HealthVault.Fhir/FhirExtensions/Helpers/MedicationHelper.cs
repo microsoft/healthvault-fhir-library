@@ -6,40 +6,33 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Constants;
 
-namespace Microsoft.HealthVault.Fhir.Transformers
+namespace Microsoft.HealthVault.Fhir.FhirExtensions.Helpers
 {
-    public static class AddressToHealthVault
+    internal static class MedicationHelper
     {
-        public static ItemTypes.Address ToHealthVault(this Hl7.Fhir.Model.Address address)
+        internal static Medication ToMedication(this CodeableConcept medicationCodeableConcept)
         {
-            if((string.IsNullOrEmpty(address.City))||(string.IsNullOrWhiteSpace(address.Line.ToString()))||(string.IsNullOrWhiteSpace(address.PostalCode))
-                ||(string.IsNullOrWhiteSpace(address.Country)))
+            return new Medication
             {
-                return null;
-            }
+                Code = medicationCodeableConcept
+            };
+        }
 
-            var hvAddress = new ItemTypes.Address();
-
-            foreach (var line in address.Line)
+        internal static Medication GetMedication(DomainResource domainResource, Element medication)
+        {
+            switch (medication)
             {
-                hvAddress.Street.Add(line);
+                case ResourceReference medicationReference:
+                    return domainResource.GetContainedResource<Medication>(medicationReference);
+                case CodeableConcept medicationCodeableConcept:
+                    return ToMedication(medicationCodeableConcept);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(medication)
+                            , $"Allowed {nameof(ResourceReference)} or {nameof(CodeableConcept)} only");
             }
-
-            hvAddress.City = address.City;
-            hvAddress.State = address.State;
-            hvAddress.County = address.District;
-            hvAddress.PostalCode = address.PostalCode;
-            if (!string.IsNullOrEmpty(address.Country))
-            {
-                hvAddress.Country = address.Country;
-            }
-
-            hvAddress.Description = address.Text;
-            hvAddress.IsPrimary = address.GetBoolExtension(HealthVaultExtensions.IsPrimary);
-            return hvAddress;
-          }     
+        }
     }
 }

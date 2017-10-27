@@ -6,40 +6,28 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
+using System.Collections.Generic;
+using System.Text;
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    public static class AddressToHealthVault
+    public static partial class ItemBaseToFhir
     {
-        public static ItemTypes.Address ToHealthVault(this Hl7.Fhir.Model.Address address)
+        // Register the type on the generic ItemBaseToFhir partial class
+        public static FhirDateTime ToFhir(this HealthServiceDate healthservicedate)
         {
-            if((string.IsNullOrEmpty(address.City))||(string.IsNullOrWhiteSpace(address.Line.ToString()))||(string.IsNullOrWhiteSpace(address.PostalCode))
-                ||(string.IsNullOrWhiteSpace(address.Country)))
-            {
-                return null;
-            }
+            return HealthServiceDateToFhir.ToFhirInternal(healthservicedate);
+        }
+    }
 
-            var hvAddress = new ItemTypes.Address();
-
-            foreach (var line in address.Line)
-            {
-                hvAddress.Street.Add(line);
-            }
-
-            hvAddress.City = address.City;
-            hvAddress.State = address.State;
-            hvAddress.County = address.District;
-            hvAddress.PostalCode = address.PostalCode;
-            if (!string.IsNullOrEmpty(address.Country))
-            {
-                hvAddress.Country = address.Country;
-            }
-
-            hvAddress.Description = address.Text;
-            hvAddress.IsPrimary = address.GetBoolExtension(HealthVaultExtensions.IsPrimary);
-            return hvAddress;
-          }     
+    public class HealthServiceDateToFhir
+    {
+        internal static FhirDateTime ToFhirInternal(HealthServiceDate healthservicedate)
+        {
+            return new FhirDateTime(healthservicedate.Year, healthservicedate.Month, healthservicedate.Day);
+        }
     }
 }

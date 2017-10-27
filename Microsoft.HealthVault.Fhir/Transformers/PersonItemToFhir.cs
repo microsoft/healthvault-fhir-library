@@ -32,12 +32,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             if (!string.IsNullOrEmpty(person.Organization))
             {
-                var fhirAddress = new Hl7.Fhir.Model.Address
-                {
-                    Text = person.Organization,
-                    Use = Hl7.Fhir.Model.Address.AddressUse.Work
-                };
-                practitioner.Address.Add(fhirAddress);
+                practitioner.SetStringExtension(HealthVaultExtensions.Organization, person.Organization);
             }
 
             if (!string.IsNullOrEmpty(person.ProfessionalTraining))

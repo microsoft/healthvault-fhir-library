@@ -32,7 +32,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToHealthVaultTests
             Assert.AreEqual(fhirAllergy.Code.Text, allergy.Name.Text);
             Assert.AreEqual(fhirAllergy.Code.Coding[0].Code, allergy.Name[0].Value);
             Assert.AreEqual(fhirAllergy.Code.Coding[0].System, allergy.Name[0].Family);
-            Assert.AreEqual("Food", allergy.AllergenType.Text);
+            Assert.AreEqual("animal", allergy.AllergenType.Text);
             Assert.AreEqual("39579001", allergy.Reaction[0].Value);
             Assert.AreEqual("Anaphylactic reaction", allergy.Reaction.Text);
             Assert.AreEqual(2004,allergy.FirstObserved.ApproximateDate.Year );
