@@ -38,7 +38,7 @@ namespace Microsoft.HealthVault.Fhir.Constants
 
         public const string PatientBasicV2 = HealthVaultExtensionsUri + "basic-v2";
         public const string PatientBirthYear = "birth-year";
-        public const string PatientFirstDayOfWeek ="first-day-of-week";
+        public const string PatientFirstDayOfWeek = "first-day-of-week";
         public const string PatientBasicAddress = "basic-address";
         public const string PatientBasicAddressCity = "city";
         public const string PatientBasicAddressState = "state";
@@ -47,7 +47,7 @@ namespace Microsoft.HealthVault.Fhir.Constants
 
         public const string PatientPersonal = HealthVaultExtensionsUri + "personal";
         public const string PatientBloodType = "blood-type";
-        public const string PatientEmploymentStatus =  "employment-status";
+        public const string PatientEmploymentStatus = "employment-status";
         public const string PatientEthnicity = "ethnicity";
         public const string PatientHighestEducationLevel = "highest-education-level";
         public const string PatientIsDisabled = "is-disabled";
@@ -63,5 +63,13 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string Condition = HealthVaultExtensionsUri + "condition";
         public const string ConditionOccurrence =  "occurrence";
         public const string ConditionStopReason = "stop-reason";
+
+        public const string Medication = HealthVaultExtensionsUri + "medication";
+        public const string MedicationGenericName = "generic-name";
+        public const string MedicationStrength = "strength";
+        public const string MedicationStrengthDisplay = "display";
+        public const string MedicationStrengthQuantity = "quantity";
+
+        public const string Organization = HealthVaultExtensionsUri + "organization";
     }
 }
