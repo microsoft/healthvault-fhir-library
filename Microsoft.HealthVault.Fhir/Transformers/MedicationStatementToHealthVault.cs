@@ -65,7 +65,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     hvMedication.Frequency = frequency;
                 }
 
-                var route = dosage.Route.ToCodableValue();//.GetCodableValue();
+                var route = dosage.Route.ToCodableValue();
                 hvMedication.Route = route;
 
             }

@@ -22,6 +22,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             return HealthServiceDateToFhir.ToFhirInternal(healthservicedate);
         }
     }
+
     public class HealthServiceDateToFhir
     {
         internal static FhirDateTime ToFhirInternal(HealthServiceDate healthservicedate)

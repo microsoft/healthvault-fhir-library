@@ -202,7 +202,6 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 default:
                     return null;
             }
-
         }
     }
 }
