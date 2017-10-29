@@ -6,6 +6,7 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,9 +27,10 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
         private static ItemTypes.PersonItem ToPerson(this Hl7.Fhir.Model.Practitioner fhirPractitioner)
         {
-            if (fhirPractitioner == null || fhirPractitioner.Name.IsNullOrEmpty())
+
+            if (!fhirPractitioner.Name.Any())
             {
-                return null;
+                throw new NotSupportedException($"{fhirPractitioner} needs to have a {nameof(HumanName)}");
             }
 
             var practitionerName = fhirPractitioner.Name.First(); // Let's consider just the first item
@@ -82,7 +84,14 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     person.ProfessionalTraining = firstQualification.Code.Coding.First().Display;
                 }
             }
-            
+
+            person.Organization = fhirPractitioner.GetStringExtension(HealthVaultExtensions.Organization);
+
+            if (fhirPractitioner.Identifier.Any())
+            {
+                person.PersonId = fhirPractitioner.Identifier.First().Value;
+            }
+
             return person;
         }
 

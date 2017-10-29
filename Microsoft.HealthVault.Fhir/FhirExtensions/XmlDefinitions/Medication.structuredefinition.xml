@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<StructureDefinition xmlns="http://hl7.org/fhir">
+  <meta>
+    <lastUpdated value="2017-10-12T12:42:20.493+05:30" />
+  </meta>
+  <url value="http://healthvault.com/fhir/stu3/StructureDefinition/medication" />
+  <name value="Medication" />
+  <status value="draft" />
+  <date value="2017-10-09T19:12:37.26+05:30" />
+  <publisher value="Microsoft Corporation" />
+  <description value="Extension that encapsulates the additional data found in a Medication thing type." />
+  <copyright value="Copyright (c) Get Real Health.  All rights reserved." />
+  <fhirVersion value="3.0.1" />
+  <kind value="complex-type" />
+  <abstract value="false" />
+  <contextType value="resource" />
+  <context value="Medication" />
+  <type value="Extension" />
+  <baseDefinition value="http://hl7.org/fhir/StructureDefinition/Extension" />
+  <derivation value="constraint" />
+  <differential>
+    <element id="Extension">
+      <path value="Extension" />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension">
+      <path value="Extension.extension" />
+      <slicing>
+        <discriminator>
+          <type value="value" />
+          <path value="url" />
+        </discriminator>
+        <rules value="open" />
+      </slicing>
+    </element>
+    <element id="Extension.extension:generic-name">
+      <path value="Extension.extension" />
+      <sliceName value="generic-name" />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:generic-name.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="generic-name" />
+    </element>
+    <element id="Extension.extension:generic-name.value[x]:valueCodeableConcept">
+      <path value="Extension.extension.valueCodeableConcept" />
+      <sliceName value="valueCodeableConcept" />
+      <type>
+        <code value="CodeableConcept" />
+      </type>
+    </element>
+    <element id="Extension.extension:strength">
+      <path value="Extension.extension" />
+      <sliceName value="strength" />
+      <short value="Strength of medication." />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:strength.extension">
+      <path value="Extension.extension.extension" />
+      <slicing>
+        <discriminator>
+          <type value="value" />
+          <path value="url" />
+        </discriminator>
+        <rules value="open" />
+      </slicing>
+    </element>
+    <element id="Extension.extension:strength.extension:display">
+      <path value="Extension.extension.extension" />
+      <sliceName value="display" />
+      <max value="1" />
+    </element>
+    <element id="Extension.extension:strength.extension:display.url">
+      <path value="Extension.extension.extension.url" />
+      <fixedUri value="display" />
+    </element>
+    <element id="Extension.extension:strength.extension:display.value[x]:valueString">
+      <path value="Extension.extension.extension.valueString" />
+      <sliceName value="valueString" />
+      <type>
+        <code value="string" />
+      </type>
+    </element>
+    <element id="Extension.extension:strength.extension:quantity">
+      <path value="Extension.extension.extension" />
+      <sliceName value="quantity" />
+    </element>
+    <element id="Extension.extension:strength.extension:quantity.url">
+      <path value="Extension.extension.extension.url" />
+      <fixedUri value="quantity" />
+    </element>
+    <element id="Extension.extension:strength.extension:quantity.value[x]:valueQuantity">
+      <path value="Extension.extension.extension.valueQuantity" />
+      <sliceName value="valueQuantity" />
+      <type>
+        <code value="Quantity" />
+        <profile value="http://hl7.org/fhir/StructureDefinition/SimpleQuantity" />
+      </type>
+    </element>
+    <element id="Extension.extension:strength.url">
+      <path value="Extension.extension.url" />
+      <fixedUri value="strength" />
+    </element>
+    <element id="Extension.extension:strength.value[x]">
+      <path value="Extension.extension.value[x]" />
+      <max value="0" />
+    </element>
+    <element id="Extension.url">
+      <path value="Extension.url" />
+      <fixedUri value="http://healthvault.com/fhir/stu3/StructureDefinition/medication" />
+    </element>
+    <element id="Extension.value[x]">
+      <path value="Extension.value[x]" />
+      <max value="0" />
+    </element>
+  </differential>
+</StructureDefinition>
