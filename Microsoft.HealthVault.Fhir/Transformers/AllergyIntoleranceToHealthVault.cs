@@ -36,37 +36,41 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
 
             var coding = allergyIntolerance.Code.Coding.FirstOrDefault();
-
-            if (HealthVaultVocabularies.SystemContainsHealthVaultUrl(coding.System))
+            if (coding != null)
             {
-                allergy.Name = allergyIntolerance.Code.ToCodableValue();
-            }
-            else
-            {
-                allergy.SetAllergyName(
-                    coding.Display,
-                    coding.Code,
-                    HealthVaultVocabularies.Fhir,
-                    coding.System,
-                    coding.Version);
+                if (HealthVaultVocabularies.SystemContainsHealthVaultUrl(coding.System))
+                {
+                    allergy.Name = allergyIntolerance.Code.ToCodableValue();
+                }
+                else
+                {
+                    allergy.SetAllergyName(
+                        coding.Display,
+                        coding.Code,
+                        HealthVaultVocabularies.Fhir,
+                        coding.System,
+                        coding.Version);
+                }
             }
 
             if (allergyIntolerance.Reaction != null && allergyIntolerance.Reaction.Count > 0)
             {
-                var code = allergyIntolerance.Reaction.FirstOrDefault().Manifestation.FirstOrDefault().Coding.First();
-
-                if (HealthVaultVocabularies.SystemContainsHealthVaultUrl(code.System))
+                var code = allergyIntolerance.Reaction.First().Manifestation.First().Coding.FirstOrDefault();
+                if (code != null)
                 {
-                    allergy.Reaction = allergyIntolerance.Reaction.FirstOrDefault().Manifestation.FirstOrDefault().ToCodableValue();
-                }
-                else
-                {
-                    allergy.SetAllergyReaction(
-                        code.Display,
-                        code.Code,
-                        HealthVaultVocabularies.Fhir,
-                        code.System,
-                        code.Version);
+                    if (HealthVaultVocabularies.SystemContainsHealthVaultUrl(code.System))
+                    {
+                        allergy.Reaction = allergyIntolerance.Reaction.First().Manifestation.First().ToCodableValue();
+                    }
+                    else
+                    {
+                        allergy.SetAllergyReaction(
+                            code.Display,
+                            code.Code,
+                            HealthVaultVocabularies.Fhir,
+                            code.System,
+                            code.Version);
+                    }
                 }
             }
 
@@ -84,9 +88,9 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
             else if (allergyIntolerance.Category != null && allergyIntolerance.Category.Count() > 0)
             {
-                allergy.AllergenType = new CodableValue(allergyIntolerance.Category.FirstOrDefault().Value.ToString())
+                allergy.AllergenType = new CodableValue(allergyIntolerance.Category.First().Value.ToString())
                 {
-                    new CodedValue(allergyIntolerance.Category.FirstOrDefault().Value.ToString(), FhirCategories.HL7Allergy, HealthVaultVocabularies.Fhir, "")
+                    new CodedValue(allergyIntolerance.Category.First().Value.ToString(), FhirCategories.HL7Allergy, HealthVaultVocabularies.Fhir, "")
                 };
             }
 
