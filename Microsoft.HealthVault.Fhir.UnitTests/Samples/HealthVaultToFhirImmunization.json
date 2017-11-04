@@ -1,0 +1,77 @@
+﻿{
+    "resourceType": "Immunization",
+    "contained": [
+        {
+            "resourceType": "Practitioner",
+            "id": "#3af5f690-cb79-40f8-ab5a-9e4e091f93ac",
+            "name": [ { "text": "Justin Case" } ]
+        },
+        {
+            "resourceType": "Organization",
+            "id": "#20f4b009-8821-4042-b10c-60d663bdd916",
+            "name": "Baxter Healthcare Corporation"
+        }
+    ],
+    "extension": [
+        {
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/thing-flags",
+            "valueString": "None"
+        },
+        {
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/thing-state",
+            "valueString": "Active"
+        },
+        {
+            "url": "http://healthvault.com/fhir/stu3/StructuredDefinition/immunization-detail",
+            "extension": [
+                {
+                    "url": "sequence",
+                    "valueString": "Last"
+                },
+                {
+                    "url": "concent",
+                    "valueString": "A concent from parent goes here"
+                },
+                {
+                    "url": "adverse-event",
+                    "valueString": "Something bad happened"
+                }
+            ]
+        }
+    ],
+    "vaccineCode": {
+        "coding": [
+            {
+                "system": "http://healthvault.com/fhir/stu3/ValueSet/HL7/vaccines-cvx",
+                "version": "2.3 09_2008",
+                "code": "26"
+            }
+        ],
+        "text": "cholera vaccine"
+    },
+    "date": "2017-09-21T18:55:10.1+05:30",
+    "manufacturer": { "reference": "#20f4b009-8821-4042-b10c-60d663bdd916" },
+    "lotNumber": "AAJN11K",
+    "expirationDate": "2017-10-20",
+    "site": {
+        "coding": [
+            {
+                "system": "http://healthvault.com/fhir/stu3/ValueSet/Snomed/SnomedBodyLocation",
+                "version": "Jan2008",
+                "code": "289002"
+            }
+        ],
+        "text": "Metacarpophalangeal joint structure of index finger"
+    },
+    "route": {
+        "coding": [
+            {
+                "system": "http://healthvault.com/fhir/stu3/ValueSet/wc/medication-routes",
+                "version": "2",
+                "code": "po"
+            }
+        ],
+        "text": "By mouth"
+    },
+    "practitioner": [ { "actor": { "reference": "#3af5f690-cb79-40f8-ab5a-9e4e091f93ac" } } ]
+}

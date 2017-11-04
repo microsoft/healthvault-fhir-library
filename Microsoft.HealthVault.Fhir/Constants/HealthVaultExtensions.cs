@@ -71,5 +71,10 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string MedicationStrengthQuantity = "quantity";
 
         public const string Organization = HealthVaultExtensionsUri + "organization";
+
+        public const string ImmunizationDetail = HealthVaultExtensionsUri + "immunization-detail";
+        public const string ImmunizationDetailSequence = "sequence";
+        public const string ImmunizationDetailConcent = "concent";
+        public const string ImmunizationDetailAdverseEvent = "adverse-event";
     }
 }
