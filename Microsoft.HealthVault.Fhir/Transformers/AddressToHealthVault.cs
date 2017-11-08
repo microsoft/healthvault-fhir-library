@@ -15,12 +15,19 @@ namespace Microsoft.HealthVault.Fhir.Transformers
     {
         public static ItemTypes.Address ToHealthVault(this Hl7.Fhir.Model.Address address)
         {
+            if((string.IsNullOrEmpty(address.City))||(string.IsNullOrWhiteSpace(address.Line.ToString()))||(string.IsNullOrWhiteSpace(address.PostalCode))
+                ||(string.IsNullOrWhiteSpace(address.Country)))
+            {
+                return null;
+            }
+
             var hvAddress = new ItemTypes.Address();
 
             foreach (var line in address.Line)
             {
                 hvAddress.Street.Add(line);
             }
+
             hvAddress.City = address.City;
             hvAddress.State = address.State;
             hvAddress.County = address.District;
@@ -33,6 +40,6 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             hvAddress.Description = address.Text;
             hvAddress.IsPrimary = address.GetBoolExtension(HealthVaultExtensions.IsPrimary);
             return hvAddress;
-        }
+          }     
     }
 }

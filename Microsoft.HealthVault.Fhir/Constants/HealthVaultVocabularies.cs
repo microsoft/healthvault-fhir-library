@@ -37,6 +37,7 @@ namespace Microsoft.HealthVault.Fhir.Constants
 
         public const string ConditionOccurrence = "condition-occurrence";
 
+        public const string AllergenType = "allergen-type";
 
         public const string BodyDimensionMeasurementNames = "body-dimension-measurement-names";
 

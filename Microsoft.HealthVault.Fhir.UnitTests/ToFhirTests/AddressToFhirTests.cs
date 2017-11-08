@@ -24,7 +24,7 @@ namespace Microsoft.HealthVault.Fhir.UnitTests.ToFhirTests
             {
                 Description = "John's Office Address",
                 IsPrimary = true,
-                Street = { "3804 Lakeland ", "Terrace" },
+                Street = { "1", "Microsoft Way" },
                 City = "KEENE",
                 State = "California",
                 Country = "US",

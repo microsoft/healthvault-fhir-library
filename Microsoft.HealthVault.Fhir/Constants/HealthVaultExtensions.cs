@@ -64,6 +64,10 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string ConditionOccurrence =  "occurrence";
         public const string ConditionStopReason = "stop-reason";
 
+        public const string Allergy = HealthVaultExtensionsUri + "allergy";
+        public const string AllergenType = "allergenType";
+        public const string AllergyTreatement = "allergyTreatment";
+        public const string AllergenCode = "allergenCode";
         public const string Medication = HealthVaultExtensionsUri + "medication";
         public const string MedicationGenericName = "generic-name";
         public const string MedicationStrength = "strength";
