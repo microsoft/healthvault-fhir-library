@@ -78,4 +78,3 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         }
     }
 }
-

@@ -128,61 +128,9 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 resultObservation.Code = resultDetail.ClinicalCode.ToFhir();
             }
 
-            LabTestResultValue labTestResultValue = resultDetail.Value;
-            if (labTestResultValue != null)
+            if (resultDetail.Value != null)
             {
-
-                resultObservation.Value = new FhirString(labTestResultValue.Measurement.Display);
-
-                foreach (var structuredMesurement in labTestResultValue.Measurement.Structured)
-                {
-                    var quantity = new Quantity
-                    {
-                        Value = (decimal)structuredMesurement.Value,
-                        Unit = structuredMesurement.Units.Text
-                    };
-                    if (structuredMesurement.Units.Any())
-                    {
-                        var codedUnit = structuredMesurement.Units.First();
-                        quantity.Code = codedUnit.Value;
-                        quantity.System = HealthVaultVocabularies.GenerateSystemUrl(codedUnit.VocabularyName, codedUnit.Family);
-                    }
-                    var valueDetailExtension = new Extension
-                    {
-                        Url = HealthVaultExtensions.LabTestResultValueDetail,
-                        Value = quantity
-                    };
-                    resultObservation.Value.AddExtension(HealthVaultExtensions.LabTestResultValueDetail, quantity);
-                }
-
-                foreach (var range in labTestResultValue.Ranges)
-                {
-
-                    var rangeComponent = new Observation.ReferenceRangeComponent
-                    {
-                        Type = range.RangeType.ToFhir(),
-                        Text = range.Text.Text
-                    };
-                    rangeComponent.TextElement.AddExtension(HealthVaultExtensions.LabTestResultValueRangeText, range.Text.ToFhir());
-
-                    if (range.Value != null)
-                    {
-                        rangeComponent.Low = GetSimpleQuantity(range.Value.Minimum);
-                        rangeComponent.High = GetSimpleQuantity(range.Value.Maximum);
-
-                        SimpleQuantity GetSimpleQuantity(double? value)
-                        {
-                            return value == null ? null : new SimpleQuantity() { Value = (decimal)value };
-                        }
-                    }
-
-                    resultObservation.ReferenceRange.Add(rangeComponent);
-                }
-
-                foreach (var flag in labTestResultValue.Flag)
-                {
-                    resultObservation.AddExtension(HealthVaultExtensions.LabTestResultValueFlag, flag.ToFhir());
-                }
+                AddLabTestResultValue(resultDetail.Value, resultObservation);                
             }
 
             if (resultDetail.Status != null)
@@ -191,6 +139,61 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             }
 
             resultObservation.Comment = resultDetail.Note;
+        }
+
+        private static void AddLabTestResultValue(LabTestResultValue labTestResultValue, Observation resultObservation)
+        {
+            resultObservation.Value = new FhirString(labTestResultValue.Measurement.Display);
+
+            foreach (var structuredMesurement in labTestResultValue.Measurement.Structured)
+            {
+                var quantity = new Quantity
+                {
+                    Value = (decimal)structuredMesurement.Value,
+                    Unit = structuredMesurement.Units.Text
+                };
+                if (structuredMesurement.Units.Any())
+                {
+                    var codedUnit = structuredMesurement.Units.First();
+                    quantity.Code = codedUnit.Value;
+                    quantity.System = HealthVaultVocabularies.GenerateSystemUrl(codedUnit.VocabularyName, codedUnit.Family);
+                }
+                var valueDetailExtension = new Extension
+                {
+                    Url = HealthVaultExtensions.LabTestResultValueDetail,
+                    Value = quantity
+                };
+                resultObservation.Value.AddExtension(HealthVaultExtensions.LabTestResultValueDetail, quantity);
+            }
+
+            foreach (var range in labTestResultValue.Ranges)
+            {
+
+                var rangeComponent = new Observation.ReferenceRangeComponent
+                {
+                    Type = range.RangeType.ToFhir(),
+                    Text = range.Text.Text
+                };
+                rangeComponent.TextElement.AddExtension(HealthVaultExtensions.LabTestResultValueRangeText, range.Text.ToFhir());
+
+                if (range.Value != null)
+                {
+                    rangeComponent.Low = GetSimpleQuantity(range.Value.Minimum);
+                    rangeComponent.High = GetSimpleQuantity(range.Value.Maximum);
+
+                    SimpleQuantity GetSimpleQuantity(double? value)
+                    {
+                        return value == null ? null : new SimpleQuantity() { Value = (decimal)value };
+                    }
+                }
+
+                resultObservation.ReferenceRange.Add(rangeComponent);
+            }
+
+            foreach (var flag in labTestResultValue.Flag)
+            {
+                resultObservation.AddExtension(HealthVaultExtensions.LabTestResultValueFlag, flag.ToFhir());
+            }
         }
 
         private static ObservationStatus? GetStatus(CodableValue status)
@@ -214,9 +217,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                     case HealthVaultLabStatusCodes.PatientRefusedTestCode:
                         return ObservationStatus.Cancelled;
                     case HealthVaultLabStatusCodes.QuantityNotSufficientCode:
-                        return ObservationStatus.Unknown;
                     default:
-                        throw new ArgumentException($"Unknown Lab-status code");
+                        return ObservationStatus.Unknown;
                 }
             }
             return ObservationStatus.Unknown;

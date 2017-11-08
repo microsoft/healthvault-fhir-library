@@ -17,10 +17,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         // Register the type on the generic ItemBaseToFhir partial class
         public static FhirOrganization ToFhir(this HVOrganization hvOrganization)
         {
-            return OrganisationToFhir.ToFhirInternal(hvOrganization);
+            return OrganizationToFhir.ToFhirInternal(hvOrganization);
         }
     }
-    internal static class OrganisationToFhir
+
+    internal static class OrganizationToFhir
     {
         internal static FhirOrganization ToFhirInternal(HVOrganization hvOrganization)
         {

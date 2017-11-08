@@ -52,9 +52,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         {
             var observation = diagnosticReport.GetContainedResource<Observation>(reference);
 
-            var labTestResultGroup = new LabTestResultGroup { };
-
-            labTestResultGroup.GroupName = observation.Code.ToCodableValue();
+            var labTestResultGroup = new LabTestResultGroup
+            {
+                GroupName = observation.Code.ToCodableValue(),
+                Status = GetStatus(observation.Status)
+            };
 
             if (observation.Performer.Any())
             {
@@ -75,13 +77,11 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                 labTestResultGroup.LaboratoryName = fhirOrganization?.ToHealthVault();
             }
 
-            labTestResultGroup.Status = GetStatus(observation.Status);
-
             foreach (var relatedObservationLink in observation.Related)
             {
                 switch (relatedObservationLink.Type)
                 {
-                    case null:
+                    case null://Type is optional for which we assume HasMember is default
                     case Observation.ObservationRelationshipType.HasMember:
                         var labTestResultSubGroup = GetLabTestResultGroup(diagnosticReport, relatedObservationLink.Target);
                         labTestResultGroup.SubGroups.Add(labTestResultSubGroup);
@@ -104,7 +104,8 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
             var labTestResultDetails = new LabTestResultDetails
             {
-                When = detailObservation.Effective?.ToAproximateDateTime()
+                When = detailObservation.Effective?.ToAproximateDateTime(),
+                ClinicalCode = detailObservation.Code.ToCodableValue()
             };
 
             if (detailObservation.HasExtensions(HealthVaultExtensions.LabTestResultName))
@@ -124,8 +125,6 @@ namespace Microsoft.HealthVault.Fhir.Transformers
 
                 labTestResultDetails.CollectionMethod = specimen.Collection?.Method?.ToCodableValue();
             }
-
-            labTestResultDetails.ClinicalCode = detailObservation.Code.ToCodableValue();
 
             switch (detailObservation.Value)
             {
@@ -162,7 +161,7 @@ namespace Microsoft.HealthVault.Fhir.Transformers
                         Measurement = measure
                     };
                     break;
-                default: //We are not supportin other types now
+                default: //We are not supporting other types now
                     break;
             }
 
@@ -250,4 +249,3 @@ namespace Microsoft.HealthVault.Fhir.Transformers
         }
     }
 }
-
