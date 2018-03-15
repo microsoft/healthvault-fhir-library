@@ -166,6 +166,7 @@
     <Compile Include="ToFhirTests\FileToFhirTests.cs" />
     <Compile Include="ToFhirTests\ToFhirDocumentReferenceTests.cs" />
     <Compile Include="ToFhirTests\AddressToFhirTests.cs" />
+    <Compile Include="ToFhirTests\AllergyToFhirTests.cs" />
     <Compile Include="ToFhirTests\BloodGlucoseToFhirTests.cs" />
     <Compile Include="ToFhirTests\DosageToFhirTests.cs" />
     <Compile Include="ToFhirTests\MedicationToFhirTests.cs" />
@@ -173,6 +174,7 @@
     <Compile Include="ToFhirTests\PersonItemToFhirTests.cs" />
     <Compile Include="ToFhirTests\VitalSignsToFhirTests.cs" />
     <Compile Include="ToFhirTests\EmailToFhirTests.cs" />
+    <Compile Include="ToFhirTests\ImmunizationToFhirTests.cs" />
     <Compile Include="ToFhirTests\PhoneToFhirTests.cs" />
     <Compile Include="ToFhirTests\ProcedureToFhirTests.cs" />
     <Compile Include="ToFhirTests\LabTestResultsToFhirTests.cs" />
@@ -208,8 +210,10 @@
     <Compile Include="ToHealthVaultTests\DocumentReferenceToHealthVaultTests.cs" />
     <Compile Include="ToHealthVaultTests\AddressToHealthVaultTests.cs" />
     <Compile Include="ToHealthVaultTests\ContactPointToHealthVaultTests.cs" />
+    <Compile Include="ToHealthVaultTests\FhirImmunizationToHealthVaultImmunization.cs" />
     <Compile Include="ToHealthVaultTests\FhirProcedureToHealthVaultProcedure.cs" />
     <Compile Include="ToHealthVaultTests\HumanNameToNameTests.cs" />
+    <Compile Include="ToHealthVaultTests\AllergyInToleranceToHealthVault.cs" />
     <Compile Include="ToHealthVaultTests\FhirCodesToHealthVaultTests.cs" />
     <Compile Include="ToHealthVaultTests\MedicationRequestToHealthVaultTests.cs" />
     <Compile Include="ToHealthVaultTests\MedicationStatementToHealthVaultTests.cs" />
@@ -249,6 +253,9 @@
     <EmbeddedResource Include="Samples\FhirFile.json" />
     <EmbeddedResource Include="Samples\FhirProcedure.json" />
     <EmbeddedResource Include="Samples\HealthVaultToFhirBloodGlucose.json" />
+    <EmbeddedResource Include="Samples\FhirImmunization.json" />
+    <EmbeddedResource Include="Samples\HealthVaultToFhirImmunization.json" />
+    <EmbeddedResource Include="Samples\FhirAllergy.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.HealthVault.Fhir\Microsoft.HealthVault.Fhir.csproj">

@@ -47,10 +47,13 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             if (!fhirPractitioner.Address.IsNullOrEmpty())
             {
                 foreach (var address in fhirPractitioner.Address)
-                {
+                {                   
                     ItemTypes.Address hvAddress = address.ToHealthVault();
 
-                    person.ContactInformation.Address.Add(hvAddress);
+                    if (hvAddress != null)
+                    {
+                        person.ContactInformation.Address.Add(hvAddress);
+                    }
                 }
             }
 

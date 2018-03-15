@@ -64,6 +64,10 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string ConditionOccurrence = "occurrence";
         public const string ConditionStopReason = "stop-reason";
 
+        public const string Allergy = HealthVaultExtensionsUri + "allergy";
+        public const string AllergenType = "allergenType";
+        public const string AllergyTreatement = "allergyTreatment";
+        public const string AllergenCode = "allergenCode";
         public const string Medication = HealthVaultExtensionsUri + "medication";
         public const string MedicationGenericName = "generic-name";
         public const string MedicationStrength = "strength";
@@ -71,6 +75,11 @@ namespace Microsoft.HealthVault.Fhir.Constants
         public const string MedicationStrengthQuantity = "quantity";
 
         public const string Organization = HealthVaultExtensionsUri + "organization";
+
+        public const string ImmunizationDetail = HealthVaultExtensionsUri + "immunization-detail";
+        public const string ImmunizationDetailSequence = "sequence";
+        public const string ImmunizationDetailConcent = "concent";
+        public const string ImmunizationDetailAdverseEvent = "adverse-event";
 
         public const string LabTestResultOrderBy = HealthVaultExtensionsUri + "lab-test-result-ordered-by";
         public const string LabTestResultName = HealthVaultExtensionsUri + "lab-test-result-name";

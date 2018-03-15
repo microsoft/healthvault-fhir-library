@@ -7,39 +7,31 @@
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using Hl7.Fhir.Model;
-using Microsoft.HealthVault.Fhir.Constants;
+using Microsoft.HealthVault.ItemTypes;
 
 namespace Microsoft.HealthVault.Fhir.Transformers
 {
-    public static class AddressToHealthVault
-    {
-        public static ItemTypes.Address ToHealthVault(this Hl7.Fhir.Model.Address address)
+    public static partial class ItemBaseToFhir
+    {      
+        public static Date ToFhir(this ApproximateDate approximateDate)
         {
-            if((string.IsNullOrEmpty(address.City))||(string.IsNullOrWhiteSpace(address.Line.ToString()))||(string.IsNullOrWhiteSpace(address.PostalCode))
-                ||(string.IsNullOrWhiteSpace(address.Country)))
+            return ApproximateDateToFhir.ToFhirInternal(approximateDate);
+        }
+    }
+
+    internal class ApproximateDateToFhir
+    {
+        internal static Date ToFhirInternal(ApproximateDate approximateDate)
+        {
+            if (approximateDate.Day.HasValue)
             {
-                return null;
+                return new Date(approximateDate.Year, approximateDate.Month.Value, approximateDate.Day.Value);
             }
-
-            var hvAddress = new ItemTypes.Address();
-
-            foreach (var line in address.Line)
+            else if (approximateDate.Month.HasValue)
             {
-                hvAddress.Street.Add(line);
+                return new Date(approximateDate.Year, approximateDate.Month.Value);
             }
-
-            hvAddress.City = address.City;
-            hvAddress.State = address.State;
-            hvAddress.County = address.District;
-            hvAddress.PostalCode = address.PostalCode;
-            if (!string.IsNullOrEmpty(address.Country))
-            {
-                hvAddress.Country = address.Country;
-            }
-
-            hvAddress.Description = address.Text;
-            hvAddress.IsPrimary = address.GetBoolExtension(HealthVaultExtensions.IsPrimary);
-            return hvAddress;
-          }     
+            return new Date(approximateDate.Year);
+        }
     }
 }

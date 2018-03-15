@@ -20,11 +20,10 @@ namespace Microsoft.HealthVault.Fhir.Transformers
             return ApproximateTimeToFhir.ToFhirInternal(approximateTime);
         }
     }
-
     /// <summary>
     /// An extension class that transforms HealthVault approximate times into FHIR times
     /// </summary>
-    public class ApproximateTimeToFhir
+    internal class ApproximateTimeToFhir
     {
         internal static Time ToFhirInternal(ApproximateTime approximateTime)
         {
