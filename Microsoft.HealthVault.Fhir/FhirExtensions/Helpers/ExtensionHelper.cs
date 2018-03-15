@@ -6,33 +6,16 @@
 //
 // THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+using System.Linq;
 using Hl7.Fhir.Model;
 
-namespace Microsoft.HealthVault.Fhir.FhirExtensions
+namespace Microsoft.HealthVault.Fhir.FhirExtensions.Helpers
 {
-    public static class FhirDateTimeExtensions
+    public static class ExtensionHelper
     {
-        /// <summary>
-        /// FhirDateTimePrecision enum will determine whether FhirDateTime contains only 
-        /// year(should contains 4 Digits format{0:D4})
-        /// month(should contains 2 Digits format{0:D2})
-        /// day(should contains 2 Digits format{0:D2})
-        /// hour(should contains 2 Digits format{0:D2})
-        /// minute(should contains 2 Digits format{0:D2})
-        /// seconds(should contains 2 Digits format{0:D2})
-        /// </summary>
-        public enum FhirDateTimePrecision
+        public static bool HasExtensions(this IExtendable extendable, string uri)
         {
-            Year = 4,       //2017
-            Month = 7,      //2017-02
-            Day = 10,       //2017-02-21
-            Minute = 16,    //2017-02-21T13:45
-            Second = 19    //2017-02-21T13:45:21
-        }
-
-        public static FhirDateTimePrecision Precision(this FhirDateTime fdt)
-        {
-            return (FhirDateTimePrecision)fdt.Value.Length;
+            return extendable.HasExtensions() && extendable.GetExtensions(uri).Any();
         }
     }
 }
